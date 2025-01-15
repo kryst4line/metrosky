@@ -1,0 +1,29 @@
+<div class="flex h-full items-center justify-center">
+  <p-card header="Login">
+    <p class="flex flex-col mt-8">
+      <p-floatlabel>
+        <input
+          pInputText
+          [ngModel]="credentials.identifier"
+          (ngModelChange)="credentials.identifier = $event"
+        />
+        <label>Handle</label>
+      </p-floatlabel>
+      <p-floatlabel class="mt-8">
+        <input
+          pInputText
+          [ngModel]="credentials.password"
+          (ngModelChange)="credentials.password = $event"
+          type="password"
+        />
+        <label>Password</label>
+      </p-floatlabel>
+      <p-button
+        class="mt-6"
+        (onClick)="onLogin()"
+      >
+        Login
+      </p-button>
+    </p>
+  </p-card>
+</div>

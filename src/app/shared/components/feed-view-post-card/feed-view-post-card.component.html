@@ -1,0 +1,141 @@
+<div #base
+  id="base"
+  class="flex flex-col bg-dark-background p-4 mb-2 cursor-pointer"
+>
+  @if (feedViewPost.reason) {
+    <span
+      class="msky-text-caption mb-2"
+      style="margin-top: -0.5rem"
+    >
+      @if (feedViewPost.reason | isFeedDefsReasonRepost) {
+        Reposted by {{ $any(feedViewPost.reason.by).displayName ?? $any(feedViewPost.reason.by).handle }}
+      }
+    </span>
+  }
+  <div #header
+    id="header"
+    class="flex gap-4"
+  >
+    <a #avatar
+      [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
+      (click)="false; $event.preventDefault()"
+    >
+      <img
+        [src]="feedViewPost.post().author.avatar"
+        class="h-10"
+      />
+    </a>
+    <div #displayName
+      class="flex flex-col w-full justify-between min-w-0"
+    >
+      @if (feedViewPost.post().author.displayName.trim().length) {
+        <a
+          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
+          (click)="false; $event.preventDefault()"
+          class="w-fit font-semibold display-name fit-text"
+        >
+          {{feedViewPost.post().author.displayName}}
+        </a>
+        <a
+          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
+          (click)="false; $event.preventDefault()"
+          class="w-fit msky-text-caption fit-text"
+        >
+          {{'@' + feedViewPost.post().author.handle}}
+        </a>
+      } @else {
+        <a
+          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
+          (click)="false; $event.preventDefault()"
+          class="w-fit font-semibold fit-text"
+        >
+          {{'@' + feedViewPost.post().author.handle}}
+        </a>
+      }
+    </div>
+  </div>
+
+  <div #body
+    class="mt-3"
+  >
+    @if (feedViewPost.post().record | isFeedPostRecord) {
+      <span class="msky-text-body">
+        {{$any(feedViewPost.post().record).text}}
+      </span>
+    }
+  </div>
+  <div #content
+    id="content"
+    class="mt-3"
+  >
+    @if (feedViewPost.post().embed) {
+
+      @if (feedViewPost.post().embed | isEmbedImagesView) {
+        @switch ($any(feedViewPost.post().embed).images.length) {
+            @case (1) {
+              <img
+                [src]="$any(feedViewPost.post().embed).images[0].thumb"
+              />
+            }
+            @case (2) {
+              <div class="img-thumbs-2">
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[0].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[1].thumb"
+                />
+              </div>
+            }
+            @case (3) {
+              <div class="img-thumbs-3">
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[0].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[1].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[2].thumb"
+                />
+              </div>
+            }
+            @case (4) {
+              <div class="img-thumbs-4">
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[0].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[1].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[2].thumb"
+                />
+                <img
+                  [src]="$any(feedViewPost.post().embed).images[3].thumb"
+                />
+              </div>
+            }
+          }
+      }
+
+      @if ($any(feedViewPost.post().embed).$type.includes('video')) {
+        <br><span>"Video"</span>
+      }
+
+      @if ($any(feedViewPost.post().embed).$type.includes('record')) {
+        <br><span>"Quote"</span>
+      }
+
+      @if ($any(feedViewPost.post().embed).$type.includes('external')) {
+        <br><span>"Website"</span>
+      }
+    }
+  </div>
+
+  <div #buttons
+    class=""
+  >
+
+  </div>
+</div>

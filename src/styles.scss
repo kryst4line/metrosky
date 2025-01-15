@@ -1,1 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import '@angular/cdk/overlay-prebuilt.css';
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+:root, body {
+  //font-family: "Open Sans", sans-serif;
+  //--font-sans: '';
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+  background-color: #000;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  line-height: 120%;
+
+  $metro-dark-background: #0A0A0B;
+  $metro-dark-surface: #0F0F10;
+  $metro-dark-secondary: #131416;
+  $metro-dark-secondary-stroke: #1B1F22;
+  $metro-dark-secondary-hover: #1B1F22;
+  $metro-dark-surface-content: #FFFFFF;
+  $metro-dark-link: #66B2FF;
+  $metro-dark-primary: #0066CC;
+  $metro-dark-primary-hover: #0073E5;
+  $metro-dark-success: #12A159;
+  $metro-dark-warn: #CC9833;
+  $metro-dark-danger: #B8144B;
+
+  .bg-dark-background {
+    background-color: $metro-dark-background;
+  }
+  .bg-dark-surface {
+    background-color: $metro-dark-surface;
+  }
+}
+
+.app-container{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
