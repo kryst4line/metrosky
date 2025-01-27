@@ -2,17 +2,18 @@
 <div #feed
   class="relative w-full h-full min-h-0 flex-1"
 >
-  <div
-       class="h-full overflow-auto scrollbar-thin p-2"
-       infinite-scroll
-       [scrollWindow]="false"
-       (scrolled)="nextData()"
+  <ag-virtual-scroll
+    #vs
+    [items]="posts"
+    [height]="'100%'"
+    [min-row-height]="150"
+    (onItemsRender)="loadMore($event)"
   >
-    @for (post of posts; track post.uuid) {
+    @for (post of vs.items; track post.uuid; let i = $index) {
       <feed-view-post-card
         [feedViewPost]="post"
         (onPostClick)="openPost($event)"
       />
     }
-  </div>
+  </ag-virtual-scroll>
 </div>

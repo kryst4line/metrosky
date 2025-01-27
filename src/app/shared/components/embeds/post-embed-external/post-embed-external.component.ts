@@ -21,7 +21,6 @@ import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
 import videojs from "video.js";
 import type Player from "video.js/dist/types/player";
 type Options = typeof videojs.options;
-import '@justinribeiro/lite-youtube';
 import {YouTubePlayer} from "@angular/youtube-player";
 
 @Component({
