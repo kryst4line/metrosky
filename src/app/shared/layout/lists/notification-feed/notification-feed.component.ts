@@ -8,24 +8,29 @@ import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-
 import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule} from "ag-virtual-scroll";
-import {PostUtils} from "~/src/app/shared/utils/post-utils";
+import {Notification} from "~/src/app/api/models/notification";
+import NotificationUtils from "~/src/app/shared/utils/notification-utils";
+import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/is-post-notification";
+import {NotificationCardComponent} from "~/src/app/shared/components/notification-card/notification-card.component";
 
 @Component({
-  selector: 'post-feed',
+  selector: 'notification-feed',
   imports: [
     CommonModule,
     FeedViewPostCardComponent,
     AgVirtualScrollModule,
+    IsNotificationArrayPipe,
+    NotificationCardComponent,
   ],
-  templateUrl: './post-feed.component.html',
-  styleUrl: './post-feed.component.scss',
+  templateUrl: './notification-feed.component.html',
+  styleUrl: './notification-feed.component.scss',
   providers: [
     DialogService
   ]
 })
-export class PostFeedComponent implements OnInit {
+export class NotificationFeedComponent implements OnInit {
   @ViewChild('feed') feed: ElementRef;
-  posts: SignalizedFeedViewPost[] = [];
+  notifications: Notification[] = [];
   dialogs: DynamicDialogRef[] = [];
   lastPostCursor: string;
   loading = true;
@@ -41,34 +46,37 @@ export class PostFeedComponent implements OnInit {
 
   initData() {
     this.loading = true;
-    agent.getTimeline({
+    agent.listNotifications({
       limit: 15
     }).then(
       response => {
         this.lastPostCursor = response.data.cursor;
-        this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
-        setTimeout(() => {
-          this.loading = false;
-        }, 500);
+        NotificationUtils.parseNotifications(response.data.notifications, this.postService).then(notifications => {
+          this.notifications = notifications;
+          setTimeout(() => {
+            this.loading = false;
+          }, 500);
+        });
       }
     );
   }
 
   nextData(scrollEvent: any) {
-    if (!this.loading && scrollEvent.endIndex == this.posts.length -1) {
+    if (!this.loading && scrollEvent.endIndex == this.notifications.length -1) {
       this.loading = true;
 
-      agent.getTimeline({
+      agent.listNotifications({
         cursor: this.lastPostCursor,
         limit: 15
       }).then(
         response => {
           this.lastPostCursor = response.data.cursor;
-          const newPosts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
-          this.posts = [...this.posts, ...newPosts];
-          setTimeout(() => {
-            this.loading = false;
-          }, 500)
+          NotificationUtils.parseNotifications(response.data.notifications, this.postService).then(notifications => {
+            this.notifications = notifications;
+            setTimeout(() => {
+              this.loading = false;
+            }, 500);
+          });
         }
       );
     }

@@ -1,0 +1,26 @@
+<div #base
+     id="base"
+     class="flex flex-col bg-dark-background p-4 mb-2 cursor-pointer"
+     (click)="openNotification($event)"
+>
+  @if (notification | isLikeNotification) {
+    <span>Like notification</span>
+  }
+  @else if (notification | isFollowNotification) {
+    <span>Follow notification</span>
+  }
+  @else if (notification | isRepostNotification) {
+    <span>Repost notification</span>
+  }
+  @else if (notification | isStarterPackNotification) {
+    <span>Starter pack notification</span>
+  }
+  @else {
+    <span>Unknown notification</span>
+  }
+</div>
+
+<ng-template #like
+>
+
+</ng-template>

@@ -1,0 +1,20 @@
+#base:hover {
+  background-color: #0F0F10;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.fit-text {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buttons {
+  ng-icon:hover {
+    transform: scaleX(1.25) scaleY(1.25);
+  }
+}

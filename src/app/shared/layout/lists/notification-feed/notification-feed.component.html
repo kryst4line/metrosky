@@ -1,0 +1,25 @@
+
+<div #feed
+  class="relative w-full h-full min-h-0 flex-1"
+>
+  <ag-virtual-scroll
+    #vs
+    [items]="notifications"
+    [height]="'100%'"
+    [min-row-height]="150"
+    (onItemsRender)="nextData($event)"
+  >
+    @for (notification of vs.items; track notification.uuid; let i = $index) {
+      @if (notification | isPostNotification) {
+        <feed-view-post-card
+          [feedViewPost]="notification.feedViewPost"
+          (onPostClick)="openPost($event)"
+        />
+      } @else {
+        <notification-card
+          [notification]="notification"
+        />
+      }
+    }
+  </ag-virtual-scroll>
+</div>

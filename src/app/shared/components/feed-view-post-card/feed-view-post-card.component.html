@@ -139,7 +139,7 @@
         style="height: 0.75rem"
       />
       <span
-        class="msky-text-caption ml-1"
+        class="msky-text-caption ml-1 fit-text"
       >
         Reposted by
 
@@ -185,7 +185,7 @@
         style="height: 0.75rem"
       />
       <span
-        class="msky-text-caption ml-1"
+        class="msky-text-caption ml-1 fit-text"
       >
         Replying to someone (not found)
       </span>
@@ -201,7 +201,7 @@
         style="height: 0.75rem"
       />
       <span
-        class="msky-text-caption ml-1"
+        class="msky-text-caption ml-1 fit-text"
       >
         Replying to someone (blocked)
       </span>
@@ -217,7 +217,7 @@
         style="height: 0.75rem"
       />
       <span
-        class="msky-text-caption ml-1"
+        class="msky-text-caption ml-1 fit-text"
       >
         Replying to
 
@@ -238,7 +238,7 @@
 >
   <div
     id="header"
-    class="flex gap-4"
+    class="flex gap-2"
   >
     <a #avatar
        [href]="'https://bsky.app/profile/' + author.handle"
@@ -251,7 +251,7 @@
       />
     </a>
     <div #displayName
-         class="flex flex-col w-full justify-between min-w-0"
+         class="flex flex-col w-full justify-center min-w-0"
     >
       @if (author.displayName.trim().length) {
         <a
