@@ -23,6 +23,7 @@ export class AuthService {
       agent.resumeSession(JSON.parse(sessionData)).then(
         () => {
           this.authenticationState.next(true);
+          localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
         }
       );
     }

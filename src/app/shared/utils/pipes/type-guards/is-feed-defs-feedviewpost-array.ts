@@ -3,8 +3,6 @@ import {AppBskyFeedDefs} from "@atproto/api";
 
 @Pipe({
   name: 'isFeedDefsFeedViewPostArray',
-  standalone: true,
-  pure: false
 })
 export class IsFeedDefsFeedViewPostArrayPipe implements PipeTransform {
   transform(value: unknown[]): value is AppBskyFeedDefs.FeedViewPost[] {

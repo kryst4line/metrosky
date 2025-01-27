@@ -1,0 +1,183 @@
+
+<!--@if (embed.record | isEmbedRecordView) {-->
+<!--  {{record = embed.record}}-->
+<!--}-->
+<!--@else if ((embed.record | isEmbedRecordWithMediaView) && (embed.record.record | isEmbedRecordView)) {-->
+<!--  record = embed.record.record;-->
+<!--  media = embed.media;-->
+<!--}-->
+<!--@else if ((embed.record | isEmbedRecordViewBlocked) || (embed.record.record | isEmbedRecordViewBlocked)) {-->
+<!--  blocked = true;-->
+<!--}-->
+<!--@else if ((embed.record | isEmbedRecordViewNotFound) || (embed.record.record | isEmbedRecordViewNotFound)) {-->
+<!--  notFound = true;-->
+<!--}-->
+<!--@else if ((embed.record | isEmbedRecordViewDetached) || (embed.record.record | isEmbedRecordViewDetached)) {-->
+<!--  detached = true;-->
+<!--}-->
+<!-- TODO: FEED, LIST, LABELER, STARTER PACK -->
+
+@if (embed |isEmbedRecordWithMediaView) {
+  <ng-container
+    [ngTemplateOutlet]="mediaEmbeds"
+    [ngTemplateOutletContext]="{media: embed.media, margin: 'block mb-3'}"
+  />
+}
+
+<div #base
+  id="base"
+  class="flex flex-col bg-dark-secondary p-3 mb-2 cursor-pointer"
+  (click)="openPost($event)"
+>
+  @if (embed | isEmbedRecordView) {
+    @if (embed.record | isEmbedRecordViewRecord) {
+      <ng-container
+        [ngTemplateOutlet]="post"
+        [ngTemplateOutletContext]="{record: embed.record, media: embed.record.embeds[0]}"
+      />
+    }
+
+    @if (embed.record | isEmbedRecordViewBlocked) {
+      <span
+        class="msky-text-body"
+      >
+        Post blocked
+      </span>
+    }
+    @if (embed.record | isEmbedRecordViewNotFound) {
+      <span
+        class="msky-text-body"
+      >
+        Post not found
+      </span>
+    }
+    @if (embed.record | isEmbedRecordViewDetached) {
+      <span
+        class="msky-text-body"
+      >
+        Post detached
+      </span>
+    }
+  }
+
+  @if (embed | isEmbedRecordWithMediaView) {
+    @if (embed.record.record | isEmbedRecordViewRecord) {
+      <ng-container
+        [ngTemplateOutlet]="post"
+        [ngTemplateOutletContext]="{record: embed.record.record, media: embed.record.record.embeds[0]}"
+      />
+    }
+
+    @if (embed.record.record | isEmbedRecordViewBlocked) {
+      <span
+        class="msky-text-body"
+      >
+        Post blocked
+      </span>
+    }
+    @if (embed.record.record | isEmbedRecordViewNotFound) {
+      <span
+        class="msky-text-body"
+      >
+        Post not found
+      </span>
+    }
+    @if (embed.record.record | isEmbedRecordViewDetached) {
+      <span
+        class="msky-text-body"
+      >
+        Post detached
+      </span>
+    }
+  }
+</div>
+
+<ng-template #post
+  let-record="record"
+  let-media="media"
+>
+  <div #header
+       id="header"
+       class="flex gap-3"
+  >
+    <a #avatar
+       [href]="'https://bsky.app/profile/' + record.author.handle"
+       (click)="openAuthor($event)"
+       class="shrink-0"
+    >
+      <img
+        [src]="record.author.avatar"
+        class="h-8"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      @if (record.author.displayName.trim().length) {
+        <a
+          [href]="'https://bsky.app/profile/' + record.author.handle"
+          (click)="openAuthor($event)"
+          class="w-fit msky-text-body font-semibold text-link fit-text leading-[100%]"
+        >
+          {{ record.author.displayName }}
+        </a>
+        <a
+          [href]="'https://bsky.app/profile/' + record.author.handle"
+          (click)="openAuthor($event)"
+          class="w-fit msky-text-caption fit-text text-[12px] leading-[100%]"
+        >
+          {{ '@' + record.author.handle }}
+        </a>
+      } @else {
+        <a
+          [href]="'https://bsky.app/profile/' + record.author.handle"
+          (click)="openAuthor($event)"
+          class="w-fit font-semibold fit-text"
+        >
+          {{ '@' + record.author.handle }}
+        </a>
+      }
+    </div>
+  </div>
+
+  @if (record.value | isFeedPostRecord) {
+    <div #body
+         class="mt-2"
+    >
+        <span class="msky-text-body">
+          {{ record.value.text }}
+        </span>
+    </div>
+  }
+
+  @if (media) {
+    <ng-container
+      [ngTemplateOutlet]="mediaEmbeds"
+      [ngTemplateOutletContext]="{media: media, margin: 'mt-2'}"
+    />
+  }
+</ng-template>
+
+<ng-template #mediaEmbeds
+  let-media="media"
+  let-margin="margin"
+>
+  @if (media | isEmbedImagesView) {
+    <post-embed-images
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+  @if (media | isEmbedVideoView) {
+    <post-embed-video
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+  @if (media | isEmbedExternalView) {
+    <post-embed-external
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+</ng-template>

@@ -24,6 +24,7 @@
     "strictPropertyInitialization": false,
     "verbatimModuleSyntax": false,
     "strictNullChecks": false,
+    "noImplicitAny": true,
     "paths": {
       "~/*": ["./*"],
     }

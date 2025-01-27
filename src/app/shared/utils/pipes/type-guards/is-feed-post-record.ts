@@ -2,8 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AppBskyFeedPost} from "@atproto/api";
 
 @Pipe({
-  name: 'isFeedPostRecord',
-  standalone: true
+  name: 'isFeedPostRecord'
 })
 export class IsFeedPostRecordPipe implements PipeTransform {
   transform(value: unknown): value is AppBskyFeedPost.Record {

@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import '@angular/cdk/overlay-prebuilt.css';
 @layer tailwind-base, primeng, tailwind-utilities;
-
 @layer tailwind-base {
   @tailwind base;
 }
-
+@layer primeng;
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
@@ -41,6 +40,31 @@
   }
   .bg-dark-surface {
     background-color: $metro-dark-surface;
+  }
+  .bg-dark-secondary {
+    background-color: $metro-dark-secondary;
+  }
+
+  .video-js {
+    .vjs-control-bar {
+      background: linear-gradient(to top, rgba(43,51,63,0.7), transparent);
+    }
+
+    > .vjs-remaining-time {
+      height: 0;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 0.75rem;
+      font-family: 'Open Sans', sans-serif;
+      opacity: 0;
+    }
+
+    &.vjs-user-inactive .vjs-remaining-time {
+      height: 2rem;
+      opacity: 1;
+      transition: 1.5s opacity ease;
+    }
   }
 }
 

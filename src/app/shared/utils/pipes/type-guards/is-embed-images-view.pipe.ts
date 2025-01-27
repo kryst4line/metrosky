@@ -2,8 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AppBskyEmbedImages} from "@atproto/api";
 
 @Pipe({
-  name: 'isEmbedImagesView',
-  standalone: true
+  name: 'isEmbedImagesView'
 })
 export class IsEmbedImagesViewPipe implements PipeTransform {
   transform(value: unknown): value is AppBskyEmbedImages.View {

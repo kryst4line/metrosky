@@ -1,0 +1,66 @@
+@switch (embed.images.length) {
+  @case (1) {
+    <img
+      [src]="embed.images[0].thumb"
+      [alt]="embed.images[0].alt"
+      (click)="imgClick(0, $event)"
+    />
+  }
+  @case (2) {
+    <div class="img-thumbs-2">
+      <img
+        [src]="embed.images[0].thumb"
+        [alt]="embed.images[0].alt"
+        (click)="imgClick(0, $event)"
+      />
+      <img
+        [src]="embed.images[1].thumb"
+        [alt]="embed.images[1].alt"
+        (click)="imgClick(1, $event)"
+      />
+    </div>
+  }
+  @case (3) {
+    <div class="img-thumbs-3">
+      <img
+        [src]="embed.images[0].thumb"
+        [alt]="embed.images[0].alt"
+        (click)="imgClick(0, $event)"
+      />
+      <img
+        [src]="embed.images[1].thumb"
+        [alt]="embed.images[1].alt"
+        (click)="imgClick(1, $event)"
+      />
+      <img
+        [src]="embed.images[2].thumb"
+        [alt]="embed.images[2].alt"
+        (click)="imgClick(2, $event)"
+      />
+    </div>
+  }
+  @case (4) {
+    <div class="img-thumbs-4">
+      <img
+        [src]="embed.images[0].thumb"
+        [alt]="embed.images[0].alt"
+        (click)="imgClick(0, $event)"
+      />
+      <img
+        [src]="embed.images[1].thumb"
+        [alt]="embed.images[1].alt"
+        (click)="imgClick(1, $event)"
+      />
+      <img
+        [src]="embed.images[2].thumb"
+        [alt]="embed.images[2].alt"
+        (click)="imgClick(2, $event)"
+      />
+      <img
+        [src]="embed.images[3].thumb"
+        [alt]="embed.images[3].alt"
+        (click)="imgClick(3, $event)"
+      />
+    </div>
+  }
+}

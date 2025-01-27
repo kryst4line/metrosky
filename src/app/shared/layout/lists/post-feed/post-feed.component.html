@@ -1,0 +1,18 @@
+
+<div #feed
+  class="relative w-full h-full min-h-0 flex-1"
+>
+  <div
+       class="h-full overflow-auto scrollbar-thin p-2"
+       infinite-scroll
+       [scrollWindow]="false"
+       (scrolled)="nextData()"
+  >
+    @for (post of posts; track post.uuid) {
+      <feed-view-post-card
+        [feedViewPost]="post"
+        (onPostClick)="openPost($event)"
+      />
+    }
+  </div>
+</div>

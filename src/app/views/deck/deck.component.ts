@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {PostFeedComponent} from "../../shared/layout/feeds/post-feed/post-feed.component";
+import {PostFeedComponent} from "~/src/app/shared/layout/lists/post-feed/post-feed.component";
 import {Ripple} from "primeng/ripple";
 
 @Component({
