@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
-import {AppBskyFeedDefs, AppBskyFeedPost} from "@atproto/api";
 import {CommonModule} from "@angular/common";
 import {FeedViewPostCardComponent} from "../../../components/feed-view-post-card/feed-view-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
