@@ -61,6 +61,8 @@ Maybe you can mention me or this repo in the acknowledgements too
  - [Angular 19](https://v19.angular.dev/)
  - [PrimeNG](https://primeng.org/)
  - [Tailwind](https://tailwindcss.com/)
+ - [ag-virtual-scroll](https://github.com/ericferreira1992/ag-virtual-scroll)
+ - [ng-icons](https://github.com/ng-icons/ng-icons)
 
 
 <!-- Roadmap -->
@@ -83,8 +85,7 @@ owo what's that? haha idk (I started this for fun)
 <!-- Acknowledgments -->
 ## :gem: Acknowledgements
 
- - [ag-virtual-scroll](https://github.com/ericferreira1992/ag-virtual-scroll)
- - [ng-icons](https://github.com/ng-icons/ng-icons)
+ - [Skeetdeck](https://github.com/mary-ext/skeetdeck) (Easily the best Bsky 3rd party client and an invaluable source of ideas about how to implement some stuff!)
  - [Tabler Icons](https://tablericons.com/)
  - [Shields.io](https://shields.io/)
  - [Awesome README](https://github.com/matiassingers/awesome-readme)
