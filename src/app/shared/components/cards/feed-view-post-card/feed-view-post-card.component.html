@@ -288,9 +288,11 @@
     <div #body
          class="mt-3"
     >
-      <span class="msky-text-body">
-        {{ record.text }}
-      </span>
+      <rich-text-display
+        [text]="record.text"
+        [facets]="record.facets"
+        class="msky-text-body"
+      />
     </div>
   }
 </ng-template>

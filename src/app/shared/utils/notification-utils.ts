@@ -18,7 +18,7 @@ export default class NotificationUtils {
 
           target.push(temp);
           notifications.shift();
-        } else {
+        } else if (notifications[0].reason) {
           const slice = notifications.filter(n =>
             (n.reasonSubject === notifications[0].reasonSubject && n.reason === notifications[0].reason)
           );
@@ -47,7 +47,7 @@ export default class NotificationUtils {
       tempChunks.forEach(array => {
         promises.push(
           agent.getPosts({
-            uris: array.map(n => n.uri)
+            uris: array.map(n => n.uri).filter(n => n)
           })
         )
       });

@@ -1,0 +1,154 @@
+<div #base
+     id="base"
+     class="flex bg-dark-background p-4 mb-2 cursor-pointer gap-2"
+     (click)="openNotification($event)"
+>
+  @if (
+    (notification | isLikeNotification) ||
+    (notification | isFollowNotification) ||
+    (notification | isRepostNotification) ||
+    (notification | isStarterPackNotification)
+  ) {
+    <ng-container
+      [ngTemplateOutlet]="template"
+    />
+  }
+  @else {
+    <span>Unknown notification</span>
+  }
+</div>
+
+<ng-template #template
+>
+  <div
+    class="w-10 shrink-0 flex justify-end"
+  >
+    @if (notification | isLikeNotification) {
+      <ng-icon name="tablerHeart" class="text-[1.5rem]"/>
+    }
+    @else if (notification | isFollowNotification) {
+      <ng-icon name="tablerUserPlus" class="text-[1.5rem]"/>
+    }
+    @else if (notification | isRepostNotification) {
+      <ng-icon name="tablerRepeat" class="text-[1.5rem]"/>
+    }
+    @else {
+      <ng-icon name="tablerCircleSquare" class="text-[1.5rem]"/>
+    }
+  </div>
+
+  <div
+    class="flex flex-col min-w-0 grow gap-2"
+  >
+    <ng-container
+      [ngTemplateOutlet]="authors"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="label"
+    />
+
+    @if (notification.feedViewPost) {
+      <ng-container
+        [ngTemplateOutlet]="content"
+        [ngTemplateOutletContext]="{
+          record: notification.feedViewPost.post().record,
+          embed: notification.feedViewPost.post().embed
+        }"
+      />
+    }
+
+    @if (notification | isStarterPackNotification) {
+      <!--TODO: Add starter pack embed-->
+    }
+  </div>
+</ng-template>
+
+<ng-template #authors
+>
+  <div
+    class="flex gap-2"
+  >
+    @for (author of notification.authors | slice : 0: 5; track author.did) {
+      <a>
+        <img
+          [src]="author.avatar"
+          class="h-6"
+        >
+      </a>
+    }
+    @if (notification.authors.length > 5) {
+      <span
+      >
+        +{{notification.authors.length - 5}}
+      </span>
+    }
+  </div>
+</ng-template>
+
+<ng-template #label
+>
+  <span
+    class="msky-text-body"
+  >
+    @switch (notification.authors.length) {
+      @case (1) {
+        <a
+          class="font-bold text-link"
+          [href]=""
+        >
+          {{notification.authors[0] | displayName}}
+        </a>
+      }
+      @case (2) {
+        {{notification.authors[0] | displayName}} and {{notification.authors[1] | displayName}}
+      }
+      @default {
+        {{notification.authors[0] | displayName}} and {{notification.authors.length - 1}} more
+      }
+    }
+
+    @if (notification | isLikeNotification) {
+      liked your post
+    }
+    @else if (notification | isFollowNotification) {
+      followed you
+    }
+    @else if (notification | isRepostNotification) {
+      reposted your post
+    }
+    @else {
+      added you to a starter pack
+    }
+  </span>
+</ng-template>
+
+<ng-template #content
+  let-record="record"
+  let-embed="embed"
+>
+  @if (
+    (record | isFeedPostRecord) &&
+    record.text.length
+  ) {
+    <span
+      class="msky-text-caption"
+    >
+      {{record.text}}
+    </span>
+  }
+
+  @if (embed | isEmbedImagesView) {
+    <post-embed-images
+      [embed]="embed"
+      class="mt-2"
+    />
+  }
+
+  @if (embed | isEmbedVideoView) {
+    <post-embed-video
+      [embed]="embed"
+      class="mt-2"
+    />
+  }
+</ng-template>

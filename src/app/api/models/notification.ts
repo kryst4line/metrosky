@@ -1,5 +1,6 @@
 import {AppBskyActorDefs, AppBskyNotificationListNotifications} from "@atproto/api";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
+import * as uuid from "uuid";
 
 export class Notification {
   /** Notification list object */
@@ -12,4 +13,6 @@ export class Notification {
   uri?: string;
   /** Record */
   feedViewPost?: SignalizedFeedViewPost;
+  /** Uuid */
+  uuid: string = uuid.v4();
 }

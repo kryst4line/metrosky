@@ -1,0 +1,32 @@
+<span>
+  @for (segment of segments; track $index) {
+    @if (segment.isLink()) {
+      <a
+        [href]="segment.link?.uri"
+        target="_blank"
+        class="text-link text-blue-600"
+        (click)="$event.stopPropagation()"
+      >
+        {{segment.text}}
+      </a>
+    } @else if (segment.isMention()) {
+      <a
+        href="https://bsky.app/profile/{{segment.mention?.did}}"
+        class="text-link text-blue-600"
+        (click)="$event.stopPropagation(); $event.preventDefault()"
+      >
+        {{segment.text}}
+      </a>
+    } @else if (segment.isTag()) {
+      <a
+        href="https://bsky.app/hashtag/{{segment.tag?.tag}}"
+        class="text-link text-blue-600"
+        (click)="$event.stopPropagation(); $event.preventDefault()"
+      >
+        {{segment.text}}
+      </a>
+    } @else {
+      {{segment.text}}
+    }
+  }
+</span>

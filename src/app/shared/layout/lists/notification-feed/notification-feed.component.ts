@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
-import {FeedViewPostCardComponent} from "../../../components/feed-view-post-card/feed-view-post-card.component";
+import {FeedViewPostCardComponent} from "~/src/app/shared/components/cards/feed-view-post-card/feed-view-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
@@ -9,8 +9,8 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule} from "ag-virtual-scroll";
 import {Notification} from "~/src/app/api/models/notification";
 import NotificationUtils from "~/src/app/shared/utils/notification-utils";
-import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/is-post-notification";
-import {NotificationCardComponent} from "~/src/app/shared/components/notification-card/notification-card.component";
+import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/notifications/is-post-notification";
+import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
 
 @Component({
   selector: 'notification-feed',
@@ -46,7 +46,7 @@ export class NotificationFeedComponent implements OnInit {
   initData() {
     this.loading = true;
     agent.listNotifications({
-      limit: 15
+      limit: 100
     }).then(
       response => {
         this.lastPostCursor = response.data.cursor;
@@ -66,12 +66,12 @@ export class NotificationFeedComponent implements OnInit {
 
       agent.listNotifications({
         cursor: this.lastPostCursor,
-        limit: 15
+        limit: 100
       }).then(
         response => {
           this.lastPostCursor = response.data.cursor;
           NotificationUtils.parseNotifications(response.data.notifications, this.postService).then(notifications => {
-            this.notifications = notifications;
+            this.notifications = [...this.notifications, ...notifications];
             setTimeout(() => {
               this.loading = false;
             }, 500);

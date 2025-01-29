@@ -44,6 +44,7 @@ import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-
 import {IsFeedDefsReasonPinPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-reasonpin";
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
 import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
+import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 
 @Component({
   selector: 'feed-view-post-card',
@@ -71,7 +72,8 @@ import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guard
     IsFeedPostRecordPipe,
     IsFeedDefsReasonPinPipe,
     IsFeedDefsNotFoundPostPipe,
-    IsFeedDefsBlockedPostPipe
+    IsFeedDefsBlockedPostPipe,
+    RichTextDisplayComponent
   ],
   templateUrl: './feed-view-post-card.component.html',
   styleUrl: './feed-view-post-card.component.scss',
