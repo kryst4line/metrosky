@@ -1,6 +1,5 @@
 <div #base
-  id="base"
-  class="flex flex-col bg-dark-background p-4 mb-2 cursor-pointer"
+  class="flex flex-col p-4 mb-2 cursor-pointer msky-bg-dark-25 hover:msky-bg-dark-30"
   (click)="openPost($event)"
 >
   @if (feedViewPost.reason) {
@@ -118,7 +117,7 @@
       [href]="feedViewPost.post().uri | linkExtractor: feedViewPost.post().author.handle"
       target="_blank"
       [title]="$any(feedViewPost.post().record).createdAt | date: 'medium'"
-      class="msky-text-caption text-link w-8 text-end"
+      class="msky-text-caption hover:underline w-8 text-end"
       (click)="$event.stopPropagation()"
     >
       {{ $any(feedViewPost.post().record).createdAt | dateFormatter }}
@@ -144,7 +143,7 @@
         Reposted by
 
         <a
-          class="text-link font-semibold"
+          class="hover:underline font-semibold"
           [href]="'https://bsky.app/profile/' + reason.by.handle"
           (click)="openAuthor($event)"
         >
@@ -222,7 +221,7 @@
         Replying to
 
         <a
-          class="text-link font-semibold"
+          class="hover:underline font-semibold"
           [href]="'https://bsky.app/profile/' + reply.parent.author.handle"
           (click)="openAuthor($event)"
         >
@@ -257,7 +256,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="w-fit font-semibold text-link fit-text"
+          class="w-fit font-semibold hover:underline fit-text"
         >
           {{ author.displayName }}
         </a>

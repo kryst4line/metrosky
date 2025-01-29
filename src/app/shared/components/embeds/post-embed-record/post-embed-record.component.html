@@ -26,7 +26,7 @@
 
 <div #base
   id="base"
-  class="flex flex-col bg-dark-secondary p-3 mb-2 cursor-pointer"
+  class="flex flex-col p-3 mb-2 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-30"
   (click)="openPost($event)"
 >
   @if (embed | isEmbedRecordView) {
@@ -117,7 +117,7 @@
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event)"
-          class="w-fit msky-text-body font-semibold text-link fit-text leading-[100%]"
+          class="w-fit msky-text-body font-semibold hover:underline fit-text leading-[100%]"
         >
           {{ record.author.displayName }}
         </a>

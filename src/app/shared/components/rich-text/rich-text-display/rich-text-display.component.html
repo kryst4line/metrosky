@@ -4,7 +4,7 @@
       <a
         [href]="segment.link?.uri"
         target="_blank"
-        class="text-link text-blue-600"
+        class="hover:underline text-blue-600"
         (click)="$event.stopPropagation()"
       >
         {{segment.text}}
@@ -12,7 +12,7 @@
     } @else if (segment.isMention()) {
       <a
         href="https://bsky.app/profile/{{segment.mention?.did}}"
-        class="text-link text-blue-600"
+        class="hover:underline text-blue-600"
         (click)="$event.stopPropagation(); $event.preventDefault()"
       >
         {{segment.text}}
@@ -20,7 +20,7 @@
     } @else if (segment.isTag()) {
       <a
         href="https://bsky.app/hashtag/{{segment.tag?.tag}}"
-        class="text-link text-blue-600"
+        class="hover:underline text-blue-600"
         (click)="$event.stopPropagation(); $event.preventDefault()"
       >
         {{segment.text}}

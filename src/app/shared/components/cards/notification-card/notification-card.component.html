@@ -1,6 +1,6 @@
 <div #base
      id="base"
-     class="flex bg-dark-background p-4 mb-2 cursor-pointer gap-2"
+     class="flex p-4 mb-2 cursor-pointer gap-2 msky-bg-dark-25 hover:msky-bg-dark-30"
      (click)="openNotification($event)"
 >
   @if (
@@ -94,7 +94,7 @@
     @switch (notification.authors.length) {
       @case (1) {
         <a
-          class="font-bold text-link"
+          class="font-bold hover:underline"
           [href]=""
         >
           {{notification.authors[0] | displayName}}

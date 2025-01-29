@@ -21,7 +21,7 @@ import {ButtonModule} from "primeng/button";
 })
 export class LoginComponent {
   credentials: AtpAgentLoginOpts = {
-    identifier: 'dragon.gal',
+    identifier: '',
     password: ''
   };
 
