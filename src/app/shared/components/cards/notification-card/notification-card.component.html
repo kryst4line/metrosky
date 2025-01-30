@@ -73,6 +73,7 @@
       <a>
         <img
           [src]="author.avatar"
+          alt="{{author | displayName}}'s avatar"
           class="h-6"
         >
       </a>
@@ -101,10 +102,38 @@
         </a>
       }
       @case (2) {
-        {{notification.authors[0] | displayName}} and {{notification.authors[1] | displayName}}
+        <a
+          class="font-bold hover:underline"
+          [href]=""
+        >
+          {{notification.authors[0] | displayName}}
+        </a>
+
+        and
+
+        <a
+          class="font-bold hover:underline"
+          [href]=""
+        >
+          {{notification.authors[1] | displayName}}
+        </a>
       }
       @default {
-        {{notification.authors[0] | displayName}} and {{notification.authors.length - 1}} more
+        <a
+          class="font-bold hover:underline"
+          [href]=""
+        >
+          {{notification.authors[0] | displayName}}
+        </a>
+
+        and
+
+        <a
+          class="font-bold hover:underline"
+          [href]=""
+        >
+          {{notification.authors.length - 1}} more
+        </a>
       }
     }
 
