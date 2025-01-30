@@ -8,6 +8,7 @@ Maybe you can mention me or this repo in the acknowledgements too
 -->
 <div align="center">
 
+  <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/icon.webp" alt="logo" width="200" height="auto" />
   <h1>Metrosky</h1>
   
   <p>
