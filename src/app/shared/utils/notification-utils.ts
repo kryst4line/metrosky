@@ -52,13 +52,6 @@ export default class NotificationUtils {
         )
       });
 
-      // for (let i = 0; i < tempChunks.length/25; i += 25) {
-      //   promises.push(
-      //     agent.getPosts({
-      //       uris: tempChunks.slice(i*25, (i*25)+25).map(n => n.uri)
-      //     })
-      //   );
-      // }
       Promise.all(promises).then(chunk => {
 
         chunk.forEach((response, i1) => {
@@ -69,7 +62,6 @@ export default class NotificationUtils {
               notification.feedViewPost.post = postService.setPost(postView);
             }
           })
-          console.log('PROCESSED NOTIFICATIONS: ', target);
         })
       }, error => console.error(error)).then(() => resolve(target));
     });

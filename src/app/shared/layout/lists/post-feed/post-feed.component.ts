@@ -6,7 +6,7 @@ import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {AgVirtualScrollModule} from "ag-virtual-scroll";
+import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
 
 @Component({
@@ -24,10 +24,13 @@ import {PostUtils} from "~/src/app/shared/utils/post-utils";
 })
 export class PostFeedComponent implements OnInit {
   @ViewChild('feed') feed: ElementRef;
+  @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
   posts: SignalizedFeedViewPost[] = [];
   dialogs: DynamicDialogRef[] = [];
   lastPostCursor: string;
   loading = true;
+  reloadReady = false;
+  reloadTimeout: ReturnType<typeof setTimeout>;
 
   constructor(
     private postService: PostService,
@@ -48,6 +51,7 @@ export class PostFeedComponent implements OnInit {
         this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
         setTimeout(() => {
           this.loading = false;
+          this.manageRefresh();
         }, 500);
       }
     );
@@ -67,7 +71,7 @@ export class PostFeedComponent implements OnInit {
           this.posts = [...this.posts, ...newPosts];
           setTimeout(() => {
             this.loading = false;
-          }, 500)
+          }, 500);
         }
       );
     }
@@ -86,6 +90,49 @@ export class PostFeedComponent implements OnInit {
         focusOnShow: false
       })
     );
+  }
+
+  manageRefresh() {
+    if (this.loading) return;
+
+    if (!this.reloadReady && !this.reloadTimeout) {
+      this.reloadTimeout = setTimeout(() => {
+        this.reloadTimeout = undefined;
+
+        if (this.virtualScroll.currentScroll == 0) {
+          this.reloadReady = false;
+          agent.getTimeline({
+            limit: 1
+          }).then(response => {
+            const post = response.data.feed[0];
+            const lastPost = this.posts[0];
+            let isNewPost = false;
+
+            if (post) {
+              if (post.reason) {
+                if (!lastPost.reason) isNewPost = true;
+                if (post.reason.indexedAt !== lastPost.reason.indexedAt) isNewPost = true;
+              } else {
+                if (lastPost.reason) isNewPost = true;
+                if (post.post.indexedAt !== lastPost.post().indexedAt) isNewPost = true;
+              }
+            }
+
+            if (isNewPost) {
+              this.initData();
+            } else {
+              this.manageRefresh();
+            }
+          });
+        } else {
+          this.reloadReady = true;
+        }
+      }, 5e3);
+      // Timer in seconds
+    } else if (this.reloadReady && this.virtualScroll.currentScroll == 0) {
+      this.reloadReady = false;
+      this.initData();
+    }
   }
 
   log(event: any) {

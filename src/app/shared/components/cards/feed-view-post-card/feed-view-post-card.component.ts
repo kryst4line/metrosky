@@ -180,10 +180,6 @@ export class FeedViewPostCardComponent {
     event.stopPropagation();
   }
 
-  copyLink() {
-    navigator.clipboard.writeText(this.linkExtractorPipe.transform(this.feedViewPost.post().uri));
-  }
-
   log(event: any) {
     console.log("DEVELOPMENT LOG: ", event)
   }

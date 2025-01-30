@@ -7,7 +7,7 @@
     [items]="posts"
     [height]="'100%'"
     [min-row-height]="150"
-    (onItemsRender)="nextData($event)"
+    (onItemsRender)="nextData($event); manageRefresh();"
   >
     @for (post of vs.items; track post.uuid; let i = $index) {
       <feed-view-post-card
