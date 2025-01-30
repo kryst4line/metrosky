@@ -21,19 +21,19 @@
 <ng-template #template
 >
   <div
-    class="w-10 shrink-0 flex justify-end"
+    class="w-14 shrink-0 flex justify-end"
   >
     @if (notification | isLikeNotification) {
-      <ng-icon name="tablerHeart" class="text-[1.5rem]"/>
+      <ng-icon name="tablerHeart" class="text-[2rem]"/>
     }
     @else if (notification | isFollowNotification) {
-      <ng-icon name="tablerUserPlus" class="text-[1.5rem]"/>
+      <ng-icon name="tablerUserPlus" class="text-[2rem]"/>
     }
     @else if (notification | isRepostNotification) {
-      <ng-icon name="tablerRepeat" class="text-[1.5rem]"/>
+      <ng-icon name="tablerRepeat" class="text-[2rem]"/>
     }
     @else {
-      <ng-icon name="tablerCircleSquare" class="text-[1.5rem]"/>
+      <ng-icon name="tablerCircleSquare" class="text-[2rem]]"/>
     }
   </div>
 
@@ -74,7 +74,7 @@
         <img
           [src]="author.avatar"
           alt="{{author | displayName}}'s avatar"
-          class="h-6"
+          class="h-8"
         >
       </a>
     }

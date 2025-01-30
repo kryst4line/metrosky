@@ -19,7 +19,7 @@
     class="flex w-full gap-3"
   >
     <div
-      class="w-16 shrink-0"
+      class="w-14 shrink-0"
     >
       <a #avatar
          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
@@ -67,7 +67,7 @@
   let-reason="reason"
 >
   <div
-    class="flex items-center gap-3 mb-2 -mt-2 ml-[3.25rem]"
+    class="flex items-center gap-3 mb-2 -mt-2 ml-11"
   >
     @if (reason | isFeedDefsReasonRepost) {
         <ng-icon
@@ -106,7 +106,7 @@
   let-reply="reply"
 >
   <div
-    class="flex items-center gap-3 mb-2 -mt-2 ml-[3.25rem]"
+    class="flex items-center gap-3 mb-2 -mt-2 ml-11"
   >
     <ng-icon
       name="tablerArrowForward"
@@ -140,7 +140,7 @@
   let-author="author"
 >
   <div #displayName
-       class="flex w-fit max-w-full min-w-0  items-baseline hover:underline gap-2 mt-[-3px]"
+       class="flex w-fit max-w-full min-w-0  items-baseline hover:underline gap-2"
   >
     @if (author.displayName.trim().length) {
       <a
