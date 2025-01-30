@@ -26,7 +26,7 @@
 
 <div #base
   id="base"
-  class="flex flex-col p-3 mb-2 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-30"
+  class="flex flex-col p-3 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-20"
   (click)="openPost($event)"
 >
   @if (embed | isEmbedRecordView) {
@@ -107,6 +107,7 @@
     >
       <img
         [src]="record.author.avatar"
+        alt="{{record.author | displayName}}'s avatar"
         class="h-8"
       />
     </a>
@@ -140,7 +141,7 @@
     </div>
   </div>
 
-  @if (record.value | isFeedPostRecord) {
+  @if ((record.value | isFeedPostRecord) && record.value.text.length) {
     <div #body
          class="mt-2"
     >

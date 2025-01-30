@@ -24,6 +24,7 @@ import {
 import {
   IsEmbedRecordViewDetachedPipe
 } from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewdetached.pipe";
+import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 
 @Component({
   selector: 'post-embed-record',
@@ -41,7 +42,8 @@ import {
     PostEmbedExternalComponent,
     IsEmbedRecordViewBlockedPipe,
     IsEmbedRecordViewNotFoundPipe,
-    IsEmbedRecordViewDetachedPipe
+    IsEmbedRecordViewDetachedPipe,
+    DisplayNamePipe
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',

@@ -1,5 +1,5 @@
 <div #base
-  class="flex flex-col p-4 mb-2 cursor-pointer msky-bg-dark-25 hover:msky-bg-dark-30"
+  class="flex flex-col p-4 mb-2 cursor-pointer msky-bg-dark-20 hover:msky-bg-dark-25"
   (click)="openPost($event)"
 >
   @if (feedViewPost.reason) {
@@ -15,209 +15,113 @@
     />
   }
 
-  <ng-container
-    [ngTemplateOutlet]="header"
-    [ngTemplateOutletContext]="{author: feedViewPost.post().author}"
-  />
-
-  <ng-container
-    [ngTemplateOutlet]="record"
-    [ngTemplateOutletContext]="{record: feedViewPost.post().record}"
-  />
-
-  @if (feedViewPost.post().embed) {
-    <ng-container
-      [ngTemplateOutlet]="embed"
-      [ngTemplateOutletContext]="{embed: feedViewPost.post().embed}"
-    />
-  }
-
-  <div #buttons
-    class="h-5 w-full mt-4 flex justify-between items-center buttons"
+  <div
+    class="flex w-full gap-3"
   >
     <div
-      class="flex shrink-0 grow"
+      class="w-16 shrink-0"
     >
-      <div
-        class="flex-1"
+      <a #avatar
+         [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
+         (click)="openAuthor($event)"
       >
-        <ng-icon name="tablerMessage"/>
-        @if (feedViewPost.post().replyCount) {
-          <span
-            class="msky-text-caption ml-0.5"
-          >
-            {{ feedViewPost.post().replyCount | numberFormatter }}
-          </span>
-        }
-      </div>
-      <div
-        class="flex-1"
-      >
-        @if (feedViewPost.post().viewer.repost) {
-          <ng-icon
-            name="tablerRepeat"
-            [color]="'green'"
-            (click)="deleteRepost($event)"
-          />
-        } @else {
-          <ng-icon
-            name="tablerRepeat"
-            (click)="repost($event)"
-          />
-        }
-        @if (feedViewPost.post().repostCount) {
-          <span
-            class="msky-text-caption ml-0.5"
-          >
-            {{ feedViewPost.post().repostCount | numberFormatter }}
-          </span>
-        }
-      </div>
-      <div
-        class="flex-1"
-      >
-        @if (feedViewPost.post().viewer.like) {
-          <ng-icon
-            name="tablerHeartFill"
-            [color]="'red'"
-            (click)="deleteLike($event)"
-          />
-        } @else {
-          <ng-icon
-            name="tablerHeart"
-            (click)="like($event)"
-          />
-        }
-        @if (feedViewPost.post().likeCount) {
-          <span
-            class="msky-text-caption ml-0.5"
-          >
-            {{ feedViewPost.post().likeCount | numberFormatter }}
-          </span>
-        }
-      </div>
-      <div
-        class="flex-1"
-      >
-        <ng-icon
-          name="tablerDots"
-          (click)="menu.toggle($event); $event.stopPropagation()"
+        <img
+          [src]="feedViewPost.post().author.avatar"
+          alt="{{feedViewPost.post().author | displayName}}'s avatar"
         />
-        <p-menu
-          #menu popup
-          [model]="postMenuItems"
-          appendTo="body"
-          class="msky-text-body"
-          styleClass="tablerDots"
-        />
-      </div>
+      </a>
     </div>
 
-    <a
-      [href]="feedViewPost.post().uri | linkExtractor: feedViewPost.post().author.handle"
-      target="_blank"
-      [title]="$any(feedViewPost.post().record).createdAt | date: 'medium'"
-      class="msky-text-caption hover:underline w-8 text-end"
-      (click)="$event.stopPropagation()"
+    <div
+      class="flex flex-col flex-1 min-w-0"
     >
-      {{ $any(feedViewPost.post().record).createdAt | dateFormatter }}
-    </a>
+      <ng-container
+        [ngTemplateOutlet]="header"
+        [ngTemplateOutletContext]="{author: feedViewPost.post().author}"
+      />
+
+      <ng-container
+        [ngTemplateOutlet]="record"
+        [ngTemplateOutletContext]="{record: feedViewPost.post().record}"
+      />
+
+      @if (feedViewPost.post().embed) {
+        <ng-container
+          [ngTemplateOutlet]="embed"
+          [ngTemplateOutletContext]="{embed: feedViewPost.post().embed}"
+        />
+      }
+
+      <ng-container
+        [ngTemplateOutlet]="buttons"
+        [ngTemplateOutletContext]="{post: feedViewPost.post()}"
+      />
+    </div>
+
   </div>
+
+
 </div>
 
 <ng-template #reason
   let-reason="reason"
 >
-  @if (reason | isFeedDefsReasonRepost) {
-    <div
-      class="flex items-center mb-2"
-      style="margin-top: -0.5rem"
-    >
-      <ng-icon
-        name="tablerRepeat"
-        style="height: 0.75rem"
-      />
-      <span
-        class="msky-text-caption ml-1 fit-text"
-      >
-        Reposted by
-
-        <a
-          class="hover:underline font-semibold"
-          [href]="'https://bsky.app/profile/' + reason.by.handle"
-          (click)="openAuthor($event)"
+  <div
+    class="flex items-center gap-3 mb-2 -mt-2 ml-[3.25rem]"
+  >
+    @if (reason | isFeedDefsReasonRepost) {
+        <ng-icon
+          name="tablerRepeat"
+          class="text-[0.75rem]"
+        />
+        <span
+          class="msky-text-caption fit-text"
         >
-          {{ reason.by | displayName }}
-        </a>
-      </span>
-    </div>
-  }
+          Reposted by
 
-  @if (reason | isFeedDefsReasonPin) {
-    <div
-      class="flex items-center mb-2"
-      style="margin-top: -0.5rem"
-    >
+          <a
+            class="hover:underline font-semibold"
+            [href]="'https://bsky.app/profile/' + reason.by.handle"
+            (click)="openAuthor($event)"
+          >
+            {{ reason.by | displayName }}
+          </a>
+        </span>
+    }
+    @else if (reason | isFeedDefsReasonPin) {
       <ng-icon
         name="tablerPin"
-        style="height: 0.75rem"
+        class="text-[0.75rem]"
       />
       <span
-        class="msky-text-caption ml-1"
+        class="msky-text-caption"
       >
         Pinned post
       </span>
-    </div>
-  }
+    }
+  </div>
 </ng-template>
 
 <ng-template #reply
   let-reply="reply"
 >
-  @if (reply.parent | isFeedDefsNotFoundPost) {
-    <div
-      class="flex items-center mb-2"
-      style="margin-top: -0.5rem"
+  <div
+    class="flex items-center gap-3 mb-2 -mt-2 ml-[3.25rem]"
+  >
+    <ng-icon
+      name="tablerArrowForward"
+      class="text-[0.75rem]"
+    />
+    <span
+      class="msky-text-caption fit-text"
     >
-      <ng-icon
-        name="tablerArrowForward"
-        style="height: 0.75rem"
-      />
-      <span
-        class="msky-text-caption ml-1 fit-text"
-      >
+      @if (reply.parent | isFeedDefsNotFoundPost) {
         Replying to someone (not found)
-      </span>
-    </div>
-  }
-  @if (reply.parent | isFeedDefsBlockedPost) {
-    <div
-      class="flex items-center mb-2"
-      style="margin-top: -0.5rem"
-    >
-      <ng-icon
-        name="tablerArrowForward"
-        style="height: 0.75rem"
-      />
-      <span
-        class="msky-text-caption ml-1 fit-text"
-      >
+      }
+      @else if (reply.parent | isFeedDefsBlockedPost) {
         Replying to someone (blocked)
-      </span>
-    </div>
-  }
-  @if (reply.parent | isFeedDefsPostView) {
-    <div
-      class="flex items-center mb-2"
-      style="margin-top: -0.5rem"
-    >
-      <ng-icon
-        name="tablerArrowForward"
-        style="height: 0.75rem"
-      />
-      <span
-        class="msky-text-caption ml-1 fit-text"
-      >
+      }
+      @else if (reply.parent | isFeedDefsPostView) {
         Replying to
 
         <a
@@ -227,65 +131,50 @@
         >
           {{ reply.parent.author | displayName }}
         </a>
-      </span>
-    </div>
-  }
+      }
+    </span>
+  </div>
 </ng-template>
 
 <ng-template #header
   let-author="author"
 >
-  <div
-    id="header"
-    class="flex gap-2"
+  <div #displayName
+       class="flex w-fit max-w-full min-w-0  items-baseline hover:underline gap-2 mt-[-3px]"
   >
-    <a #avatar
-       [href]="'https://bsky.app/profile/' + author.handle"
-       (click)="openAuthor($event)"
-       class="shrink-0"
-    >
-      <img
-        [src]="author.avatar"
-        class="h-10"
-      />
-    </a>
-    <div #displayName
-         class="flex flex-col w-full justify-center min-w-0"
-    >
-      @if (author.displayName.trim().length) {
-        <a
-          [href]="'https://bsky.app/profile/' + author.handle"
-          (click)="openAuthor($event)"
-          class="w-fit font-semibold hover:underline fit-text"
-        >
-          {{ author.displayName }}
-        </a>
-        <a
-          [href]="'https://bsky.app/profile/' + author.handle"
-          (click)="openAuthor($event)"
-          class="w-fit msky-text-caption fit-text"
-        >
-          {{ '@' + author.handle }}
-        </a>
-      } @else {
-        <a
-          [href]="'https://bsky.app/profile/' + author.handle"
-          (click)="openAuthor($event)"
-          class="w-fit font-semibold fit-text"
-        >
-          {{ '@' + author.handle }}
-        </a>
-      }
-    </div>
+    @if (author.displayName.trim().length) {
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event)"
+        class="font-semibold fit-text shrink-1 grow-0 leading-none h-full"
+      >
+        {{ author.displayName }}
+      </a>
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event)"
+        class="msky-text-caption fit-text shrink-0 grow basis-0 min-w-0"
+      >
+        {{ '@' + author.handle }}
+      </a>
+    } @else {
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event)"
+        class="font-semibold"
+      >
+        {{ '@' + author.handle }}
+      </a>
+    }
   </div>
 </ng-template>
 
 <ng-template #record
   let-record="record"
 >
-  @if (record | isFeedPostRecord) {
+  @if ((record | isFeedPostRecord) && record.text.length) {
     <div #body
-         class="mt-3"
+         class="mt-2"
     >
       <rich-text-display
         [text]="record.text"
@@ -301,7 +190,7 @@
 >
   <div #content
        id="content"
-       class="mt-3"
+       class="mt-4"
   >
     @if (embed | isEmbedImagesView) {
       <post-embed-images
@@ -327,5 +216,101 @@
         [embed]="embed"
       />
     }
+  </div>
+</ng-template>
+
+<ng-template #buttons
+  let-post="post"
+>
+  <div #buttons
+       class="w-full mt-4 flex justify-between items-center buttons"
+  >
+    <div
+      class="flex flex-1 h-4"
+    >
+      <div
+        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+      >
+        <ng-icon name="tablerMessage"/>
+        @if (post.replyCount) {
+          <span
+            class="msky-text-caption leading-none"
+          >
+            {{ post.replyCount | numberFormatter }}
+          </span>
+        }
+      </div>
+      <div
+        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+      >
+        @if (post.viewer.repost) {
+          <ng-icon
+            name="tablerRepeat"
+            [color]="'green'"
+            (click)="deleteRepost($event)"
+          />
+        } @else {
+          <ng-icon
+            name="tablerRepeat"
+            (click)="repost($event)"
+          />
+        }
+        @if (post.repostCount) {
+          <span
+            class="msky-text-caption leading-none"
+          >
+            {{ post.repostCount | numberFormatter }}
+          </span>
+        }
+      </div>
+      <div
+        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+      >
+        @if (post.viewer.like) {
+          <ng-icon
+            name="tablerHeartFill"
+            [color]="'red'"
+            (click)="deleteLike($event)"
+          />
+        } @else {
+          <ng-icon
+            name="tablerHeart"
+            (click)="like($event)"
+          />
+        }
+        @if (post.likeCount) {
+          <span
+            class="msky-text-caption leading-none"
+          >
+            {{ post.likeCount | numberFormatter }}
+          </span>
+        }
+      </div>
+      <div
+        class="flex-0"
+      >
+        <ng-icon
+          name="tablerDots"
+          (click)="menu.toggle($event); $event.stopPropagation()"
+        />
+        <p-menu
+          #menu popup
+          [model]="postMenuItems"
+          appendTo="body"
+          class="msky-text-body block"
+          styleClass="tablerDots"
+        />
+      </div>
+    </div>
+
+    <a
+      [href]="post.uri | linkExtractor: post.author.handle"
+      target="_blank"
+      [title]="$any(post.record).createdAt | date: 'medium'"
+      class="msky-text-caption hover:underline w-8 text-end leading-none"
+      (click)="$event.stopPropagation()"
+    >
+      {{ $any(post.record).createdAt | dateFormatter }}
+    </a>
   </div>
 </ng-template>

@@ -55,7 +55,10 @@ module.exports = {
               fontSize: '0.8rem'
             },
             '.msky-bg-dark-15': {
-              background: 'rgba(0,0,0,0.25)'
+              background: 'rgba(0,0,0,0.15)'
+            },
+            '.msky-bg-dark-20': {
+              background: 'rgba(0,0,0,0.20)'
             },
             '.msky-bg-dark-25': {
               background: 'rgba(0,0,0,0.25)'
