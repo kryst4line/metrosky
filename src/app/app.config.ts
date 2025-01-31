@@ -14,7 +14,8 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         preset: Nora
-      }
+      },
+      ripple: true
     })
   ]
 };

@@ -1,0 +1,88 @@
+<div
+  class="flex flex-col w-20 h-full shrink-0 bg-[#002047] hover:w-80 transition-width ease-out duration-300 overflow-hidden justify-around"
+>
+  <div #topButton
+    class="flex items-center shrink-0 select-none"
+  >
+    <a
+      class="flex-shrink-0"
+    >
+      <img
+        src="/icon.webp"
+        alt="Your avatar"
+        class="w-20"
+      />
+    </a>
+
+    <div
+      class="flex flex-col shrink-0 h-full justify-center gap-1 px-4 max-w-full min-w-0 flex-1"
+    >
+      <span
+        class="msky-text-subheader whitespace-nowrap overflow-hidden text-ellipsis leading-none"
+      >
+        {{ 'Placeholder' }}
+      </span>
+      <span
+        class="msky-text-caption whitespace-nowrap overflow-hidden text-ellipsis"
+      >
+        {{ '@placeholder.bsky.social' }}
+      </span>
+    </div>
+  </div>
+  <div #arrayButtons
+       class="flex flex-col flex-1 justify-center select-none"
+  >
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'profile', icon: 'tablerUser'}"
+    />
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'search', icon: 'tablerSearch'}"
+    />
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'lists', icon: 'tablerList'}"
+    />
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'feeds', icon: 'tablerHash'}"
+    />
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'settings', icon: 'tablerSettings'}"
+    />
+  </div>
+  <div #bottomButton
+       class="mt-auto"
+  >
+    <ng-container
+      [ngTemplateOutlet]="button"
+      [ngTemplateOutletContext]="{title: 'post', icon: 'tablerMessage'}"
+    />
+  </div>
+</div>
+
+<ng-template #button
+  let-title="title"
+  let-icon="icon"
+>
+  <a
+    class="flex shrink-0 items-center h-20 hover:msky-bg-light-20 cursor-pointer"
+    pRipple
+  >
+    <div
+      class="flex justify-center w-20 shrink-0"
+    >
+      <ng-icon
+        [name]="icon"
+        class="text-[2.5rem]"
+      />
+    </div>
+    <span
+      class="msky-text-subheader"
+    >
+      {{title}}
+    </span>
+  </a>
+</ng-template>
