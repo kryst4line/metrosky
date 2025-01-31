@@ -48,7 +48,7 @@ Maybe you can mention me or this repo in the acknowledgements too
 
 <div align="center"> 
   <figure>
-    <img src="https://i.imgur.com/lNZ5eMM.png" alt="screenshot" />
+    <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/demo.webp" alt="screenshot" />
     <figcaption>
       <sup>Very, VERY early WIP, btw</sup>
     </figcaption>
