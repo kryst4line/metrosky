@@ -111,7 +111,7 @@ export class PostFeedComponent implements OnInit {
             if (post) {
               if (post.reason) {
                 if (!lastPost.reason) isNewPost = true;
-                if (post.reason?.indexedAt !== lastPost.reason.indexedAt) isNewPost = true;
+                if (post.reason.indexedAt !== lastPost.reason?.indexedAt) isNewPost = true;
               } else {
                 if (lastPost.reason) isNewPost = true;
                 if (post.post.indexedAt !== lastPost.post().indexedAt) isNewPost = true;
