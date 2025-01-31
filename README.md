@@ -46,13 +46,9 @@ Maybe you can mention me or this repo in the acknowledgements too
 <!-- Screenshots -->
 ## :camera: Screenshots
 
-<div align="center"> 
-  <figure>
+<div align="center">
     <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/demo.webp" alt="screenshot" />
-    <figcaption>
-      <sup>Very, VERY early WIP, btw</sup>
-    </figcaption>
-  </figure>
+    <p><sup>Very, VERY early WIP, btw</sup></p>
 </div>
 
 
