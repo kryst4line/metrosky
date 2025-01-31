@@ -127,7 +127,7 @@ export class PostFeedComponent implements OnInit {
         } else {
           this.reloadReady = true;
         }
-      }, 5e3);
+      }, 30e3);
       // Timer in seconds
     } else if (this.reloadReady && this.virtualScroll.currentScroll == 0) {
       this.reloadReady = false;
