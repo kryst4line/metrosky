@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedViewPostCardComponent} from "~/src/app/shared/components/cards/feed-view-post-card/feed-view-post-card.component";
@@ -8,6 +8,7 @@ import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-po
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'post-feed',
@@ -23,6 +24,7 @@ import {PostUtils} from "~/src/app/shared/utils/post-utils";
   ]
 })
 export class PostFeedComponent implements OnInit {
+  @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
   posts: SignalizedFeedViewPost[] = [];
@@ -39,6 +41,17 @@ export class PostFeedComponent implements OnInit {
 
   ngOnInit() {
     this.initData();
+
+    //Listen to new posts to refresh
+    this.triggerRefresh.subscribe({
+      next: () => {
+        if (this.virtualScroll.currentScroll == 0) {
+          this.initData();
+        } else {
+          this.reloadReady = true;
+        }
+      }
+    })
   }
 
   initData() {

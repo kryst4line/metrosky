@@ -58,7 +58,7 @@
   >
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'post', icon: 'tablerMessage'}"
+      [ngTemplateOutletContext]="{title: 'post', icon: 'tablerMessage', action: onActionPost}"
     />
   </div>
 </div>
@@ -66,10 +66,12 @@
 <ng-template #button
   let-title="title"
   let-icon="icon"
+  let-action="action"
 >
   <a
     class="flex shrink-0 items-center h-20 hover:msky-bg-light-20 cursor-pointer"
     pRipple
+    (click)="action.emit()"
   >
     <div
       class="flex justify-center w-20 shrink-0"

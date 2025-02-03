@@ -1,0 +1,24 @@
+<div
+  class="flex h-full items-center justify-center gap-4"
+>
+  <p-editor
+    [modules]="{mention: mentionConfig}"
+    styleClass="w-[30rem] h-32"
+    (onInit)="onEditorInit($event)"
+  />
+  <div
+    class="h-32 flex flex-col-reverse gap-3 items-center"
+  >
+    <p-button
+      (onClick)="onCreatePost.emit(text)"
+    >
+      Post
+    </p-button>
+    @if (loading) {
+      <ng-icon
+        name="tablerLoader2"
+        class="text-[2rem]"
+      />
+    }
+  </div>
+</div>

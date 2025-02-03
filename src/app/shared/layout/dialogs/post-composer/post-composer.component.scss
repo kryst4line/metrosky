@@ -1,0 +1,14 @@
+:host(::ng-deep p-editor) {
+  --p-editor-content-border-color: none;
+  --p-editor-content-background: #fff;
+  --p-editor-content-color: #262626;
+
+  .p-editor-toolbar {
+    display: none;
+  }
+
+  .ql-editor {
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+  }
+}

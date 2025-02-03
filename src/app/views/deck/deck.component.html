@@ -1,5 +1,7 @@
 <div class="flex h-full w-full min-h-0 min-w-0 darken-bg">
-  <sidebar/>
+  <sidebar
+    (onActionPost)="postService.writeNewPost()"
+  />
 
   <div class="flex w-full h-full min-h-0 py-5 px-10 gap-8">
     <div class="flex flex-col">
@@ -8,7 +10,10 @@
       >
         timeline
       </div>
-      <post-feed class="w-[25rem] flex-1 min-h-0"/>
+      <post-feed
+        [triggerRefresh]="refreshFeeds"
+        class="w-[28rem] flex-1 min-h-0"
+      />
     </div>
     <div class="flex flex-col">
       <div
@@ -16,7 +21,28 @@
       >
         notifications
       </div>
-      <notification-feed class="w-[25rem] flex-1 min-h-0"/>
+      <notification-feed class="w-[28rem] flex-1 min-h-0"/>
     </div>
   </div>
 </div>
+
+<p-drawer
+  [visible]="newPost() !== undefined"
+  [modal]="false"
+  position="bottom"
+  styleClass="!border-none !bg-[#002047]"
+  transitionOptions="0.15s ease-out"
+>
+  <ng-template #headless>
+    <ng-icon
+      name="tablerX"
+      class="absolute top-2 right-2 cursor-pointer text-[2rem]"
+      (click)="newPost.set(undefined)"
+    />
+    <post-composer
+      class="h-full"
+      [loading]="creatingPost"
+      (onCreatePost)="post($event)"
+    />
+  </ng-template>
+</p-drawer>
