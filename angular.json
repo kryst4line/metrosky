@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "metrosky-rework": {
+    "metrosky": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/metrosky-rework",
+            "outputPath": "dist/metrosky",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "metrosky-rework:build:production"
+              "buildTarget": "metrosky:build:production"
             },
             "development": {
-              "buildTarget": "metrosky-rework:build:development"
+              "buildTarget": "metrosky:build:development"
             }
           },
           "defaultConfiguration": "development"
