@@ -9,7 +9,7 @@ import {tablerX} from "@ng-icons/tabler-icons";
 import {PostService} from "~/src/app/api/services/post.service";
 import {AppBskyFeedPost, RichText} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
-import {Subject} from "rxjs";
+import {from, Subject} from "rxjs";
 
 @Component({
   selector: 'app-deck',
@@ -53,12 +53,15 @@ export class DeckComponent implements OnInit {
       this.postService.newPost().facets = rt.facets;
       this.postService.newPost().createdAt = new Date().toISOString();
 
-      agent.post(this.postService.newPost()).then(() => {
-        this.creatingPost = false;
-        this.postService.newPost.set(undefined);
+      from(agent.post(this.postService.newPost())).subscribe({
+        next: () => {
+          this.postService.newPost.set(undefined);
+          this.refreshFeeds.next();
+        },
+        error: err => {
 
-        this.refreshFeeds.next();
-      })
+        }
+      }).add(() => this.creatingPost = false);
     });
   }
 }

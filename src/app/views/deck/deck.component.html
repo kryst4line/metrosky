@@ -1,6 +1,6 @@
 <div class="flex h-full w-full min-h-0 min-w-0 darken-bg">
   <sidebar
-    (onActionPost)="postService.writeNewPost()"
+    (onActionPost)="postService.createPost()"
   />
 
   <div class="flex w-full h-full min-h-0 py-5 px-10 gap-8">
@@ -30,7 +30,7 @@
   [visible]="newPost() !== undefined"
   [modal]="false"
   position="bottom"
-  styleClass="!border-none !bg-[#002047]"
+  styleClass="!border-none !bg-[#002047] !h-auto"
   transitionOptions="0.15s ease-out"
 >
   <ng-template #headless>
@@ -40,7 +40,7 @@
       (click)="newPost.set(undefined)"
     />
     <post-composer
-      class="h-full"
+      class="h-full p-2"
       [loading]="creatingPost"
       (onCreatePost)="post($event)"
     />

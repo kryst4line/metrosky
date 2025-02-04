@@ -231,7 +231,10 @@
       <div
         class="flex flex-1 max-w-[4.5rem] items-center gap-1"
       >
-        <ng-icon name="tablerMessage"/>
+        <ng-icon
+          name="tablerMessage"
+          (click)="replyPost(post, $event)"
+        />
         @if (post.replyCount) {
           <span
             class="msky-text-caption leading-none"

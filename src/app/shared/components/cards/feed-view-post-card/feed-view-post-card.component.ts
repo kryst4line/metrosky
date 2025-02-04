@@ -45,6 +45,8 @@ import {IsFeedDefsReasonPinPipe} from "~/src/app/shared/utils/pipes/type-guards/
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
 import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {AppBskyFeedDefs} from "@atproto/api";
+import {PostService} from "~/src/app/api/services/post.service";
 
 @Component({
   selector: 'feed-view-post-card',
@@ -124,9 +126,15 @@ export class FeedViewPostCardComponent {
   ];
 
   constructor(
+    private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
     private dialogService: DialogService
   ) {}
+
+  replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
+    this.postService.replyPost(post.uri)
+    event.stopPropagation();
+  }
 
   like(event: MouseEvent) {
     agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
