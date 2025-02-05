@@ -117,6 +117,6 @@ export class PostComposerComponent implements OnInit {
           return op.insert.mention.denotationChar + op.insert.mention.value;
         }
       })
-      .join('');
+      .join('').trim();
   }
 }
