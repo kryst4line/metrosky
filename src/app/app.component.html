@@ -1,3 +1,66 @@
 <div class="app-container">
   <router-outlet></router-outlet>
 </div>
+
+<p-toast
+  [baseZIndex]="1e6"
+>
+  <ng-template
+    let-message
+    #headless
+  >
+    <div
+      class="flex px-4 pt-[0.9rem] pb-3 gap-3"
+      [ngClass]="{
+        'msky-bg-info': message.severity == 'info',
+        'msky-bg-success': message.severity == 'success',
+        'msky-bg-warn': message.severity == 'warn',
+        'msky-bg-error': message.severity == 'error',
+      }"
+    >
+      @switch (message.icon) {
+        @case ('info') {
+          <ng-icon
+            name="tablerInfoCircle"
+            color="rgba(255,255,255,0.8)"
+            class="text-[2rem]"
+          />
+        }
+        @case ('error') {
+          <ng-icon
+            name="tablerX"
+            color=""
+            class="text-[2rem]"
+          />
+        }
+        @case ('warn') {
+          <ng-icon
+            name="tablerAlertTriangle"
+            color="rgba(255,255,255,0.8)"
+            class="text-[2rem]"
+          />
+        }
+      }
+
+      <div
+        class="flex flex-col flex-1 gap-2"
+      >
+        @if (message.summary) {
+          <span
+            class="msky-text-subheader text-[2rem] leading-[0.8]"
+          >
+            {{message.summary}}
+          </span>
+        }
+
+        @if (message.detail) {
+          <span
+            class="msky-text-body text-base"
+          >
+            {{message.detail}}
+          </span>
+        }
+      </div>
+    </div>
+  </ng-template>
+</p-toast>

@@ -72,6 +72,18 @@ module.exports = {
             '.msky-bg-light-30': {
               background: 'rgba(255,255,255,0.30)'
             },
+            '.msky-bg-info': {
+              backgroundColor: '#0066CC'
+            },
+            '.msky-bg-success': {
+              backgroundColor: '#12A159'
+            },
+            '.msky-bg-warn': {
+              backgroundColor: '#CC9833'
+            },
+            '.msky-bg-error': {
+              backgroundColor: '#B8144B'
+            },
           }
         )
     })

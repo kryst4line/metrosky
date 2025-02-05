@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, from} from 'rxjs';
 import {AtpAgentLoginOpts} from "@atproto/api";
 import {agent} from "../bsky.api";
 import {Router} from "@angular/router";
+import {MessageService} from "primeng/api";
+import {HttpErrorResponse} from "@angular/common/http";
 
 const TOKEN_KEY = 'session';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
 
   authenticationState = new BehaviorSubject(false);
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private messageService: MessageService
+  ) {
     this.checkToken();
   }
 
@@ -30,10 +35,20 @@ export class AuthService {
   }
 
   login(credentials: AtpAgentLoginOpts) {
-    agent.login(credentials).then(() => {
-      localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
-      this.authenticationState.next(true);
-      this.router.navigate(['']);
+    from(agent.login(credentials)).subscribe({
+      next: () => {
+        localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
+        this.authenticationState.next(true);
+        this.router.navigate(['']);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.messageService.add({
+          icon: 'warn',
+          severity: 'warn',
+          summary: 'Oops!',
+          detail: err.message
+        });
+      }
     });
   }
 

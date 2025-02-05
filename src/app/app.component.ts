@@ -2,14 +2,28 @@ import {Component, OnInit} from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from "./core/auth/auth.service";
 import {takeWhile} from "rxjs";
+import {Toast} from "primeng/toast";
+import {NgIcon, provideIcons} from "@ng-icons/core";
+import {tablerAlertTriangle, tablerInfoCircle, tablerX} from "@ng-icons/tabler-icons";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
+    Toast,
+    NgIcon,
+    NgClass,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [
+    provideIcons({
+      tablerX,
+      tablerInfoCircle,
+      tablerAlertTriangle
+    })
+  ]
 })
 export class AppComponent implements OnInit {
   constructor(
