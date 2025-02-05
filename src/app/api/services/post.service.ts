@@ -46,11 +46,14 @@ export class PostService {
       let root;
       if (response.data.thread.parent) {
         root = response.data.thread.parent as AppBskyFeedDefs.ThreadViewPost;
+
         while (root.parent) {
-          root = root.parent;
+          root = root.parent as AppBskyFeedDefs.ThreadViewPost;
         }
+
+        root = root.post;
       } else {
-        root = response.data.thread.post;
+        root = response.data.thread.post as AppBskyFeedDefs.PostView;
       }
 
       let replyRef = {
@@ -59,8 +62,8 @@ export class PostService {
           cid: (response.data.thread.post as AppBskyFeedDefs.PostView).cid
         },
         root: {
-          uri: (root as any).uri,
-          cid: (root as any).cid
+          uri: root.uri,
+          cid: root.cid
         },
       };
 
