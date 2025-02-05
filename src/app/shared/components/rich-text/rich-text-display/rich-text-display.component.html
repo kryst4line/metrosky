@@ -1,4 +1,6 @@
-<span>
+<span
+  class="whitespace-pre-line"
+>
   @for (segment of segments; track $index) {
     @if (segment.isLink()) {
       <a
@@ -26,7 +28,9 @@
         {{segment.text}}
       </a>
     } @else {
-      {{segment.text}}
+      <span>
+        {{segment.text}}
+      </span>
     }
   }
 </span>
