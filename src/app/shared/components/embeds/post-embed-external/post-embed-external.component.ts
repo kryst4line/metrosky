@@ -15,7 +15,7 @@ import {
   IframeSnippet,
   LinkSnippet,
   SnippetSource
-} from "~/src/app/shared/models/snippet";
+} from "~/src/app/api/models/snippet";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
 import videojs from "video.js";

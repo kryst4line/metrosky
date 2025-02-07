@@ -26,6 +26,8 @@
     "@primeng/themes": "^19.0.5",
     "ag-virtual-scroll": "^1.9.2",
     "date-fns": "^4.1.0",
+    "ng2-file-upload": "^8.0.0",
+    "ngx-image-compress": "^18.1.5",
     "primeng": "^19.0.5",
     "quill": "^2.0.3",
     "quill-mention": "^6.0.2",

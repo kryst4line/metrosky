@@ -4,7 +4,26 @@ import {AuthService} from "./core/auth/auth.service";
 import {takeWhile} from "rxjs";
 import {Toast} from "primeng/toast";
 import {NgIcon, provideIcons} from "@ng-icons/core";
-import {tablerAlertTriangle, tablerInfoCircle, tablerX} from "@ng-icons/tabler-icons";
+import {
+  tablerAlertTriangle,
+  tablerArrowForward,
+  tablerCircleSquare,
+  tablerDots,
+  tablerHeart,
+  tablerInfoCircle,
+  tablerLink,
+  tablerMessage,
+  tablerPin,
+  tablerRepeat,
+  tablerUserPlus,
+  tablerX,
+  tablerSettings,
+  tablerList,
+  tablerHash,
+  tablerSearch,
+  tablerLoader2, tablerUser, tablerCircleX
+} from "@ng-icons/tabler-icons";
+import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
 import {NgClass} from "@angular/common";
 
 @Component({
@@ -21,7 +40,24 @@ import {NgClass} from "@angular/common";
     provideIcons({
       tablerX,
       tablerInfoCircle,
-      tablerAlertTriangle
+      tablerAlertTriangle,
+      tablerArrowForward,
+      tablerDots,
+      tablerHeart,
+      tablerHeartFill,
+      tablerLink,
+      tablerMessage,
+      tablerPin,
+      tablerRepeat,
+      tablerUserPlus,
+      tablerCircleSquare,
+      tablerSettings,
+      tablerList,
+      tablerHash,
+      tablerSearch,
+      tablerLoader2,
+      tablerUser,
+      tablerCircleX
     })
   ]
 })
