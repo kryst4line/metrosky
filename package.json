@@ -1,11 +1,11 @@
 {
   "name": "metrosky",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4300",
     "build": "ng build",
-    "deploy-github": "ng build --output-path docs --base-href /metrosky/",
+    "build-gh": "ng build --base-href /metrosky/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
