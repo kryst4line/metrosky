@@ -5,16 +5,7 @@ import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is
 import {IsFeedDefsReasonRepostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-reasonrepost";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {IsFeedDefsPostViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-postview";
-import {NgIcon, provideIcons} from "@ng-icons/core";
-import {
-  tablerArrowForward,
-  tablerDots,
-  tablerHeart,
-  tablerLink,
-  tablerMessage, tablerPin,
-  tablerRepeat
-} from "@ng-icons/tabler-icons";
-import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
+import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
 import {DatePipe, NgTemplateOutlet} from "@angular/common";
@@ -81,16 +72,6 @@ import {PostService} from "~/src/app/api/services/post.service";
   styleUrl: './feed-view-post-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    provideIcons({
-      tablerMessage,
-      tablerRepeat,
-      tablerHeart,
-      tablerHeartFill,
-      tablerArrowForward,
-      tablerDots,
-      tablerLink,
-      tablerPin
-    }),
     LinkExtractorPipe,
     DialogService
   ]

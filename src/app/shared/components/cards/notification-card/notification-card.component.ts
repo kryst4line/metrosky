@@ -10,11 +10,9 @@ import {
 import {
   IsStarterPackNotificationPipe
 } from "~/src/app/shared/utils/pipes/type-guards/notifications/is-starterpack-notification.pipe";
-import {NgIcon, provideIcons} from "@ng-icons/core";
-import {tablerCircleSquare, tablerHeart, tablerRepeat, tablerUserPlus} from "@ng-icons/tabler-icons";
+import {NgIcon} from "@ng-icons/core";
 import {NgTemplateOutlet, SlicePipe} from "@angular/common";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
-import {IsFeedDefsPostViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-postview";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {IsEmbedVideoViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-video-view.pipe";
@@ -43,14 +41,6 @@ import {PostEmbedVideoComponent} from "~/src/app/shared/components/embeds/post-e
   templateUrl: './notification-card.component.html',
   styleUrl: './notification-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    provideIcons({
-      tablerHeart,
-      tablerRepeat,
-      tablerUserPlus,
-      tablerCircleSquare
-    })
-  ]
 })
 export class NotificationCardComponent {
   @Input() notification: Notification;

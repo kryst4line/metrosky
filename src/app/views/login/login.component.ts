@@ -6,18 +6,19 @@ import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {ButtonModule} from "primeng/button";
+import {MessageService} from "primeng/api";
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        FormsModule,
-        CardModule,
-        InputTextModule,
-        FloatLabelModule,
-        ButtonModule
-    ],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+  selector: 'app-login',
+  imports: [
+    FormsModule,
+    CardModule,
+    InputTextModule,
+    FloatLabelModule,
+    ButtonModule
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   credentials: AtpAgentLoginOpts = {
@@ -25,9 +26,26 @@ export class LoginComponent {
     password: ''
   };
 
-  constructor(private authService: AuthService) {}
+  APP_PASSWORD_REGEX = new RegExp("[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}");
+
+  constructor(
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
 
   onLogin() {
-    this.authService.login(this.credentials);
+    if (
+      this.credentials.identifier.trim().length &&
+      this.APP_PASSWORD_REGEX.exec(this.credentials.password)
+    ) {
+      this.authService.login(this.credentials);
+    } else {
+      this.messageService.add({
+        icon: 'warn',
+        severity: 'warn',
+        summary: 'Oops!',
+        detail: 'Please check your credentials.'
+      });
+    }
   }
 }

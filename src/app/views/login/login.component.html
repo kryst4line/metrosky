@@ -6,6 +6,8 @@
           pInputText
           [ngModel]="credentials.identifier"
           (ngModelChange)="credentials.identifier = $event"
+          (keyup.enter)="onLogin()"
+          name="handle"
         />
         <label>Handle</label>
       </p-floatlabel>
@@ -14,9 +16,10 @@
           pInputText
           [ngModel]="credentials.password"
           (ngModelChange)="credentials.password = $event"
-          type="password"
+          (keyup.enter)="onLogin()"
+          name="password"
         />
-        <label>Password</label>
+        <label>App Password</label>
       </p-floatlabel>
       <p-button
         class="mt-6"

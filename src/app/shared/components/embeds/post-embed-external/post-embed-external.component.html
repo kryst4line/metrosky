@@ -1,6 +1,7 @@
 @if (snippet.type == LinkSnippetType) {
   <a
     [href]="embed.external.uri"
+    target="_blank"
     (click)="$event.stopPropagation()"
   >
     <div
