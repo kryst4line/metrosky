@@ -72,6 +72,8 @@ Maybe you can mention me or this repo in the acknowledgements too
 * [ ] Customizable columns
 * [ ] Internationalization (multi-language)
 
+For more info, [check the project kanban](https://github.com/users/kryst4line/projects/1)
+
 
 <!-- License -->
 ## :warning: License
