@@ -31,6 +31,9 @@ import {IsMediaEmbedImagePipe} from "~/src/app/shared/utils/pipes/type-guards/is
 import {IsMediaEmbedVideoPipe} from "~/src/app/shared/utils/pipes/type-guards/is-media-embed-video";
 import {IsMediaEmbedExternalPipe} from "~/src/app/shared/utils/pipes/type-guards/is-media-embed-external";
 import {PostCompose} from "~/src/app/api/models/post-compose";
+import {
+  PostEmbedRecordComponent
+} from "~/src/app/shared/components/embeds/post-embed-record/post-embed-record.component";
 
 @Component({
   selector: 'post-composer',
@@ -43,7 +46,8 @@ import {PostCompose} from "~/src/app/api/models/post-compose";
     NgTemplateOutlet,
     IsMediaEmbedImagePipe,
     IsMediaEmbedVideoPipe,
-    IsMediaEmbedExternalPipe
+    IsMediaEmbedExternalPipe,
+    PostEmbedRecordComponent
   ],
   templateUrl: './post-composer.component.html',
   styleUrl: './post-composer.component.scss',

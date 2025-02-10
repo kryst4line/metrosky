@@ -1,5 +1,12 @@
 import {Injectable, signal, WritableSignal} from "@angular/core";
-import {AppBskyFeedDefs, RichText} from "@atproto/api";
+import {
+  AppBskyEmbedExternal,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
+  AppBskyFeedDefs,
+  RichText
+} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
 import {from} from "rxjs";
 import {PostCompose} from "~/src/app/api/models/post-compose";
@@ -80,7 +87,26 @@ export class PostService {
     });
   }
 
-  attachEmbed(files: File[]) {
+  quotePost(uri:string) {
+    agent.getPosts({
+      uris: [uri]
+    }).then(response => {
+      const quotedPost = this.setPost(response.data.posts[0] as AppBskyFeedDefs.PostView);
+
+      if (!this.postCompose()) this.createPost();
+      this.postCompose().recordEmbed.set({
+        $type: 'app.bsky.embed.record#viewRecord',
+        uri: quotedPost().uri,
+        cid: quotedPost().cid,
+        author: quotedPost().author,
+        indexedAt: quotedPost().indexedAt,
+        value: quotedPost().record,
+        embeds: [quotedPost().embed]
+      } as AppBskyEmbedRecord.ViewRecord);
+    });
+  }
+
+  attachMedia(files: File[]) {
     if (!this.postCompose()) this.createPost();
 
     //Fix array methods because it comes as FileList
@@ -128,9 +154,19 @@ export class PostService {
       });
 
       Promise.all([
-        this.prepareEmbeds(),
+        this.prepareRecord(),
+        this.prepareMedia(),
         rt.detectFacets(agent)
-      ]).then(() => {
+      ]).then(([record, media]) => {
+        if (record && media) {
+          this.postCompose().post().embed = {
+            $type: 'app.bsky.embed.recordWithMedia',
+            record: record,
+            media: media
+          } as AppBskyEmbedRecordWithMedia.Main
+        } else {
+          this.postCompose().post().embed = record ?? media;
+        }
         this.postCompose().post.update(post => {
           post.text = text;
           post.facets = rt.facets;
@@ -151,9 +187,25 @@ export class PostService {
     });
   }
 
-  private prepareEmbeds(): Promise<void> {
+  private prepareRecord(): Promise<AppBskyEmbedRecord.Main> {
+    return new Promise(resolve => {
+      if (!this.postCompose().recordEmbed()) {
+        resolve(undefined)
+      } else {
+        resolve({
+          $type: 'app.bsky.embed.record',
+          record: {
+            uri: this.postCompose().recordEmbed().uri,
+            cid: this.postCompose().recordEmbed().cid
+          }
+        });
+      }
+    });
+  }
+
+  private prepareMedia(): Promise<AppBskyEmbedImages.Main | AppBskyEmbedVideo.Main | AppBskyEmbedExternal.Main> {
     return new Promise((resolve, reject) => {
-      if (!this.postCompose().mediaEmbed()) resolve();
+      if (!this.postCompose().mediaEmbed()) resolve(undefined);
 
       if (this.postCompose().mediaEmbed()?.type == EmbedType.IMAGE) {
         const imageEmbed = this.postCompose().mediaEmbed as WritableSignal<ImageEmbed>;
@@ -172,7 +224,7 @@ export class PostService {
                   Promise.all(blobs.map(b => agent.uploadBlob(b)))
                 ).subscribe({
                   next: upload => {
-                    this.postCompose().post().embed = {
+                    resolve({
                       $type: 'app.bsky.embed.images',
                       images: upload.map(response => {
                         return {
@@ -180,8 +232,7 @@ export class PostService {
                           image: response.data.blob
                         }
                       })
-                    };
-                    resolve();
+                    });
                   },
                   error: err => reject(err)
                 })
@@ -195,12 +246,12 @@ export class PostService {
 
       if (this.postCompose().mediaEmbed()?.type == EmbedType.VIDEO) {
         const videoEmbed = this.postCompose().mediaEmbed as WritableSignal<VideoEmbed>;
-        resolve();
+        resolve(undefined);
       }
 
       if (this.postCompose().mediaEmbed().type == EmbedType.EXTERNAL) {
         const externalEmbed = this.postCompose().mediaEmbed as WritableSignal<ExternalEmbed>;
-        resolve();
+        resolve(undefined);
       }
     });
   }

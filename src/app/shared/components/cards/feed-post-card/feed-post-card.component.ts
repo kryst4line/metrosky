@@ -40,7 +40,7 @@ import {AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
 
 @Component({
-  selector: 'feed-view-post-card',
+  selector: 'feed-post-card',
   imports: [
     CardModule,
     IsEmbedImagesViewPipe,
@@ -68,20 +68,21 @@ import {PostService} from "~/src/app/api/services/post.service";
     IsFeedDefsBlockedPostPipe,
     RichTextDisplayComponent
   ],
-  templateUrl: './feed-view-post-card.component.html',
-  styleUrl: './feed-view-post-card.component.scss',
+  templateUrl: './feed-post-card.component.html',
+  styleUrl: './feed-post-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     LinkExtractorPipe,
     DialogService
   ]
 })
-export class FeedViewPostCardComponent {
+export class FeedPostCardComponent {
   @Input() feedViewPost: SignalizedFeedViewPost;
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>;
   ref: DynamicDialogRef;
+  processingAction: boolean = false;
 
-  postMenuItems: MenuItem[] = [
+  moreMenuItems: MenuItem[] = [
     {
       label: 'Open in Bsky',
       command: () => {
@@ -106,6 +107,8 @@ export class FeedViewPostCardComponent {
     }
   ];
 
+  repostMenuItems: MenuItem[]
+
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
@@ -118,12 +121,14 @@ export class FeedViewPostCardComponent {
   }
 
   like(event: MouseEvent) {
+    this.processingAction = true;
     agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
       response => {
         agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
+          uris: [response.uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
+          this.processingAction = false;
         });
       }
     );
@@ -131,42 +136,53 @@ export class FeedViewPostCardComponent {
   }
 
   deleteLike(event: MouseEvent) {
+    this.processingAction = true;
     agent.deleteLike(this.feedViewPost.post().viewer.like).then(
-      response => {
+      () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
+          this.processingAction = false;
         });
       }
     );
     event.stopPropagation();
   }
 
-  repost(event: MouseEvent) {
+  repost() {
+    this.processingAction = true;
     agent.repost(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
       response => {
         agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
+          uris: [response.uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
+          this.processingAction = false;
         });
       }
     );
-    event.stopPropagation();
   }
 
-  deleteRepost(event: MouseEvent) {
+  deleteRepost() {
+    this.processingAction = true;
     agent.deleteRepost(this.feedViewPost.post().viewer.repost).then(
-      response => {
+      () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
+          this.processingAction = false;
         });
       }
     );
-    event.stopPropagation();
+  }
+
+  redoRepost() {
+    this.processingAction = true;
+    agent.deleteRepost(this.feedViewPost.post().viewer.repost).then(
+      () => this.repost()
+    );
   }
 
   log(event: any) {
@@ -194,5 +210,33 @@ export class FeedViewPostCardComponent {
       },
       focusOnShow: false
     });
+  }
+
+  openRepostMenu(menu: Menu, event: MouseEvent) {
+    this.repostMenuItems = [
+      {
+        label: !this.feedViewPost.post().viewer.repost ? 'Repost' : 'Undo repost',
+        command: () => {
+          !this.feedViewPost.post().viewer.repost ? this.repost() : this.deleteRepost()
+        },
+        disabled: this.processingAction
+      },
+      {
+        label: 'Redo repost',
+        command: () => {
+          this.redoRepost()
+        },
+        visible: !!this.feedViewPost.post().viewer.repost,
+        disabled: this.processingAction
+      },
+      {
+        label: 'Quote post',
+        command: () => {
+          this.postService.quotePost(this.feedViewPost.post().uri);
+        }
+      }
+    ];
+    menu.toggle(event);
+    event.stopPropagation();
   }
 }

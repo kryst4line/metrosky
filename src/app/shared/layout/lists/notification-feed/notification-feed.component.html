@@ -11,7 +11,7 @@
   >
     @for (notification of vs.items; track notification.uuid) {
       @if (notification | isPostNotification) {
-        <feed-view-post-card
+        <feed-post-card
           [feedViewPost]="notification.feedViewPost"
           (onPostClick)="openPost($event)"
         />

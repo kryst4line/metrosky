@@ -80,7 +80,11 @@
   <div
     class="grow basis-0"
   >
-
+    @if (postCompose().recordEmbed) {
+      <post-embed-record
+        [embed]="$any({$type: 'app.bsky.embed.record#view', record: postCompose().recordEmbed()})"
+      />
+    }
   </div>
 </div>
 

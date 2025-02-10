@@ -44,9 +44,22 @@ export class DeckComponent implements OnInit {
   publishPost(text: string) {
     this.creatingPost = true;
 
+
+
     this.postService.publishPost(text).then(
       () => {
-        this.refreshFeeds.next();
+        this.messageService.add({
+          severity: 'success',
+          detail: 'Your post has been successfully published'
+        });
+
+        setTimeout(() => {
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Your post has been published successfully'
+          });
+          this.refreshFeeds.next();
+        }, 1e3);
       },
       (err: HttpErrorResponse) => {
         this.messageService.add({
@@ -60,6 +73,6 @@ export class DeckComponent implements OnInit {
   }
 
   onFileDrop($event: any) {
-    this.postService.attachEmbed($event);
+    this.postService.attachMedia($event);
   }
 }

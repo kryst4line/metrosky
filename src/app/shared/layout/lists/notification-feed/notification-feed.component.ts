@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
-import {FeedViewPostCardComponent} from "~/src/app/shared/components/cards/feed-view-post-card/feed-view-post-card.component";
+import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
@@ -16,7 +16,7 @@ import {NotificationCardComponent} from "~/src/app/shared/components/cards/notif
   selector: 'notification-feed',
   imports: [
     CommonModule,
-    FeedViewPostCardComponent,
+    FeedPostCardComponent,
     AgVirtualScrollModule,
     IsNotificationArrayPipe,
     NotificationCardComponent,

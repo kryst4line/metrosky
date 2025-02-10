@@ -246,18 +246,18 @@
       <div
         class="flex flex-1 max-w-[4.5rem] items-center gap-1"
       >
-        @if (post.viewer.repost) {
-          <ng-icon
-            name="tablerRepeat"
-            [color]="'green'"
-            (click)="deleteRepost($event)"
-          />
-        } @else {
-          <ng-icon
-            name="tablerRepeat"
-            (click)="repost($event)"
-          />
-        }
+        <ng-icon
+          name="tablerRepeat"
+          [color]="post.viewer.repost ? 'green' : undefined"
+          (click)="openRepostMenu(repostMenu, $event)"
+        />
+        <p-menu
+          #repostMenu popup
+          [model]="repostMenuItems"
+          appendTo="body"
+          class="msky-text-body block"
+        />
+
         @if (post.repostCount) {
           <span
             class="msky-text-caption leading-none"
@@ -266,6 +266,7 @@
           </span>
         }
       </div>
+
       <div
         class="flex flex-1 max-w-[4.5rem] items-center gap-1"
       >
@@ -289,19 +290,19 @@
           </span>
         }
       </div>
+
       <div
         class="flex-0"
       >
         <ng-icon
           name="tablerDots"
-          (click)="menu.toggle($event); $event.stopPropagation()"
+          (click)="moreMenu.toggle($event); $event.stopPropagation()"
         />
         <p-menu
-          #menu popup
-          [model]="postMenuItems"
+          #moreMenu popup
+          [model]="moreMenuItems"
           appendTo="body"
           class="msky-text-body block"
-          styleClass="tablerDots"
         />
       </div>
     </div>
