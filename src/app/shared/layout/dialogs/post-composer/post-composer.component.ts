@@ -1,11 +1,9 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
-  OnInit,
-  Output
+  Output, WritableSignal
 } from '@angular/core';
 import {Button} from "primeng/button";
 import {Editor, EditorInitEvent} from "primeng/editor";
@@ -21,18 +19,18 @@ import {
   Subject,
   Subscription
 } from "rxjs";
-import {AppBskyActorSearchActorsTypeahead, AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs} from "@atproto/api";
+import {AppBskyActorSearchActorsTypeahead} from "@atproto/api";
 import Quill from "quill";
 import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
-import {EmbedType, ExternalEmbed, ImageEmbed, RecordEmbed, VideoEmbed} from "~/src/app/api/models/embed";
+import {ExternalEmbed, ImageEmbed, RecordEmbed} from "~/src/app/api/models/embed";
 import {EmbedUtils} from "~/src/app/shared/utils/embed-utils";
 import {NgTemplateOutlet, SlicePipe} from "@angular/common";
 import {IsMediaEmbedImagePipe} from "~/src/app/shared/utils/pipes/type-guards/is-media-embed-image";
 import {IsMediaEmbedVideoPipe} from "~/src/app/shared/utils/pipes/type-guards/is-media-embed-video";
 import {IsMediaEmbedExternalPipe} from "~/src/app/shared/utils/pipes/type-guards/is-media-embed-external";
-import {PostComposerEvent} from "~/src/app/api/models/post-composer-event";
+import {PostCompose} from "~/src/app/api/models/post-compose";
 
 @Component({
   selector: 'post-composer',
@@ -51,13 +49,10 @@ import {PostComposerEvent} from "~/src/app/api/models/post-composer-event";
   styleUrl: './post-composer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostComposerComponent implements OnInit {
+export class PostComposerComponent {
   @Input() loading = false;
-  @Input() fileDrop: Subject<File[]>;
-  @Output() onCreatePost: EventEmitter<PostComposerEvent> = new EventEmitter<PostComposerEvent>;
-  reply: AppBskyFeedDefs.PostView;
-  recordEmbed: AppBskyFeedDefs.PostView | AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView | AppBskyGraphDefs.StarterPackView;
-  mediaEmbed: ImageEmbed | VideoEmbed | ExternalEmbed;
+  @Output() onPublishPost: EventEmitter<string> = new EventEmitter<string>;
+  postCompose: WritableSignal<PostCompose>
   embedSuggestions: Array<RecordEmbed | ExternalEmbed> = [];
 
   editor: Quill;
@@ -98,9 +93,9 @@ export class PostComposerComponent implements OnInit {
   };
 
   constructor(
-    private postService: PostService,
-    private cdRef: ChangeDetectorRef
+    private postService: PostService
   ) {
+    this.postCompose = this.postService.postCompose;
     this.mentionResults$ = this.mentionSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -108,23 +103,11 @@ export class PostComposerComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-    if (this.postService.newPost().reply) {
-      this.reply = this.postService.getPost(this.postService.newPost().reply.parent.cid)();
-    }
-    if (AppBskyEmbedRecord.isMain(this.postService.newPost().embed)) {
-      this.recordEmbed = this.postService.getPost((this.postService.newPost().embed.record as AppBskyEmbedRecord.ViewRecord).cid)();
-    }
-    this.fileDrop.subscribe(files => {
-      this.onFileDrop(files);
-    });
-  }
-
   onEditorInit(event: EditorInitEvent) {
     this.editor = event.editor;
     this.editor.on('text-change', () => {
       this.embedSuggestions = EmbedUtils.findEmbedSuggestions(this.editor.getText());
-    })
+    });
   }
 
   get text(): string {
@@ -140,46 +123,16 @@ export class PostComposerComponent implements OnInit {
       .join('').trim();
   }
 
-  onFileDrop(files: File[]) {
-    //Fix array methods because it comes as FileList
-    files = Array.from(files);
-
-    if (files.some(f => f.type.includes('image'))) {
-      //Filelist has images
-      if (!this.mediaEmbed) {
-        this.mediaEmbed = new ImageEmbed();
-      }
-      if (this.mediaEmbed.type == EmbedType.IMAGE) {
-        //Our embed list is for images
-        files.forEach(file => {
-          if (file.type.includes('image') && (this.mediaEmbed as ImageEmbed).images.length < 4) {
-            const reader = new FileReader();
-            reader.onload = (event: any) => {
-              (this.mediaEmbed as ImageEmbed).images.push({file: file, thumbnail: event.srcElement.result});
-              this.cdRef.markForCheck();
-            };
-            reader.readAsDataURL(file);
-          }
-        })
-      }
-    } else if (files.some(f => f.type.includes('video'))) {
-      //Filelist has video
-      while (!this.mediaEmbed){
-        files.forEach(file => {
-          if (file.type.includes('video')) {
-
-            this.mediaEmbed = new VideoEmbed(file, undefined);
-          }
-        });
-      }
-    }
-  }
-
   removeImage(index: number) {
-    if ((this.mediaEmbed as ImageEmbed).images.length == 1) {
-      this.mediaEmbed = undefined;
+    const imageEmbed = this.postCompose().mediaEmbed as WritableSignal<ImageEmbed>;
+
+    if (imageEmbed().images.length == 1) {
+      imageEmbed.set(undefined);
     } else {
-      (this.mediaEmbed as ImageEmbed).images.splice(index, 1);
+      imageEmbed.update(embed => {
+        embed.images.splice(index, 1);
+        return embed;
+      });
     }
   }
 

@@ -34,7 +34,7 @@
 </div>
 
 <p-drawer
-  [visible]="newPost() !== undefined"
+  [visible]="postCompose() !== undefined"
   [modal]="false"
   position="bottom"
   styleClass="!border-none !bg-[#002047] !h-auto"
@@ -44,13 +44,14 @@
     <ng-icon
       name="tablerX"
       class="absolute top-2 right-2 cursor-pointer text-[2rem]"
-      (click)="newPost.set(undefined)"
+      (click)="postCompose.set(undefined)"
     />
     <post-composer
       class="h-full"
       [loading]="creatingPost"
-      [fileDrop]="fileDrop"
-      (onCreatePost)="post($event)"
+      (onPublishPost)="publishPost($event)"
+      ng2FileDrop
+      (onFileDrop)="onFileDrop($event)"
     />
   </ng-template>
 </p-drawer>

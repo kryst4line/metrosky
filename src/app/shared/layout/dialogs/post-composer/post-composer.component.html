@@ -11,49 +11,48 @@
       />
     }
 
-    @if (mediaEmbed) {
-      @if (mediaEmbed | isMediaEmbedImage) {
-        <span>Embedding images</span>
-        <div
-          class="flex flex-row justify-end gap-2"
+    @let mediaEmbed = postCompose().mediaEmbed();
+    @if (mediaEmbed | isMediaEmbedImage) {
+      <div
+        class="flex flex-row justify-end gap-2"
+      >
+      @for (image of mediaEmbed.images; track $index) {
+        <a
+          class="cursor-pointer relative group"
+          (click)="removeImage($index)"
         >
-        @for (item of mediaEmbed.images; track $index) {
-          <a
-            class="cursor-pointer relative group"
-            (click)="removeImage($index)"
-          >
-            <img
-              [src]="item.thumbnail"
-              class="h-24 w-24 object-cover hover:brightness-75"
-            />
-            <ng-icon
-              name="tablerCircleX"
-              color="rgba(255,255,255,0.85)"
-              class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
-            />
-          </a>
-        }
-        </div>
+          <img
+            [src]="image.data"
+            class="h-24 w-24 object-cover hover:brightness-75"
+          />
+          <ng-icon
+            name="tablerCircleX"
+            color="rgba(255,255,255,0.85)"
+            class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
+          />
+        </a>
       }
-      @else if (mediaEmbed | isMediaEmbedVideo) {
-        <img
-          [src]="mediaEmbed.thumbnail"
-          class="h-10 w-10 object-cover"
-        />
-      }
-      @else if (mediaEmbed | isMediaEmbedExternal) {
+      </div>
+    }
+    @else if (mediaEmbed | isMediaEmbedVideo) {
+      <img
+        [src]="mediaEmbed.thumbnail"
+        class="h-10 w-10 object-cover"
+      />
+    }
+    @else if (mediaEmbed | isMediaEmbedExternal) {
 
-      }
     }
   </div>
+
   <div
     class="flex flex-col gap-2"
   >
-    @if (reply) {
+    @if (postCompose().reply()) {
       <span
         class="msky-text-body"
       >
-        Replying to <b>{{ reply.author | displayName }}</b>
+        Replying to <b>{{ postCompose().reply().author | displayName }}</b>
       </span>
     }
     <p-editor
@@ -67,7 +66,7 @@
     class="flex flex-col-reverse gap-3 items-center"
   >
     <p-button
-      (onClick)="onCreatePost.emit({text, recordEmbed, mediaEmbed})"
+      (onClick)="onPublishPost.emit(text)"
     >
       Post
     </p-button>
@@ -89,7 +88,7 @@
   let-embed="embed"
 >
   <p-button>
-    @if (embed.type == 'RECORD' && !recordEmbed) {
+    @if (embed.type == 'RECORD' && !postCompose().recordEmbed()) {
       @switch (embed.recordType) {
         @case ('POST') {
           Quote post
@@ -105,7 +104,7 @@
         }
       }
     }
-    @if (embed.type == 'EXTERNAL' && !mediaEmbed) {
+    @if (embed.type == 'EXTERNAL' && !postCompose().mediaEmbed()) {
       Embed link
     }
   </p-button>

@@ -1,17 +1,23 @@
 import {Injectable, signal, WritableSignal} from "@angular/core";
-import {AppBskyFeedDefs, AppBskyFeedPost} from "@atproto/api";
+import {AppBskyFeedDefs, RichText} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
-import {Subject} from "rxjs";
+import {from} from "rxjs";
+import {PostCompose} from "~/src/app/api/models/post-compose";
+import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "~/src/app/api/models/embed";
+import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
+import {HttpErrorResponse} from "@angular/common/http";
 
 export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
   new Map<string, WritableSignal<AppBskyFeedDefs.PostView>>();
-type Record = AppBskyFeedPost.Record;
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  public newPost: WritableSignal<AppBskyFeedPost.Record> = signal(undefined);
+  public postCompose: WritableSignal<PostCompose> = signal(undefined);
+
+  constructor(private imageCompressService: NgxImageCompressService) {
+  }
 
   setPost(post: AppBskyFeedDefs.PostView): WritableSignal<AppBskyFeedDefs.PostView> {
     const existingPost = posts.get(post.cid);
@@ -30,20 +36,15 @@ export class PostService {
   }
 
   createPost() {
-    this.newPost.set({
-      $type: 'app.bsky.feed.post',
-      text: '',
-      facets: [],
-      createdAt: '',
-      langs: [],
-      tags: [],
-    } as Record);
+    this.postCompose.set(new PostCompose());
   }
 
   replyPost(uri: string) {
     agent.getPostThread({
       uri: uri
     }).then(response => {
+      this.setPost(response.data.thread.post as AppBskyFeedDefs.PostView);
+
       let root;
       if (response.data.thread.parent) {
         root = response.data.thread.parent as AppBskyFeedDefs.ThreadViewPost;
@@ -68,24 +69,139 @@ export class PostService {
         },
       };
 
-      this.newPost.set({
-        $type: 'app.bsky.feed.post',
-        text: '',
-        facets: [],
-        createdAt: '',
-        langs: [],
-        tags: [],
-        reply: replyRef
-      } as Record);
+      if (!this.postCompose()) this.createPost();
+
+      this.postCompose().post.update(post => {
+        post.reply = replyRef;
+        return post;
+      });
+
+      this.postCompose().reply.set(response.data.thread.post as AppBskyFeedDefs.PostView);
     });
   }
 
-  attachEmbed(files: File[], subscription: Subject<File[]>) {
-    if (!this.newPost()) this.createPost();
+  attachEmbed(files: File[]) {
+    if (!this.postCompose()) this.createPost();
 
-    //Wait for post composer to init
-    setTimeout(() => {
-      subscription.next(files);
-    }, 200);
+    //Fix array methods because it comes as FileList
+    files = Array.from(files);
+
+    if (files.some(f => f.type.includes('image'))) {
+      //Filelist has images
+      if (!this.postCompose().mediaEmbed()) {
+        this.postCompose().mediaEmbed.set(new ImageEmbed());
+      }
+      if (this.postCompose().mediaEmbed().type == EmbedType.IMAGE) {
+        const imageEmbed = this.postCompose().mediaEmbed as WritableSignal<ImageEmbed>;
+
+        //Our embed list is for images
+        files.forEach(file => {
+          if (file.type.includes('image') && imageEmbed().images.length < 4) {
+            const reader = new FileReader();
+            reader.onload = (event: any) => {
+              const newEmbed = new ImageEmbed();
+              newEmbed.images = [...imageEmbed().images, {data: event.srcElement.result, alt: ''}];
+              imageEmbed.set(newEmbed);
+            };
+            reader.readAsDataURL(file);
+          }
+        })
+      }
+    } else if (files.some(f => f.type.includes('video'))) {
+      const videoEmbed = this.postCompose().mediaEmbed as WritableSignal<VideoEmbed>;
+
+      //Filelist has video
+      while (!videoEmbed()) {
+        files.forEach(file => {
+          if (file.type.includes('video')) {
+            videoEmbed.set(new VideoEmbed(file, undefined));
+          }
+        });
+      }
+    }
+  }
+
+  publishPost(text: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const rt = new RichText({
+        text: text
+      });
+
+      Promise.all([
+        this.prepareEmbeds(),
+        rt.detectFacets(agent)
+      ]).then(() => {
+        this.postCompose().post.update(post => {
+          post.text = text;
+          post.facets = rt.facets;
+          post.createdAt = new Date().toISOString();
+          return post;
+        });
+
+        from(agent.post(this.postCompose().post())).subscribe({
+          next: () => {
+            this.postCompose.set(undefined);
+            resolve();
+          },
+          error: (err: HttpErrorResponse) => {
+            reject(err);
+          }
+        });
+      });
+    });
+  }
+
+  private prepareEmbeds(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.postCompose().mediaEmbed()) resolve();
+
+      if (this.postCompose().mediaEmbed()?.type == EmbedType.IMAGE) {
+        const imageEmbed = this.postCompose().mediaEmbed as WritableSignal<ImageEmbed>;
+
+        from(Promise.all(
+          imageEmbed().images.map(i => {
+            return this.imageCompressService.compressFile(i.data, DOC_ORIENTATION.Default, undefined, undefined, 2000, 2000);
+          })
+        )).subscribe({
+          next: images64 => {
+            from(
+              Promise.all(images64.map(image => fetch(image).then(res => res.blob())))
+            ).subscribe({
+              next: blobs => {
+                from(
+                  Promise.all(blobs.map(b => agent.uploadBlob(b)))
+                ).subscribe({
+                  next: upload => {
+                    this.postCompose().post().embed = {
+                      $type: 'app.bsky.embed.images',
+                      images: upload.map(response => {
+                        return {
+                          alt: '',
+                          image: response.data.blob
+                        }
+                      })
+                    };
+                    resolve();
+                  },
+                  error: err => reject(err)
+                })
+              },
+              error: err => reject(err)
+            })
+          },
+          error: err => reject(err)
+        });
+      }
+
+      if (this.postCompose().mediaEmbed()?.type == EmbedType.VIDEO) {
+        const videoEmbed = this.postCompose().mediaEmbed as WritableSignal<VideoEmbed>;
+        resolve();
+      }
+
+      if (this.postCompose().mediaEmbed().type == EmbedType.EXTERNAL) {
+        const externalEmbed = this.postCompose().mediaEmbed as WritableSignal<ExternalEmbed>;
+        resolve();
+      }
+    });
   }
 }
