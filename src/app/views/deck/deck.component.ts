@@ -13,6 +13,7 @@ import {PostComposerEvent} from "~/src/app/api/models/post-composer-event";
 import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "~/src/app/api/models/embed";
 import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
 import {MessageService} from "primeng/api";
+import {FileUploadModule} from "ng2-file-upload";
 
 @Component({
   selector: 'app-deck',
@@ -22,7 +23,8 @@ import {MessageService} from "primeng/api";
     SidebarComponent,
     PostComposerComponent,
     Drawer,
-    NgIcon
+    NgIcon,
+    FileUploadModule
   ],
   templateUrl: './deck.component.html',
   styleUrl: './deck.component.scss',
@@ -31,7 +33,8 @@ export class DeckComponent implements OnInit {
   newPost: WritableSignal<AppBskyFeedPost.Record>;
   creatingPost = false;
 
-  refreshFeeds = new Subject<void>();
+  refreshFeeds: Subject<void> = new Subject<void>();
+  fileDrop: Subject<File[]> = new Subject<File[]>();
 
   constructor(
     protected postService: PostService,
@@ -127,5 +130,9 @@ export class DeckComponent implements OnInit {
         resolve();
       }
     });
+  }
+
+  onFileDrop($event: any) {
+    this.postService.attachEmbed($event, this.fileDrop);
   }
 }

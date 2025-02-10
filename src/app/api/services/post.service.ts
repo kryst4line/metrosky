@@ -1,6 +1,7 @@
 import {Injectable, signal, WritableSignal} from "@angular/core";
 import {AppBskyFeedDefs, AppBskyFeedPost} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
+import {Subject} from "rxjs";
 
 export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
   new Map<string, WritableSignal<AppBskyFeedDefs.PostView>>();
@@ -36,7 +37,7 @@ export class PostService {
       createdAt: '',
       langs: [],
       tags: [],
-    } as Record)
+    } as Record);
   }
 
   replyPost(uri: string) {
@@ -77,5 +78,14 @@ export class PostService {
         reply: replyRef
       } as Record);
     });
+  }
+
+  attachEmbed(files: File[], subscription: Subject<File[]>) {
+    if (!this.newPost()) this.createPost();
+
+    //Wait for post composer to init
+    setTimeout(() => {
+      subscription.next(files);
+    }, 200);
   }
 }

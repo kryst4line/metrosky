@@ -12,13 +12,20 @@ import {Editor, EditorInitEvent} from "primeng/editor";
 import "quill-mention/autoregister";
 import "quill-mention/dist/quill.mention.css"
 import {agent} from "~/src/app/core/bsky.api";
-import {debounceTime, distinctUntilChanged, from, mergeMap, Observable, Subject, Subscription} from "rxjs";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  from,
+  mergeMap,
+  Observable,
+  Subject,
+  Subscription
+} from "rxjs";
 import {AppBskyActorSearchActorsTypeahead, AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs} from "@atproto/api";
 import Quill from "quill";
 import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
-import {FileUploader, FileUploadModule} from "ng2-file-upload";
 import {EmbedType, ExternalEmbed, ImageEmbed, RecordEmbed, VideoEmbed} from "~/src/app/api/models/embed";
 import {EmbedUtils} from "~/src/app/shared/utils/embed-utils";
 import {NgTemplateOutlet, SlicePipe} from "@angular/common";
@@ -34,7 +41,6 @@ import {PostComposerEvent} from "~/src/app/api/models/post-composer-event";
     Editor,
     NgIcon,
     DisplayNamePipe,
-    FileUploadModule,
     SlicePipe,
     NgTemplateOutlet,
     IsMediaEmbedImagePipe,
@@ -47,13 +53,12 @@ import {PostComposerEvent} from "~/src/app/api/models/post-composer-event";
 })
 export class PostComposerComponent implements OnInit {
   @Input() loading = false;
+  @Input() fileDrop: Subject<File[]>;
   @Output() onCreatePost: EventEmitter<PostComposerEvent> = new EventEmitter<PostComposerEvent>;
   reply: AppBskyFeedDefs.PostView;
   recordEmbed: AppBskyFeedDefs.PostView | AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView | AppBskyGraphDefs.StarterPackView;
   mediaEmbed: ImageEmbed | VideoEmbed | ExternalEmbed;
   embedSuggestions: Array<RecordEmbed | ExternalEmbed> = [];
-
-  uploader: FileUploader;
 
   editor: Quill;
   mentionResults$: Observable<AppBskyActorSearchActorsTypeahead.Response>;
@@ -96,10 +101,6 @@ export class PostComposerComponent implements OnInit {
     private postService: PostService,
     private cdRef: ChangeDetectorRef
   ) {
-    this.uploader = new FileUploader({
-      url: undefined
-    });
-
     this.mentionResults$ = this.mentionSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -114,6 +115,9 @@ export class PostComposerComponent implements OnInit {
     if (AppBskyEmbedRecord.isMain(this.postService.newPost().embed)) {
       this.recordEmbed = this.postService.getPost((this.postService.newPost().embed.record as AppBskyEmbedRecord.ViewRecord).cid)();
     }
+    this.fileDrop.subscribe(files => {
+      this.onFileDrop(files);
+    });
   }
 
   onEditorInit(event: EditorInitEvent) {
