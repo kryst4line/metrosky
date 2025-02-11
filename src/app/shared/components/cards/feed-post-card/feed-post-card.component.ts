@@ -125,7 +125,7 @@ export class FeedPostCardComponent {
     agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
       response => {
         agent.getPosts({
-          uris: [response.uri]
+          uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
           this.processingAction = false;
@@ -155,7 +155,7 @@ export class FeedPostCardComponent {
     agent.repost(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
       response => {
         agent.getPosts({
-          uris: [response.uri]
+          uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
           this.processingAction = false;
