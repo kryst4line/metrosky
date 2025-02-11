@@ -97,7 +97,11 @@
   @if (embed.type == 'RECORD' && !postCompose().recordEmbed()) {
     @switch (embed.recordType) {
       @case ('POST') {
-        Quote post
+        <p-button
+          (click)="embedQuote()"
+        >
+          Quote post
+        </p-button>
       }
       @case ('FEED') {
         Embed feed

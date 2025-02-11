@@ -170,6 +170,15 @@ export class PostComposerComponent {
     }
   }
 
+  embedQuote() {
+    const embed = this.embedSuggestions()[0] as RecordEmbed;
+    agent.resolveHandle({
+      handle: embed.author
+    }).then(response => {
+      this.postService.quotePost('at://' + response.data.did + '/app.bsky.feed.post/' + embed.rkey);
+    });
+  }
+
   log(event: any) {
     console.log('DEVELOPMENT LOG: ', event);
   }
