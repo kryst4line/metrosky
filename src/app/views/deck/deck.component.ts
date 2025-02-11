@@ -54,10 +54,6 @@ export class DeckComponent implements OnInit {
         });
 
         setTimeout(() => {
-          this.messageService.add({
-            severity: 'success',
-            detail: 'Your post has been published successfully'
-          });
           this.refreshFeeds.next();
         }, 1e3);
       },

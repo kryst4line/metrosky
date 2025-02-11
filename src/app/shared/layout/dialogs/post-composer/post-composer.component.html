@@ -2,9 +2,9 @@
   class="flex h-full justify-between gap-4 p-2"
 >
   <div
-    class="grow basis-0"
+    class="grow basis-0 flex justify-end"
   >
-    @for (embed of embedSuggestions | slice : 0 : 1; track embed) {
+    @for (embed of embedSuggestions() | slice : 0 : 1; track embed) {
       <ng-container
         [ngTemplateOutlet]="embedButton"
         [ngTemplateOutletContext]="{embed: embed}"
@@ -14,24 +14,24 @@
     @let mediaEmbed = postCompose().mediaEmbed();
     @if (mediaEmbed | isMediaEmbedImage) {
       <div
-        class="flex flex-row justify-end gap-2"
+        class="flex flex-row gap-2"
       >
-      @for (image of mediaEmbed.images; track $index) {
-        <a
-          class="cursor-pointer relative group"
-          (click)="removeImage($index)"
-        >
-          <img
-            [src]="image.data"
-            class="h-24 w-24 object-cover hover:brightness-75"
-          />
-          <ng-icon
-            name="tablerCircleX"
-            color="rgba(255,255,255,0.85)"
-            class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
-          />
-        </a>
-      }
+        @for (image of mediaEmbed.images; track $index) {
+          <a
+            class="cursor-pointer relative group"
+            (click)="removeImage($index)"
+          >
+            <img
+              [src]="image.data"
+              class="h-24 w-24 object-cover hover:brightness-75"
+            />
+            <ng-icon
+              name="tablerCircleX"
+              color="rgba(255,255,255,0.85)"
+              class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
+            />
+          </a>
+        }
       </div>
     }
     @else if (mediaEmbed | isMediaEmbedVideo) {
@@ -41,7 +41,10 @@
       />
     }
     @else if (mediaEmbed | isMediaEmbedExternal) {
-
+      <post-embed-external-preview
+        [embed]="mediaEmbed"
+        class="block h-32 w-48"
+      />
     }
   </div>
 
@@ -80,7 +83,7 @@
   <div
     class="grow basis-0"
   >
-    @if (postCompose().recordEmbed) {
+    @if (postCompose().recordEmbed()) {
       <post-embed-record
         [embed]="$any({$type: 'app.bsky.embed.record#view', record: postCompose().recordEmbed()})"
       />
@@ -91,25 +94,28 @@
 <ng-template #embedButton
   let-embed="embed"
 >
-  <p-button>
-    @if (embed.type == 'RECORD' && !postCompose().recordEmbed()) {
-      @switch (embed.recordType) {
-        @case ('POST') {
-          Quote post
-        }
-        @case ('FEED') {
-          Embed feed
-        }
-        @case ('LIST') {
-          Embed list
-        }
-        @case ('STARTER_PACK') {
-          Embed starter pack
-        }
+  @if (embed.type == 'RECORD' && !postCompose().recordEmbed()) {
+    @switch (embed.recordType) {
+      @case ('POST') {
+        Quote post
+      }
+      @case ('FEED') {
+        Embed feed
+      }
+      @case ('LIST') {
+        Embed list
+      }
+      @case ('STARTER_PACK') {
+        Embed starter pack
       }
     }
-    @if (embed.type == 'EXTERNAL' && !postCompose().mediaEmbed()) {
+  }
+  @if (embed.type == 'EXTERNAL' && !postCompose().mediaEmbed()) {
+    <p-button
+      (click)="embedLink()"
+    >
       Embed link
-    }
-  </p-button>
+    </p-button>
+  }
+
 </ng-template>

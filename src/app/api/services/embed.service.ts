@@ -24,6 +24,6 @@ export class EmbedService {
           metadata.error = res.error;
           return metadata;
         })
-      )
+      );
   }
 }

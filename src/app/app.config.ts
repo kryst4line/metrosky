@@ -6,6 +6,7 @@ import Nora from '@primeng/themes/nora'
 import { routes } from './app.routes';
 import {providePrimeNG} from "primeng/config";
 import {MessageService} from "primeng/api";
+import {provideHttpClient} from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
+    provideHttpClient(),
     MessageService
   ]
 };

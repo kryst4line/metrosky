@@ -3,7 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output, WritableSignal
+  Output, signal, WritableSignal
 } from '@angular/core';
 import {Button} from "primeng/button";
 import {Editor, EditorInitEvent} from "primeng/editor";
@@ -34,6 +34,13 @@ import {PostCompose} from "~/src/app/api/models/post-compose";
 import {
   PostEmbedRecordComponent
 } from "~/src/app/shared/components/embeds/post-embed-record/post-embed-record.component";
+import {EmbedService} from "~/src/app/api/services/embed.service";
+import {MessageService} from "primeng/api";
+import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
+import {
+  PostEmbedExternalPreviewComponent
+} from "~/src/app/shared/components/embeds/post-embed-external-preview/post-embed-external-preview.component";
+import {SnippetType} from "~/src/app/api/models/snippet";
 
 @Component({
   selector: 'post-composer',
@@ -47,7 +54,8 @@ import {
     IsMediaEmbedImagePipe,
     IsMediaEmbedVideoPipe,
     IsMediaEmbedExternalPipe,
-    PostEmbedRecordComponent
+    PostEmbedRecordComponent,
+    PostEmbedExternalPreviewComponent
   ],
   templateUrl: './post-composer.component.html',
   styleUrl: './post-composer.component.scss',
@@ -57,7 +65,7 @@ export class PostComposerComponent {
   @Input() loading = false;
   @Output() onPublishPost: EventEmitter<string> = new EventEmitter<string>;
   postCompose: WritableSignal<PostCompose>
-  embedSuggestions: Array<RecordEmbed | ExternalEmbed> = [];
+  embedSuggestions: WritableSignal<Array<RecordEmbed | ExternalEmbed>> = signal([]);
 
   editor: Quill;
   mentionResults$: Observable<AppBskyActorSearchActorsTypeahead.Response>;
@@ -97,7 +105,9 @@ export class PostComposerComponent {
   };
 
   constructor(
-    private postService: PostService
+    private postService: PostService,
+    private embedService: EmbedService,
+    private messageService: MessageService
   ) {
     this.postCompose = this.postService.postCompose;
     this.mentionResults$ = this.mentionSubject.pipe(
@@ -110,7 +120,7 @@ export class PostComposerComponent {
   onEditorInit(event: EditorInitEvent) {
     this.editor = event.editor;
     this.editor.on('text-change', () => {
-      this.embedSuggestions = EmbedUtils.findEmbedSuggestions(this.editor.getText());
+      this.embedSuggestions.set(EmbedUtils.findEmbedSuggestions(this.editor.getText()));
     });
   }
 
@@ -136,6 +146,26 @@ export class PostComposerComponent {
       imageEmbed.update(embed => {
         embed.images.splice(index, 1);
         return embed;
+      });
+    }
+  }
+
+  embedLink() {
+    const embed = this.embedSuggestions()[0] as ExternalEmbed;
+    embed.snippet = SnippetUtils.detectSnippet({uri: embed.url, description: ''});
+
+    if (embed.snippet.type !== SnippetType.BLUESKY_GIF) {
+      this.embedService.getUrlMetadata(embed.url).subscribe({
+        next: metadata => {
+          embed.metadata = metadata;
+          this.postCompose().mediaEmbed.set(embed);
+        },
+        error: err => this.messageService.add({
+          icon: 'error',
+          severity: 'error',
+          summary: 'Oops!',
+          detail: err.message
+        })
       });
     }
   }

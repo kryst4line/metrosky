@@ -251,7 +251,24 @@ export class PostService {
 
       if (this.postCompose().mediaEmbed().type == EmbedType.EXTERNAL) {
         const externalEmbed = this.postCompose().mediaEmbed as WritableSignal<ExternalEmbed>;
-        resolve(undefined);
+
+        from(
+          fetch(externalEmbed().metadata.imageUrl)
+            .then(res => res.blob())
+            .then(blob => agent.uploadBlob(blob))
+        ).subscribe({
+          next: response => {
+            resolve({
+              $type: 'app.bsky.embed.external',
+              external: {
+                uri: externalEmbed().metadata.url,
+                title: externalEmbed().metadata.title,
+                description: externalEmbed().metadata.description,
+                thumb: response.data.blob
+              }
+            })
+          }, error: err => reject(err)
+        })
       }
     });
   }
