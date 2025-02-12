@@ -67,7 +67,9 @@ import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pip
 })
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
+
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
+  protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 
   openPost(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
@@ -107,6 +109,4 @@ export class PostEmbedRecordComponent {
     event.preventDefault();
     event.stopPropagation();
   }
-
-  protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 }
