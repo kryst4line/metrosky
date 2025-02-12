@@ -104,13 +104,25 @@
         </p-button>
       }
       @case ('FEED') {
-        Embed feed
+        <p-button
+          (click)="embedFeed()"
+        >
+          Embed feed
+        </p-button>
       }
       @case ('LIST') {
-        Embed list
+        <p-button
+          (click)="embedList()"
+        >
+          Embed list
+        </p-button>
       }
       @case ('STARTER_PACK') {
-        Embed starter pack
+        <p-button
+          (click)="embedStarterPack()"
+        >
+          Embed starter pack
+        </p-button>
       }
     }
   }

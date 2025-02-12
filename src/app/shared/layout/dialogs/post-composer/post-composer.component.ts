@@ -179,6 +179,48 @@ export class PostComposerComponent {
     });
   }
 
+  embedFeed() {
+    const embed = this.embedSuggestions()[0] as RecordEmbed;
+
+    agent.resolveHandle({
+      handle: embed.author
+    }).then(response => agent.app.bsky.feed.getFeedGenerator({
+      feed: 'at://' + response.data.did + '/app.bsky.feed.generator/' + embed.rkey
+    })).then(response => {
+      let feed = response.data.view;
+      feed['$type'] = 'app.bsky.feed.defs#generatorView';
+      this.postCompose().recordEmbed.set(feed);
+    });
+  }
+
+  embedList() {
+    const embed = this.embedSuggestions()[0] as RecordEmbed;
+
+    agent.resolveHandle({
+      handle: embed.author
+    }).then(response => agent.app.bsky.graph.getList({
+      list: 'at://' + response.data.did + '/app.bsky.graph.list/' + embed.rkey
+    })).then(response => {
+      let list = response.data.list;
+      list['$type'] = 'app.bsky.graph.defs#listView';
+      this.postCompose().recordEmbed.set(list);
+    });
+  }
+
+  embedStarterPack() {
+    const embed = this.embedSuggestions()[0] as RecordEmbed;
+
+    agent.resolveHandle({
+      handle: embed.author
+    }).then(response => agent.app.bsky.graph.getStarterPack({
+      starterPack: 'at://' + response.data.did + '/app.bsky.graph.starterpack/' + embed.rkey
+    })).then(response => {
+      let starterPack = response.data.starterPack;
+      starterPack['$type'] = 'app.bsky.graph.defs#starterPackViewBasic';
+      this.postCompose().recordEmbed.set(starterPack);
+    });
+  }
+
   log(event: any) {
     console.log('DEVELOPMENT LOG: ', event);
   }
