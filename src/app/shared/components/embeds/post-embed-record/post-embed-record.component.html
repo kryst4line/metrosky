@@ -63,11 +63,10 @@
     }
 
     @if (embed.record | isGraphDefsListView) {
-      <span
-        class="msky-text-body"
-      >
-        List record
-      </span>
+      <ng-container
+        [ngTemplateOutlet]="userList"
+        [ngTemplateOutletContext]="{list: embed.record}"
+      />
     }
 
     @if (embed.record | isLabelerDefsLabelerView) {
@@ -235,17 +234,62 @@
     >
       <a
         [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
-        (click)="openAuthor($event)"
+        (click)="openStarterPack($event)"
         class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
       >
         {{ starterpack.record.name }}
       </a>
       <a
         [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
-        (click)="openAuthor($event)"
+        (click)="openStarterPack($event)"
         class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
       >
         Starter pack by {{ starterpack.creator | displayName }}
+      </a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #userList
+  let-list="list"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="list.uri | linkExtractor : list.creator.handle"
+       (click)="openList($event)"
+       class="shrink-0 h-8 w-8"
+    >
+      <img
+        [src]="list.avatar"
+        alt="{{list.name}}'s avatar"
+        class="h-8"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="list.uri | linkExtractor : list.creator.handle"
+        (click)="openList($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ list.name }}
+      </a>
+      <a
+        [href]="list.uri | linkExtractor : list.creator.handle"
+        (click)="openList($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        @switch (list.purpose) {
+          @case (AppBskyGraphDefs.MODLIST) {
+            Mod list by {{ list.creator | displayName }}
+          }
+          @default {
+            List by {{ list.creator | displayName }}
+          }
+        }
       </a>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {AppBskyEmbedRecord} from "@atproto/api";
+import {AppBskyEmbedRecord, AppBskyGraphDefs} from "@atproto/api";
 import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
 import {
   IsEmbedRecordWithMediaViewPipe
@@ -33,6 +33,7 @@ import {
 } from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-starterpack-viewbasic";
 import {LinkExtractorStarterPackPipe} from "~/src/app/shared/utils/pipes/link-extractor-starterpack.pipe";
 import {NgIcon} from "@ng-icons/core";
+import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
 
 @Component({
   selector: 'post-embed-record',
@@ -57,7 +58,8 @@ import {NgIcon} from "@ng-icons/core";
     IsLabelerDefsLabelerViewPipe,
     IsGraphDefsStarterPackViewBasicPipe,
     LinkExtractorStarterPackPipe,
-    NgIcon
+    NgIcon,
+    LinkExtractorPipe
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',
@@ -65,6 +67,7 @@ import {NgIcon} from "@ng-icons/core";
 })
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
+  protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
 
   openPost(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
@@ -74,12 +77,27 @@ export class PostEmbedRecordComponent {
   }
 
   openAuthor(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
     event.preventDefault();
     event.stopPropagation();
   }
 
   openStarterPack(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
     event.preventDefault();
     event.stopPropagation();
   }
+
+  openList(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
 }
