@@ -6,7 +6,7 @@ import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {ButtonModule} from "primeng/button";
-import {MessageService} from "primeng/api";
+import {MessageService} from "~/src/app/api/services/message.service";
 
 @Component({
   selector: 'app-login',
@@ -40,12 +40,7 @@ export class LoginComponent {
     ) {
       this.authService.login(this.credentials);
     } else {
-      this.messageService.add({
-        icon: 'warn',
-        severity: 'warn',
-        summary: 'Oops!',
-        detail: 'Please check your credentials.'
-      });
+      this.messageService.warnIcon('Please check your credentials.', 'Oops!');
     }
   }
 }

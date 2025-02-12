@@ -35,7 +35,7 @@ import {
   PostEmbedRecordComponent
 } from "~/src/app/shared/components/embeds/post-embed-record/post-embed-record.component";
 import {EmbedService} from "~/src/app/api/services/embed.service";
-import {MessageService} from "primeng/api";
+import {MessageService} from "~/src/app/api/services/message.service";
 import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
 import {
   PostEmbedExternalPreviewComponent
@@ -160,12 +160,7 @@ export class PostComposerComponent {
           embed.metadata = metadata;
           this.postCompose().mediaEmbed.set(embed);
         },
-        error: err => this.messageService.add({
-          icon: 'error',
-          severity: 'error',
-          summary: 'Oops!',
-          detail: err.message
-        })
+        error: err => this.messageService.error(err.message, 'Oops!')
       });
     }
   }

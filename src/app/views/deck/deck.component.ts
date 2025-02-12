@@ -7,7 +7,7 @@ import {Drawer} from "primeng/drawer";
 import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {Subject} from "rxjs";
-import {MessageService} from "primeng/api";
+import {MessageService} from "~/src/app/api/services/message.service";
 import {FileUploadModule} from "ng2-file-upload";
 import {PostCompose} from "~/src/app/api/models/post-compose";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -48,23 +48,13 @@ export class DeckComponent implements OnInit {
 
     this.postService.publishPost(text).then(
       () => {
-        this.messageService.add({
-          severity: 'success',
-          detail: 'Your post has been successfully published'
-        });
+        this.messageService.success('Your post has been successfully published');
 
         setTimeout(() => {
           this.refreshFeeds.next();
         }, 1e3);
       },
-      (err: HttpErrorResponse) => {
-        this.messageService.add({
-          icon: 'error',
-          severity: 'error',
-          summary: 'Oops!',
-          detail: err.message
-        });
-      }
+      (err: HttpErrorResponse) => this.messageService.error(err.message, 'Oops!')
     ).finally(() => this.creatingPost = false);
   }
 

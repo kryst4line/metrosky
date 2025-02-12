@@ -3,7 +3,7 @@ import {BehaviorSubject, from} from 'rxjs';
 import {AtpAgentLoginOpts} from "@atproto/api";
 import {agent} from "../bsky.api";
 import {Router} from "@angular/router";
-import {MessageService} from "primeng/api";
+import {MessageService} from "~/src/app/api/services/message.service";
 import {HttpErrorResponse} from "@angular/common/http";
 
 const TOKEN_KEY = 'session';
@@ -42,12 +42,7 @@ export class AuthService {
         this.router.navigate(['']);
       },
       error: (err: HttpErrorResponse) => {
-        this.messageService.add({
-          icon: 'warn',
-          severity: 'warn',
-          summary: 'Oops!',
-          detail: err.message
-        });
+        this.messageService.warnIcon(err.message, 'Oops!');
       }
     });
   }
