@@ -17,19 +17,12 @@
 <!--}-->
 <!-- TODO: FEED, LIST, LABELER, STARTER PACK -->
 
-@if (embed |isEmbedRecordWithMediaView) {
-  <ng-container
-    [ngTemplateOutlet]="mediaEmbeds"
-    [ngTemplateOutletContext]="{media: embed.media, margin: 'block mb-3'}"
-  />
-}
-
 <div #base
   id="base"
   class="flex flex-col p-3 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-20"
   (click)="openPost($event)"
 >
-  @if (embed | isEmbedRecordView) {
+
     @if (embed.record | isEmbedRecordViewRecord) {
       <ng-container
         [ngTemplateOutlet]="post"
@@ -58,38 +51,7 @@
         Post detached
       </span>
     }
-  }
 
-  @if (embed | isEmbedRecordWithMediaView) {
-    @if (embed.record.record | isEmbedRecordViewRecord) {
-      <ng-container
-        [ngTemplateOutlet]="post"
-        [ngTemplateOutletContext]="{record: embed.record.record, media: embed.record.record.embeds[0]}"
-      />
-    }
-
-    @if (embed.record.record | isEmbedRecordViewBlocked) {
-      <span
-        class="msky-text-body"
-      >
-        Post blocked
-      </span>
-    }
-    @if (embed.record.record | isEmbedRecordViewNotFound) {
-      <span
-        class="msky-text-body"
-      >
-        Post not found
-      </span>
-    }
-    @if (embed.record.record | isEmbedRecordViewDetached) {
-      <span
-        class="msky-text-body"
-      >
-        Post detached
-      </span>
-    }
-  }
 </div>
 
 <ng-template #post
@@ -169,16 +131,52 @@
       [class]="margin"
     />
   }
+
   @if (media | isEmbedVideoView) {
     <post-embed-video
       [embed]="media"
       [class]="margin"
     />
   }
+
   @if (media | isEmbedExternalView) {
     <post-embed-external
       [embed]="media"
       [class]="margin"
     />
+  }
+
+  @if (media | isEmbedRecordView) {
+    <post-embed-record
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+
+  @if (media | isEmbedRecordWithMediaView) {
+    @if (media.media | isEmbedImagesView) {
+      <post-embed-images
+        [embed]="media.media"
+        [class]="margin"
+      />
+    }
+    @if (media.media | isEmbedVideoView) {
+      <post-embed-video
+        [embed]="media.media"
+        [class]="margin"
+      />
+    }
+    @if (media.media | isEmbedExternalView) {
+      <post-embed-external
+        [embed]="media.media"
+        [class]="margin"
+      />
+    }
+    @if (media.record | isEmbedRecordView) {
+      <post-embed-record
+        [embed]="media.record"
+        [class]="margin"
+      />
+    }
   }
 </ng-template>

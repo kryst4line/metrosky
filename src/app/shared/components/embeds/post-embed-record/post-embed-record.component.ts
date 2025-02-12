@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia} from "@atproto/api";
+import {AppBskyEmbedRecord} from "@atproto/api";
 import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
 import {
   IsEmbedRecordWithMediaViewPipe
@@ -50,7 +50,7 @@ import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostEmbedRecordComponent {
-  @Input() embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View;
+  @Input() embed: AppBskyEmbedRecord.View;
 
   openPost(event: MouseEvent) {
     if (!window.getSelection().toString().length) {

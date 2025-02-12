@@ -190,7 +190,7 @@
 >
   <div #content
        id="content"
-       class="mt-4"
+       class="mt-4 flex flex-col"
   >
     @if (embed | isEmbedImagesView) {
       <post-embed-images
@@ -205,15 +205,41 @@
       />
     }
 
-    @if ((embed | isEmbedRecordView) || (embed | isEmbedRecordWithMediaView)) {
+    @if (embed | isEmbedExternalView) {
+      <post-embed-external
+        [embed]="embed"
+      />
+    }
+
+    @if (embed | isEmbedRecordView) {
       <post-embed-record
         [embed]="embed"
       />
     }
 
-    @if (embed | isEmbedExternalView) {
-      <post-embed-external
-        [embed]="embed"
+    @if (embed | isEmbedRecordWithMediaView) {
+      @if (embed.media | isEmbedImagesView) {
+        <post-embed-images
+          [embed]="embed.media"
+          (onImgClick)="openDialog($event)"
+        />
+      }
+
+      @if (embed.media | isEmbedVideoView) {
+        <post-embed-video
+          [embed]="embed.media"
+        />
+      }
+
+      @if (embed.media | isEmbedExternalView) {
+        <post-embed-external
+          [embed]="embed.media"
+        />
+      }
+
+      <post-embed-record
+        [embed]="embed.record"
+        class="block mt-4"
       />
     }
   </div>
