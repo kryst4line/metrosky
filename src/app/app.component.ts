@@ -21,7 +21,9 @@ import {
   tablerList,
   tablerHash,
   tablerSearch,
-  tablerLoader2, tablerUser, tablerCircleX
+  tablerLoader2,
+  tablerUser,
+  tablerCircleX
 } from "@ng-icons/tabler-icons";
 import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
 import {NgClass} from "@angular/common";

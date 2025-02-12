@@ -22,11 +22,11 @@
   class="flex flex-col p-3 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-20"
   (click)="openPost($event)"
 >
-
     @if (embed.record | isEmbedRecordViewRecord) {
+
       <ng-container
         [ngTemplateOutlet]="post"
-        [ngTemplateOutletContext]="{record: embed.record, media: embed.record.embeds[0]}"
+        [ngTemplateOutletContext]="{record: embed.record, media: embed.record.embeds ? embed.record.embeds[0]: undefined }"
       />
     }
 
@@ -37,6 +37,7 @@
         Post blocked
       </span>
     }
+
     @if (embed.record | isEmbedRecordViewNotFound) {
       <span
         class="msky-text-body"
@@ -44,12 +45,44 @@
         Post not found
       </span>
     }
+
     @if (embed.record | isEmbedRecordViewDetached) {
       <span
         class="msky-text-body"
       >
         Post detached
       </span>
+    }
+
+    @if (embed.record | isFeedDefsGeneratorView) {
+      <span
+        class="msky-text-body"
+      >
+        Feed record
+      </span>
+    }
+
+    @if (embed.record | isGraphDefsListView) {
+      <span
+        class="msky-text-body"
+      >
+        List record
+      </span>
+    }
+
+    @if (embed.record | isLabelerDefsLabelerView) {
+      <span
+        class="msky-text-body"
+      >
+        Labeler record
+      </span>
+    }
+
+    @if (embed.record | isGraphDefsStarterPackViewBasic) {
+      <ng-container
+        [ngTemplateOutlet]="starterPack"
+        [ngTemplateOutletContext]="{starterPack: embed.record}"
+      />
     }
 
 </div>
@@ -80,14 +113,14 @@
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event)"
-          class="w-fit msky-text-body font-semibold hover:underline fit-text leading-[100%]"
+          class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
         >
           {{ record.author.displayName }}
         </a>
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event)"
-          class="w-fit msky-text-caption fit-text text-[12px] leading-[100%]"
+          class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
         >
           {{ '@' + record.author.handle }}
         </a>
@@ -95,7 +128,7 @@
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event)"
-          class="w-fit font-semibold fit-text"
+          class="w-fit font-semibold line-clamp-1"
         >
           {{ '@' + record.author.handle }}
         </a>
@@ -172,11 +205,48 @@
         [class]="margin"
       />
     }
-    @if (media.record | isEmbedRecordView) {
-      <post-embed-record
-        [embed]="media.record"
-        [class]="margin"
-      />
-    }
+
+    <post-embed-record
+      [embed]="media.record"
+      [class]="margin"
+    />
   }
+</ng-template>
+
+<ng-template #starterPack
+  let-starterpack="starterPack"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+       (click)="openStarterPack($event)"
+       class="shrink-0 h-8 w-8"
+    >
+      <ng-icon
+        name="tablerCircleSquare"
+        color="rgba(255,255,255,0.8)"
+        class="text-[2rem]"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openAuthor($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ starterpack.record.name }}
+      </a>
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openAuthor($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        Starter pack by {{ starterpack.creator | displayName }}
+      </a>
+    </div>
+  </div>
 </ng-template>

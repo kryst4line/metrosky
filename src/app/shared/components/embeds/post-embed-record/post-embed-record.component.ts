@@ -25,6 +25,14 @@ import {
   IsEmbedRecordViewDetachedPipe
 } from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewdetached.pipe";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
+import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-generator-view";
+import {IsGraphDefsListViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-list-view";
+import {IsLabelerDefsLabelerViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-labeler-defs-labeler-view";
+import {
+  IsGraphDefsStarterPackViewBasicPipe
+} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-starterpack-viewbasic";
+import {LinkExtractorStarterPackPipe} from "~/src/app/shared/utils/pipes/link-extractor-starterpack.pipe";
+import {NgIcon} from "@ng-icons/core";
 
 @Component({
   selector: 'post-embed-record',
@@ -43,7 +51,13 @@ import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
     IsEmbedRecordViewBlockedPipe,
     IsEmbedRecordViewNotFoundPipe,
     IsEmbedRecordViewDetachedPipe,
-    DisplayNamePipe
+    DisplayNamePipe,
+    IsFeedDefsGeneratorViewPipe,
+    IsGraphDefsListViewPipe,
+    IsLabelerDefsLabelerViewPipe,
+    IsGraphDefsStarterPackViewBasicPipe,
+    LinkExtractorStarterPackPipe,
+    NgIcon
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',
@@ -60,6 +74,11 @@ export class PostEmbedRecordComponent {
   }
 
   openAuthor(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openStarterPack(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
