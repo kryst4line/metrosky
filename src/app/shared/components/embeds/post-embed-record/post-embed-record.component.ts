@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {AppBskyEmbedRecord, AppBskyGraphDefs} from "@atproto/api";
+import {AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs} from "@atproto/api";
 import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
 import {
   IsEmbedRecordWithMediaViewPipe
@@ -100,4 +100,13 @@ export class PostEmbedRecordComponent {
     event.stopPropagation();
   }
 
+  openFeed(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 }

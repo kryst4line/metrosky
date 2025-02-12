@@ -55,11 +55,10 @@
     }
 
     @if (embed.record | isFeedDefsGeneratorView) {
-      <span
-        class="msky-text-body"
-      >
-        Feed record
-      </span>
+      <ng-container
+        [ngTemplateOutlet]="feed"
+        [ngTemplateOutletContext]="{feed: embed.record}"
+      />
     }
 
     @if (embed.record | isGraphDefsListView) {
@@ -69,6 +68,7 @@
       />
     }
 
+    <!-- Apparently there's no actual support yet? -->
     @if (embed.record | isLabelerDefsLabelerView) {
       <span
         class="msky-text-body"
@@ -212,46 +212,53 @@
   }
 </ng-template>
 
-<ng-template #starterPack
-  let-starterpack="starterPack"
+<ng-template #feed
+             let-feed="feed"
 >
   <div #header
        class="flex gap-3"
   >
     <a #title
-       [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
-       (click)="openStarterPack($event)"
+       [href]="feed.uri | linkExtractor : feed.creator.handle"
+       (click)="openFeed($event)"
        class="shrink-0 h-8 w-8"
     >
-      <ng-icon
-        name="tablerCircleSquare"
-        color="rgba(255,255,255,0.8)"
-        class="text-[2rem]"
+      <img
+        [src]="feed.avatar"
+        alt="{{feed.name}}'s avatar"
+        class="h-8"
       />
     </a>
     <div #displayName
          class="flex flex-col w-full justify-between min-w-0"
     >
       <a
-        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
-        (click)="openStarterPack($event)"
+        [href]="feed.uri | linkExtractor : feed.creator.handle"
+        (click)="openFeed($event)"
         class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
       >
-        {{ starterpack.record.name }}
+        {{ feed.displayName }}
       </a>
       <a
-        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
-        (click)="openStarterPack($event)"
+        [href]="feed.uri | linkExtractor : feed.creator.handle"
+        (click)="openFeed($event)"
         class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
       >
-        Starter pack by {{ starterpack.creator | displayName }}
+        @switch (feed.contentMode) {
+          @case (AppBskyFeedDefs.CONTENTMODEVIDEO) {
+            Video feed by {{ feed.creator | displayName }}
+          }
+          @default {
+            Feed by {{ feed.creator | displayName }}
+          }
+        }
       </a>
     </div>
   </div>
 </ng-template>
 
 <ng-template #userList
-  let-list="list"
+             let-list="list"
 >
   <div #header
        class="flex gap-3"
@@ -290,6 +297,44 @@
             List by {{ list.creator | displayName }}
           }
         }
+      </a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #starterPack
+  let-starterpack="starterPack"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+       (click)="openStarterPack($event)"
+       class="shrink-0 h-8 w-8"
+    >
+      <ng-icon
+        name="tablerCircleSquare"
+        color="rgba(255,255,255,0.8)"
+        class="text-[2rem]"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openStarterPack($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ starterpack.record.name }}
+      </a>
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openStarterPack($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        Starter pack by {{ starterpack.creator | displayName }}
       </a>
     </div>
   </div>
