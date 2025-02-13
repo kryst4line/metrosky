@@ -40,12 +40,12 @@
       @else if (mediaEmbed | isMediaEmbedExternal) {
         <post-embed-external-preview
           [embed]="mediaEmbed"
-          class="block w-[30rem] h-32"
+          class="block max-w-[30rem] h-32"
         />
       }
     </div>
     <div
-      class="flex justify-end items-center h-10 w-[30rem]"
+      class="flex justify-end items-center h-10 max-w-[30rem] w-full"
     >
       @if (mediaEmbed) {
         <button
@@ -117,7 +117,7 @@
           color="rgba(255,255,255,0.85)"
           class="text-[1.5rem]"
         />
-        <span class="mb-[2px] ml-1">close</span>
+        <span class="ml-1">close</span>
       </button>
 
       @if (loading) {
@@ -169,19 +169,19 @@
     @let recordEmbed = postCompose().recordEmbed();
 
     <div
-      class="block w-[30rem] h-32 overflow-hidden"
+      class="block max-w-[30rem] h-32 overflow-hidden"
       style="mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 75%, rgba(0,0,0,0))"
     >
       @if (postCompose().recordEmbed()) {
         <post-embed-record
           [embed]="$any({$type: 'app.bsky.embed.record#view', record: recordEmbed})"
-          class="block w-[30rem] h-32"
+          class="block max-w-[30rem] h-32"
         />
       }
     </div>
 
     <div
-      class="flex items-center h-10 w-[30rem]"
+      class="flex items-center h-10 max-w-[30rem] w-full"
     >
       <span
         class="msky-text-subheader text-[18px] ml-2"
