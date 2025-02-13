@@ -31,7 +31,7 @@ export class PostEmbedExternalPreviewComponent implements OnInit {
   protected readonly YoutubeSnippetSource = SnippetSource.YOUTUBE;
 
   ngOnInit() {
-    this.snippet = SnippetUtils.detectSnippet({uri: this.embed.url, description: this.embed.metadata.description});
+    this.snippet = SnippetUtils.detectSnippet({uri: this.embed.metadata.url, description: this.embed.metadata.description});
   }
 
 }

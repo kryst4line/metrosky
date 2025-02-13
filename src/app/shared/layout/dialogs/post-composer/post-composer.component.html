@@ -2,92 +2,214 @@
   class="flex h-full justify-between gap-4 p-2"
 >
   <div
-    class="grow basis-0 flex justify-end"
+    class="grow basis-0 flex flex-col justify-end items-end gap-2"
   >
-    @for (embed of embedSuggestions() | slice : 0 : 1; track embed) {
-      <ng-container
-        [ngTemplateOutlet]="embedButton"
-        [ngTemplateOutletContext]="{embed: embed}"
-      />
-    }
-
     @let mediaEmbed = postCompose().mediaEmbed();
-    @if (mediaEmbed | isMediaEmbedImage) {
-      <div
-        class="flex flex-row gap-2"
+
+    <div
+      class="flex grow justify-end items-end"
+    >
+      @if (mediaEmbed | isMediaEmbedImage) {
+        <div
+          class="flex flex-row gap-2 overflow-x-auto"
+        >
+          @for (image of mediaEmbed.images; track $index) {
+            <a
+              class="cursor-pointer relative group shrink-0"
+              (click)="removeImage($index)"
+            >
+              <img
+                [src]="image.data"
+                class="h-32 w-32 object-cover hover:brightness-75"
+              />
+              <ng-icon
+                name="tablerCircleX"
+                color="rgba(255,255,255,0.85)"
+                class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
+              />
+            </a>
+          }
+        </div>
+      }
+      @else if (mediaEmbed | isMediaEmbedVideo) {
+        <img
+          [src]="mediaEmbed.thumbnail"
+          class="h-32 w-32 object-cover"
+        />
+      }
+      @else if (mediaEmbed | isMediaEmbedExternal) {
+        <post-embed-external-preview
+          [embed]="mediaEmbed"
+          class="block w-[30rem] h-32"
+        />
+      }
+    </div>
+    <div
+      class="flex justify-end items-center h-10 w-[30rem]"
+    >
+      @if (mediaEmbed) {
+        <button
+          class="ui-button !mr-auto"
+          pRipple
+          (click)="postCompose().mediaEmbed.set(undefined)"
+        >
+          remove attachment
+        </button>
+      }
+
+      <span
+        class="msky-text-subheader text-[18px] mr-2"
       >
-        @for (image of mediaEmbed.images; track $index) {
-          <a
-            class="cursor-pointer relative group"
-            (click)="removeImage($index)"
-          >
-            <img
-              [src]="image.data"
-              class="h-24 w-24 object-cover hover:brightness-75"
-            />
-            <ng-icon
-              name="tablerCircleX"
-              color="rgba(255,255,255,0.85)"
-              class="absolute top-0 left-0 !h-full !w-full scale-50 pointer-events-none opacity-0 group-hover:opacity-100"
-            />
-          </a>
+        @if (mediaEmbed | isMediaEmbedImage) {
+          attaching images
         }
-      </div>
-    }
-    @else if (mediaEmbed | isMediaEmbedVideo) {
-      <img
-        [src]="mediaEmbed.thumbnail"
-        class="h-10 w-10 object-cover"
-      />
-    }
-    @else if (mediaEmbed | isMediaEmbedExternal) {
-      <post-embed-external-preview
-        [embed]="mediaEmbed"
-        class="block h-32 w-48"
-      />
-    }
+        @else if (mediaEmbed | isMediaEmbedVideo) {
+          attaching video
+        }
+        @else if (mediaEmbed | isMediaEmbedExternal) {
+          attaching link
+        }
+      </span>
+    </div>
   </div>
 
   <div
-    class="flex flex-col gap-2"
+    class="flex flex-col gap-2 w-[30rem]"
   >
     @if (postCompose().reply()) {
-      <span
-        class="msky-text-body"
+      <div
+        class="flex gap-2 items-center group"
       >
-        Replying to <b>{{ postCompose().reply().author | displayName }}</b>
-      </span>
+        <ng-icon
+          name="tablerArrowForward"
+          color="rgba(255,255,255,0.85)"
+          class="text-[1.5rem] shrink-0"
+        />
+        <span
+          class="msky-text-subheader text-[18px] line-clamp-1 break-all"
+        >
+          replying to <b>{{ postCompose().reply().author | displayName }}</b>
+        </span>
+        <button
+          class="ui-button !bg-transparent !font-normal !h-auto !px-2 !ml-auto !text-[18px] hover:!underline collapse group-hover:visible"
+          (click)="postCompose().reply.set(undefined)"
+        >
+          cancel
+        </button>
+      </div>
     }
     <p-editor
-      [modules]="{mention: mentionConfig}"
+      [modules]="{mention: mentionConfig, keyboard:{bindings:keyboardBindings}}"
       [formats]="['bold', 'mention']"
       (onInit)="onEditorInit($event)"
       styleClass="w-[30rem] h-32"
     />
-  </div>
-  <div
-    class="flex flex-col-reverse gap-3 items-center"
-  >
-    <p-button
-      (onClick)="onPublishPost.emit(text)"
+    <div
+      class="h-10 flex justify-end items-center gap-2"
     >
-      Post
-    </p-button>
-    @if (loading) {
-      <ng-icon
-        name="tablerLoader2"
-        class="text-[2rem] animate-spin"
-      />
-    }
+      <button
+        class="ui-button flex items-center !p-4 !pl-3 !mr-auto"
+        pRipple
+        (click)="postCompose.set(undefined)"
+      >
+        <ng-icon
+          name="tablerX"
+          color="rgba(255,255,255,0.85)"
+          class="text-[1.5rem]"
+        />
+        <span class="mb-[2px] ml-1">close</span>
+      </button>
+
+      @if (loading) {
+        <ng-icon
+          name="tablerLoader2"
+          color="rgba(255,255,255,0.85)"
+          class="text-[2rem] animate-spin"
+        />
+      }
+
+      @for (embed of embedSuggestions() | slice : 0 : 1; track embed) {
+        <ng-container
+          [ngTemplateOutlet]="embedButton"
+          [ngTemplateOutletContext]="{embed: embed}"
+        />
+      }
+
+      <button
+        class="ui-button flex items-center !p-[0.625rem]"
+        pRipple
+        (click)="uploader.click()"
+      >
+        <input
+          #uploader
+          type="file"
+          class="hidden"
+          (change)="postService.attachMedia($any(uploader.files))"
+
+        />
+        <ng-icon
+          name="tablerPaperclip"
+          color="rgba(255,255,255,0.85)"
+          class="text-[1.25rem]"
+        />
+      </button>
+
+      <button
+        class="ui-button"
+        pRipple
+        (click)="onPublishPost.emit(text)"
+      >
+        create post
+      </button>
+    </div>
   </div>
   <div
-    class="grow basis-0"
+    class="grow basis-0 flex flex-col justify-end gap-2"
   >
-    @if (postCompose().recordEmbed()) {
-      <post-embed-record
-        [embed]="$any({$type: 'app.bsky.embed.record#view', record: postCompose().recordEmbed()})"
-      />
-    }
+    @let recordEmbed = postCompose().recordEmbed();
+
+    <div
+      class="block w-[30rem] h-32 overflow-hidden"
+      style="mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 75%, rgba(0,0,0,0))"
+    >
+      @if (postCompose().recordEmbed()) {
+        <post-embed-record
+          [embed]="$any({$type: 'app.bsky.embed.record#view', record: recordEmbed})"
+          class="block w-[30rem] h-32"
+        />
+      }
+    </div>
+
+    <div
+      class="flex items-center h-10 w-[30rem]"
+    >
+      <span
+        class="msky-text-subheader text-[18px] ml-2"
+      >
+        @if (recordEmbed | isEmbedRecordViewRecord) {
+          quoting post
+        }
+        @else if (recordEmbed | isFeedDefsGeneratorView) {
+          quoting feed
+        }
+        @else if (recordEmbed | isGraphDefsListView) {
+          quoting list
+        }
+        @else if (recordEmbed | isGraphDefsStarterPackViewBasic) {
+          quoting starter pack
+        }
+      </span>
+
+      @if (recordEmbed) {
+        <button
+          class="ui-button !ml-auto"
+          pRipple
+          (click)="postCompose().recordEmbed.set(undefined)"
+        >
+          remove quote
+        </button>
+      }
+    </div>
   </div>
 </div>
 
@@ -97,41 +219,50 @@
   @if (embed.type == 'RECORD' && !postCompose().recordEmbed()) {
     @switch (embed.recordType) {
       @case ('POST') {
-        <p-button
+        <button
+          class="ui-button"
+          pRipple
           (click)="embedQuote()"
         >
-          Quote post
-        </p-button>
+          quote post
+        </button>
       }
       @case ('FEED') {
-        <p-button
+        <button
+          class="ui-button"
+          pRipple
           (click)="embedFeed()"
         >
-          Embed feed
-        </p-button>
+          quote feed
+        </button>
       }
       @case ('LIST') {
-        <p-button
-          (click)="embedList()"
+        <button
+          class="ui-button"
+          pRipple
+          (click)="embedLink()"
         >
-          Embed list
-        </p-button>
+          quote list
+        </button>
       }
       @case ('STARTER_PACK') {
-        <p-button
-          (click)="embedStarterPack()"
+        <button
+          class="ui-button"
+          pRipple
         >
-          Embed starter pack
-        </p-button>
+          quote starter pack
+        </button>
       }
     }
   }
   @if (embed.type == 'EXTERNAL' && !postCompose().mediaEmbed()) {
-    <p-button
+    <button
+      class="ui-button"
+      pRipple
       (click)="embedLink()"
     >
-      Embed link
-    </p-button>
+      attach link
+    </button>
   }
 
 </ng-template>

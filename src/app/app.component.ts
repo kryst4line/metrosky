@@ -23,7 +23,7 @@ import {
   tablerSearch,
   tablerLoader2,
   tablerUser,
-  tablerCircleX
+  tablerCircleX, tablerPaperclip
 } from "@ng-icons/tabler-icons";
 import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
 import {NgClass} from "@angular/common";
@@ -59,7 +59,8 @@ import {NgClass} from "@angular/common";
       tablerSearch,
       tablerLoader2,
       tablerUser,
-      tablerCircleX
+      tablerCircleX,
+      tablerPaperclip
     })
   ]
 })

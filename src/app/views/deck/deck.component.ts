@@ -20,7 +20,6 @@ import {HttpErrorResponse} from "@angular/common/http";
     SidebarComponent,
     PostComposerComponent,
     Drawer,
-    NgIcon,
     FileUploadModule
   ],
   templateUrl: './deck.component.html',
@@ -42,9 +41,8 @@ export class DeckComponent implements OnInit {
   }
 
   publishPost(text: string) {
+    if (!text.trim().length) return;
     this.creatingPost = true;
-
-
 
     this.postService.publishPost(text).then(
       () => {

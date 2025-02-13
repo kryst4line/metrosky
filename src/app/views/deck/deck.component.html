@@ -41,17 +41,10 @@
   transitionOptions="0.15s ease-out"
 >
   <ng-template #headless>
-    <ng-icon
-      name="tablerX"
-      class="absolute top-2 right-2 cursor-pointer text-[2rem]"
-      (click)="postCompose.set(undefined)"
-    />
     <post-composer
       class="h-full"
       [loading]="creatingPost"
       (onPublishPost)="publishPost($event)"
-      ng2FileDrop
-      (onFileDrop)="onFileDrop($event)"
     />
   </ng-template>
 </p-drawer>

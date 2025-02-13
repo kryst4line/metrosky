@@ -5,7 +5,6 @@ import {
   Input,
   Output, signal, WritableSignal
 } from '@angular/core';
-import {Button} from "primeng/button";
 import {Editor, EditorInitEvent} from "primeng/editor";
 import "quill-mention/autoregister";
 import "quill-mention/dist/quill.mention.css"
@@ -41,11 +40,17 @@ import {
   PostEmbedExternalPreviewComponent
 } from "~/src/app/shared/components/embeds/post-embed-external-preview/post-embed-external-preview.component";
 import {SnippetType} from "~/src/app/api/models/snippet";
+import {Ripple} from "primeng/ripple";
+import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
+import {IsGraphDefsListViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-list-view";
+import {
+  IsGraphDefsStarterPackViewBasicPipe
+} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-starterpack-viewbasic";
+import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-generator-view";
 
 @Component({
   selector: 'post-composer',
   imports: [
-    Button,
     Editor,
     NgIcon,
     DisplayNamePipe,
@@ -55,7 +60,12 @@ import {SnippetType} from "~/src/app/api/models/snippet";
     IsMediaEmbedVideoPipe,
     IsMediaEmbedExternalPipe,
     PostEmbedRecordComponent,
-    PostEmbedExternalPreviewComponent
+    PostEmbedExternalPreviewComponent,
+    Ripple,
+    IsEmbedRecordViewRecordPipe,
+    IsGraphDefsListViewPipe,
+    IsGraphDefsStarterPackViewBasicPipe,
+    IsFeedDefsGeneratorViewPipe
   ],
   templateUrl: './post-composer.component.html',
   styleUrl: './post-composer.component.scss',
@@ -68,6 +78,24 @@ export class PostComposerComponent {
   embedSuggestions: WritableSignal<Array<RecordEmbed | ExternalEmbed>> = signal([]);
 
   editor: Quill;
+  keyboardBindings = [
+    {
+      key: 'Enter',
+      ctrlKey: true,
+      handler: () => this.onPublishPost.emit(this.text)
+    },
+    {
+      key: 'Escape',
+      handler: () => {
+        const mention: any = this.editor.getModule('mention');
+        if (mention.isOpen) {
+          mention.escapeHandler();
+        } else {
+          this.postCompose.set(undefined);
+        }
+      }
+    }
+  ];
   mentionResults$: Observable<AppBskyActorSearchActorsTypeahead.Response>;
   mentionSubject = new Subject<string>();
   mentionSubscription: Subscription;
@@ -105,7 +133,7 @@ export class PostComposerComponent {
   };
 
   constructor(
-    private postService: PostService,
+    protected postService: PostService,
     private embedService: EmbedService,
     private messageService: MessageService
   ) {
@@ -119,9 +147,12 @@ export class PostComposerComponent {
 
   onEditorInit(event: EditorInitEvent) {
     this.editor = event.editor;
+    //Listen for possible urls to embed
     this.editor.on('text-change', () => {
       this.embedSuggestions.set(EmbedUtils.findEmbedSuggestions(this.editor.getText()));
     });
+    //Remove tabulation
+    delete this.editor.keyboard.bindings['Tab'];
   }
 
   get text(): string {
