@@ -27,19 +27,19 @@ export class PostService {
   }
 
   setPost(post: AppBskyFeedDefs.PostView): WritableSignal<AppBskyFeedDefs.PostView> {
-    const existingPost = posts.get(post.cid);
+    const existingPost = posts.get(post.uri);
     if (existingPost) {
       existingPost.set(post);
       return existingPost;
     } else {
       const newPost = signal(post);
-      posts.set(post.cid, newPost);
+      posts.set(post.uri, newPost);
       return newPost;
     }
   }
 
-  getPost(cid: string): WritableSignal<AppBskyFeedDefs.PostView> | undefined {
-    return posts.get(cid);
+  getPost(uri: string): WritableSignal<AppBskyFeedDefs.PostView> | undefined {
+    return posts.get(uri);
   }
 
   createPost() {
