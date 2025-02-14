@@ -3,30 +3,9 @@ import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from "./core/auth/auth.service";
 import {takeWhile} from "rxjs";
 import {Toast} from "primeng/toast";
-import {NgIcon, provideIcons} from "@ng-icons/core";
-import {
-  tablerAlertTriangle,
-  tablerArrowForward,
-  tablerCircleSquare,
-  tablerDots,
-  tablerHeart,
-  tablerInfoCircle,
-  tablerLink,
-  tablerMessage,
-  tablerPin,
-  tablerRepeat,
-  tablerUserPlus,
-  tablerX,
-  tablerSettings,
-  tablerList,
-  tablerHash,
-  tablerSearch,
-  tablerLoader2,
-  tablerUser,
-  tablerCircleX, tablerPaperclip
-} from "@ng-icons/tabler-icons";
-import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
+import {NgIcon} from "@ng-icons/core";
 import {NgClass} from "@angular/common";
+import {iconsProvider} from "~/src/app/app.config";
 
 @Component({
   selector: 'app-root',
@@ -39,29 +18,7 @@ import {NgClass} from "@angular/common";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   providers: [
-    provideIcons({
-      tablerX,
-      tablerInfoCircle,
-      tablerAlertTriangle,
-      tablerArrowForward,
-      tablerDots,
-      tablerHeart,
-      tablerHeartFill,
-      tablerLink,
-      tablerMessage,
-      tablerPin,
-      tablerRepeat,
-      tablerUserPlus,
-      tablerCircleSquare,
-      tablerSettings,
-      tablerList,
-      tablerHash,
-      tablerSearch,
-      tablerLoader2,
-      tablerUser,
-      tablerCircleX,
-      tablerPaperclip
-    })
+    iconsProvider
   ]
 })
 export class AppComponent implements OnInit {

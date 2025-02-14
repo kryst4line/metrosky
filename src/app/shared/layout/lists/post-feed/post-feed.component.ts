@@ -4,7 +4,7 @@ import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
+import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
@@ -18,17 +18,14 @@ import {Subject} from "rxjs";
     AgVirtualScrollModule,
   ],
   templateUrl: './post-feed.component.html',
-  styleUrl: './post-feed.component.scss',
-  providers: [
-    DialogService
-  ]
+  styleUrl: './post-feed.component.scss'
 })
 export class PostFeedComponent implements OnInit {
   @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
   posts: SignalizedFeedViewPost[] = [];
-  dialogs: DynamicDialogRef[] = [];
+  dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
   reloadReady = false;
@@ -90,19 +87,24 @@ export class PostFeedComponent implements OnInit {
     }
   }
 
-  openPost(event: SignalizedFeedViewPost) {
-    this.dialogs.push(
-      this.dialogService.open(ImagePostDialogComponent, {
-        modal: true,
-        dismissableMask: true,
-        data: {
-          post: event
-        },
-        appendTo: this.feed.nativeElement,
-        maskStyleClass: '!absolute',
-        focusOnShow: false
-      })
-    );
+  openPost(uri: string) {
+    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
+      data: {
+        uri: uri
+      },
+      appendTo: this.feed.nativeElement,
+      maskStyleClass: 'inner-dialog !absolute',
+      style: {background: 'transparent', height: '100%'},
+      focusOnShow: false,
+      width: '450px'
+    });
+
+    this.dialog.onClose.subscribe({
+      next: () => {
+        this.dialog.destroy();
+        this.dialog = undefined;
+      }
+    });
   }
 
   manageRefresh() {
@@ -151,4 +153,6 @@ export class PostFeedComponent implements OnInit {
   log(event: any) {
     console.log(event)
   }
+
+  protected readonly open = open;
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs} from "@atproto/api";
 import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
 import {
@@ -67,13 +67,14 @@ import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pip
 })
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
+  @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
 
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 
-  openPost(event: MouseEvent) {
+  openEmbed(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
-
+      this.onEmbedClick.emit(this.embed);
     }
     event.stopPropagation();
   }

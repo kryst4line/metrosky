@@ -1,26 +1,7 @@
-
-<!--@if (embed.record | isEmbedRecordView) {-->
-<!--  {{record = embed.record}}-->
-<!--}-->
-<!--@else if ((embed.record | isEmbedRecordWithMediaView) && (embed.record.record | isEmbedRecordView)) {-->
-<!--  record = embed.record.record;-->
-<!--  media = embed.media;-->
-<!--}-->
-<!--@else if ((embed.record | isEmbedRecordViewBlocked) || (embed.record.record | isEmbedRecordViewBlocked)) {-->
-<!--  blocked = true;-->
-<!--}-->
-<!--@else if ((embed.record | isEmbedRecordViewNotFound) || (embed.record.record | isEmbedRecordViewNotFound)) {-->
-<!--  notFound = true;-->
-<!--}-->
-<!--@else if ((embed.record | isEmbedRecordViewDetached) || (embed.record.record | isEmbedRecordViewDetached)) {-->
-<!--  detached = true;-->
-<!--}-->
-<!-- TODO: FEED, LIST, LABELER, STARTER PACK -->
-
 <div #base
   id="base"
   class="flex flex-col p-3 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-20"
-  (click)="openPost($event)"
+  (click)="openEmbed($event)"
 >
     @if (embed.record | isEmbedRecordViewRecord) {
 
@@ -182,6 +163,7 @@
     <post-embed-record
       [embed]="media"
       [class]="margin"
+      (onEmbedClick)="onEmbedClick.emit($event)"
     />
   }
 

@@ -1,0 +1,88 @@
+
+  <div
+    class="h-full flex flex-col"
+  >
+    <div
+      class="h-12 w-full flex items-center px-2 gap-2 shrink-0"
+    >
+      <ng-icon
+        name="tablerChevronLeft"
+        class="text-[2rem] cursor-pointer"
+        (click)="ref.close()"
+      />
+      <span
+        class="msky-text-subheader text-[1.5rem]"
+      >
+        thread view
+      </span>
+    </div>
+
+    @if (post) {
+      <div #scroll
+           class="flex flex-col flex-1 min-h-0 overflow-y-auto pr-2"
+      >
+        <div
+          class="flex flex-col max-w-[90%]"
+        >
+          @for (parent of parents; track parent.uuid) {
+            <feed-post-card
+              [feedViewPost]="parent"
+            />
+          }
+        </div>
+
+        <feed-post-card-detail #main
+                               [feedViewPost]="post"
+        />
+
+        <div
+          class="flex flex-col w-[95%] self-end"
+        >
+          @for (reply of replies; track reply.uuid) {
+            <ng-container
+              [ngTemplateOutlet]="threadReplyTemplate"
+              [ngTemplateOutletContext]="{threadReply: reply}"
+            />
+          }
+        </div>
+      </div>
+    } @else {
+      <div
+        class="w-full h-full flex justify-center items-center"
+      >
+        <ng-icon
+          name="tablerLoader2"
+          color="rgba(255,255,255,0.85)"
+          class="text-[5rem] animate-spin"
+        />
+      </div>
+    }
+  </div>
+
+<ng-template #threadReplyTemplate
+  let-threadReply="threadReply"
+>
+  <feed-post-card
+    [feedViewPost]="threadReply.post"
+    class="w-full"
+  />
+  @if (threadReply.replies.length) {
+    <div
+      class="flex w-full"
+    >
+      <div
+        class="h-full w-[2px] bg-[rgba(255,255,255,0.30)] bg-clip-content pb-2 ml-1 mr-3 shrink-0 rounded-sm"
+      ></div>
+      <div
+        class="flex flex-col w-full items-end min-w-0"
+      >
+        @for (reply of threadReply.replies; track reply.uuid) {
+          <ng-container
+            [ngTemplateOutlet]="threadReplyTemplate"
+            [ngTemplateOutletContext]="{threadReply: reply}"
+          />
+        }
+      </div>
+    </div>
+  }
+</ng-template>

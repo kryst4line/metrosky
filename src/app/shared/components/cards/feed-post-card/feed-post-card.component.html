@@ -214,6 +214,7 @@
     @if (embed | isEmbedRecordView) {
       <post-embed-record
         [embed]="embed"
+        (onEmbedClick)="onEmbedClick.emit($event)"
       />
     }
 
@@ -239,6 +240,7 @@
 
       <post-embed-record
         [embed]="embed.record"
+        (onEmbedClick)="$event"
         class="block mt-4"
       />
     }

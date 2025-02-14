@@ -7,17 +7,20 @@
     [items]="notifications"
     [height]="'100%'"
     [min-row-height]="110"
+    [class]="dialog ? 'invisible' : 'visible'"
     (onItemsRender)="nextData($event)"
   >
     @for (notification of vs.items; track notification.uuid) {
       @if (notification | isPostNotification) {
         <feed-post-card
           [feedViewPost]="notification.feedViewPost"
-          (onPostClick)="openPost($event)"
+          (onPostClick)="openPost($event.post().uri)"
+          (onEmbedClick)="openPost($any($event.record).uri)"
         />
       } @else {
         <notification-card
           [notification]="notification"
+          (onNotificationClick)="openNotification($event)"
         />
       }
     }

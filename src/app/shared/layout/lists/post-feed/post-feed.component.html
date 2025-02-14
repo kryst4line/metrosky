@@ -7,12 +7,14 @@
     [items]="posts"
     [height]="'100%'"
     [min-row-height]="150"
+    [class]="dialog ? 'invisible' : 'visible'"
     (onItemsRender)="nextData($event); manageRefresh();"
   >
     @for (post of vs.items; track post.uuid; let i = $index) {
       <feed-post-card
         [feedViewPost]="post"
-        (onPostClick)="openPost($event)"
+        (onPostClick)="openPost($event.post().uri)"
+        (onEmbedClick)="openPost($any($event.record).uri)"
       />
     }
   </ag-virtual-scroll>

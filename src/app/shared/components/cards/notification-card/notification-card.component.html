@@ -1,7 +1,7 @@
 <div #base
      id="base"
      class="flex p-4 mb-2 cursor-pointer gap-2 msky-bg-dark-20 hover:msky-bg-dark-25"
-     (click)="openNotification($event)"
+     (click)="onNotificationClick.emit(notification)"
 >
   @if (
     (notification | isLikeNotification) ||

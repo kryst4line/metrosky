@@ -3,14 +3,14 @@ import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
-import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {ImagePostDialogComponent} from "~/src/app/shared/layout/dialogs/image-post-dialog/image-post-dialog.component";
+import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {Notification} from "~/src/app/api/models/notification";
 import NotificationUtils from "~/src/app/shared/utils/notification-utils";
 import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/notifications/is-post-notification";
 import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
+import {MessageService} from "~/src/app/api/services/message.service";
 
 @Component({
   selector: 'notification-feed',
@@ -31,7 +31,7 @@ export class NotificationFeedComponent implements OnInit {
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
   notifications: Notification[] = [];
-  dialogs: DynamicDialogRef[] = [];
+  dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
   reloadReady = false;
@@ -39,7 +39,8 @@ export class NotificationFeedComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -85,19 +86,37 @@ export class NotificationFeedComponent implements OnInit {
     }
   }
 
-  openPost(event: SignalizedFeedViewPost) {
-    this.dialogs.push(
-      this.dialogService.open(ImagePostDialogComponent, {
-        modal: true,
-        dismissableMask: true,
-        data: {
-          post: event
-        },
-        appendTo: this.feed.nativeElement,
-        maskStyleClass: '!absolute',
-        focusOnShow: false
-      })
-    );
+  openPost(uri: string) {
+    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
+      data: {
+        uri: uri
+      },
+      appendTo: this.feed.nativeElement,
+      maskStyleClass: 'inner-dialog !absolute',
+      style: {background: 'transparent', height: '100%'},
+      focusOnShow: false,
+      width: '450px'
+    });
+
+    this.dialog.onClose.subscribe({
+      next: () => {
+        this.dialog.destroy();
+        this.dialog = undefined;
+      }
+    });
+  }
+
+  openNotification(notification: Notification) {
+    switch (notification.reason) {
+      case "like":
+      case "repost":
+        this.openPost(notification.uri);
+        break;
+      case "follow":
+      case "starterpack-joined":
+        this.messageService.warnIcon('This feature is not implemented yet.', 'Welp!');
+        break;
+    }
   }
 
   manageRefresh() {

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImagePostDialogComponent } from './image-post-dialog.component';
+import { ThreadViewDialogComponent } from './thread-view-dialog.component';
 
 describe('ImagePostDialogComponent', () => {
-  let component: ImagePostDialogComponent;
-  let fixture: ComponentFixture<ImagePostDialogComponent>;
+  let component: ThreadViewDialogComponent;
+  let fixture: ComponentFixture<ThreadViewDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImagePostDialogComponent]
+      imports: [ThreadViewDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ImagePostDialogComponent);
+    fixture = TestBed.createComponent(ThreadViewDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
