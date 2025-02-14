@@ -34,8 +34,10 @@ export class LoginComponent {
   ) {}
 
   onLogin() {
+    this.credentials.identifier = this.credentials.identifier.trim();
+
     if (
-      this.credentials.identifier.trim().length &&
+      this.credentials.identifier.length &&
       this.APP_PASSWORD_REGEX.exec(this.credentials.password)
     ) {
       this.authService.login(this.credentials);
