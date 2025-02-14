@@ -68,7 +68,7 @@ Maybe you can mention me or this repo in the acknowledgements too
 * [x] Browse timeline and notification feeds 
 * [x] Basic interaction (like/repost)
 * [x] Post/reply/quote
-* [ ] View threads/replies
+* [x] View threads/replies
 * [ ] Customizable columns
 * [ ] Internationalization (multi-language)
 
