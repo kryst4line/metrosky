@@ -1,9 +1,16 @@
-<div class="flex h-full w-full min-h-0 min-w-0 darken-bg">
+<div
+  class="flex h-full w-full min-h-0 min-w-0 darken-bg"
+  ng2FileDrop
+  (onFileDrop)="onFileDrop($event)"
+>
   <sidebar
     (onActionPost)="postService.createPost()"
   />
 
-  <div class="flex w-full h-full min-h-0 py-5 px-10 gap-8">
+  <div
+    class="flex w-full h-full min-h-0 py-5 px-10 gap-8 overflow-x-auto"
+
+  >
     <div class="flex flex-col">
       <div
         class="h-12 shrink-0 msky-text-header leading-[100%]"
@@ -27,22 +34,17 @@
 </div>
 
 <p-drawer
-  [visible]="newPost() !== undefined"
+  [visible]="postCompose() !== undefined"
   [modal]="false"
   position="bottom"
   styleClass="!border-none !bg-[#002047] !h-auto"
   transitionOptions="0.15s ease-out"
 >
   <ng-template #headless>
-    <ng-icon
-      name="tablerX"
-      class="absolute top-2 right-2 cursor-pointer text-[2rem]"
-      (click)="newPost.set(undefined)"
-    />
     <post-composer
       class="h-full"
       [loading]="creatingPost"
-      (onCreatePost)="post($event)"
+      (onPublishPost)="publishPost($event)"
     />
   </ng-template>
 </p-drawer>

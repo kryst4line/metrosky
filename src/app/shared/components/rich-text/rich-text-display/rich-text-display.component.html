@@ -1,5 +1,5 @@
 <span
-  class="whitespace-pre-line"
+  class="whitespace-pre-line block leading-snug"
 >
   @for (segment of segments; track $index) {
     @if (segment.isLink()) {
@@ -28,7 +28,7 @@
         {{segment.text}}
       </a>
     } @else {
-      <span>
+      <span class="break-words">
         {{segment.text}}
       </span>
     }

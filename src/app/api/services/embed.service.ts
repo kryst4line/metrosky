@@ -12,6 +12,10 @@ export class EmbedService {
   ) {}
 
   getUrlMetadata(url: string): Observable<UrlMetadata> {
+    if (!url.startsWith('https://') && !url.startsWith('http://')) {
+      url = 'https://' + url;
+    }
+
     return this.httpClient.get(`https://cardyb.bsky.app/v1/extract?url=${url}`)
       .pipe(
         map((res: any) => {
@@ -24,6 +28,6 @@ export class EmbedService {
           metadata.error = res.error;
           return metadata;
         })
-      )
+      );
   }
 }

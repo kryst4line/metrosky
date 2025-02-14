@@ -44,12 +44,5 @@ import {PostEmbedVideoComponent} from "~/src/app/shared/components/embeds/post-e
 })
 export class NotificationCardComponent {
   @Input() notification: Notification;
-  @Output() onNotificationClick: EventEmitter<any> = new EventEmitter<any>;
-
-  openNotification(event: MouseEvent) {
-    if (!window.getSelection().toString().length) {
-      this.onNotificationClick.emit();
-    }
-    event.stopPropagation();
-  }
+  @Output() onNotificationClick: EventEmitter<Notification> = new EventEmitter<Notification>;
 }

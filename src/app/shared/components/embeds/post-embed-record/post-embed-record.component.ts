@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia} from "@atproto/api";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs} from "@atproto/api";
 import {IsEmbedRecordViewRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewrecord.pipe";
 import {
   IsEmbedRecordWithMediaViewPipe
@@ -25,6 +25,15 @@ import {
   IsEmbedRecordViewDetachedPipe
 } from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-viewdetached.pipe";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
+import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-generator-view";
+import {IsGraphDefsListViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-list-view";
+import {IsLabelerDefsLabelerViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-labeler-defs-labeler-view";
+import {
+  IsGraphDefsStarterPackViewBasicPipe
+} from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-starterpack-viewbasic";
+import {LinkExtractorStarterPackPipe} from "~/src/app/shared/utils/pipes/link-extractor-starterpack.pipe";
+import {NgIcon} from "@ng-icons/core";
+import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
 
 @Component({
   selector: 'post-embed-record',
@@ -43,23 +52,61 @@ import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
     IsEmbedRecordViewBlockedPipe,
     IsEmbedRecordViewNotFoundPipe,
     IsEmbedRecordViewDetachedPipe,
-    DisplayNamePipe
+    DisplayNamePipe,
+    IsFeedDefsGeneratorViewPipe,
+    IsGraphDefsListViewPipe,
+    IsLabelerDefsLabelerViewPipe,
+    IsGraphDefsStarterPackViewBasicPipe,
+    LinkExtractorStarterPackPipe,
+    NgIcon,
+    LinkExtractorPipe
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostEmbedRecordComponent {
-  @Input() embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View;
+  @Input() embed: AppBskyEmbedRecord.View;
+  @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
 
-  openPost(event: MouseEvent) {
+  protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
+  protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
+
+  openEmbed(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
-
+      this.onEmbedClick.emit(this.embed);
     }
     event.stopPropagation();
   }
 
   openAuthor(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openStarterPack(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openList(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openFeed(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+
+    }
     event.preventDefault();
     event.stopPropagation();
   }

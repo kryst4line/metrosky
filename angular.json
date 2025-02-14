@@ -38,6 +38,11 @@
               "src/styles.scss",
               "https://unpkg.com/video.js@8.21.1/dist/video-js.min.css"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            },
             "scripts": [
             ]
           },

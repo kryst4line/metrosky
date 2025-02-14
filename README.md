@@ -67,10 +67,12 @@ Maybe you can mention me or this repo in the acknowledgements too
 
 * [x] Browse timeline and notification feeds 
 * [x] Basic interaction (like/repost)
-* [ ] Post/reply/quote
-* [ ] View threads/replies
+* [x] Post/reply/quote
+* [x] View threads/replies
 * [ ] Customizable columns
 * [ ] Internationalization (multi-language)
+
+For more info, [check the project kanban](https://github.com/users/kryst4line/projects/1)
 
 
 <!-- License -->

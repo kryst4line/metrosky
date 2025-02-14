@@ -1,4 +1,5 @@
 import {UrlMetadata} from "~/src/app/api/models/url-metadata";
+import {BlueskyGifSnippet, IframeSnippet, LinkSnippet} from "~/src/app/api/models/snippet";
 
 export const enum EmbedType {
   IMAGE = 'IMAGE',
@@ -20,7 +21,7 @@ interface Embed {
 export class ImageEmbed implements Embed {
   type: EmbedType.IMAGE = EmbedType.IMAGE;
   /** Image array */
-  images: {file: File, thumbnail: string}[] = [];
+  images: {data: string, alt: string}[] = [];
 }
 
 export class VideoEmbed implements Embed {
@@ -41,6 +42,8 @@ export class ExternalEmbed implements Embed {
   url: string;
   /** Extended info */
   metadata: UrlMetadata;
+  /** Extended info */
+  snippet: LinkSnippet | BlueskyGifSnippet | IframeSnippet;
 
   constructor(url: string) {
     this.url = url;

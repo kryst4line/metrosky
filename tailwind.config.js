@@ -11,7 +11,10 @@ module.exports = {
       fontFamily: {
         'sans': 'Open Sans'
       },
-      color: 'rgba(255,255,255,0.85)'
+      color: 'rgba(255,255,255,0.85)',
+      lineHeight: {
+        'snug': '1.4'
+      }
     },
   },
   plugins: [
