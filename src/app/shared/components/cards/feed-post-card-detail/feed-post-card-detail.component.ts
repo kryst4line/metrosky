@@ -26,12 +26,12 @@ import {
 } from "~/src/app/shared/components/embeds/post-embed-external/post-embed-external.component";
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
+import {MessageService} from '~/src/app/api/services/message.service'
 
 @Component({
   selector: 'feed-post-card-detail',
@@ -69,7 +69,6 @@ export class FeedPostCardDetailComponent {
   @Input() feedViewPost: SignalizedFeedViewPost;
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>();
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
-  ref: DynamicDialogRef;
   processingAction: boolean = false;
 
   moreMenuItems: MenuItem[] = [
@@ -102,7 +101,7 @@ export class FeedPostCardDetailComponent {
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
-    private dialogService: DialogService
+    private messageService: MessageService
   ) {}
 
   replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
@@ -191,15 +190,8 @@ export class FeedPostCardDetailComponent {
     event.stopPropagation();
   }
 
-  openDialog(index: number) {
-    this.ref = this.dialogService.open(ThreadViewDialogComponent, {
-      modal: true,
-      dismissableMask: true,
-      data: {
-        post: this.feedViewPost.post()
-      },
-      focusOnShow: false
-    });
+  openDialog() {
+    this.messageService.warnIcon('This feature is not implemented yet.', 'Welp!');
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {

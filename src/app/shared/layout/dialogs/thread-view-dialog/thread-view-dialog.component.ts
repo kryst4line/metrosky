@@ -90,7 +90,6 @@ export class ThreadViewDialogComponent {
             });
           }
 
-
           this.cdRef.markForCheck();
           setTimeout(() => {
             if (thread.parent) {

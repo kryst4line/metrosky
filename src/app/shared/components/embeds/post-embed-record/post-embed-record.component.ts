@@ -68,6 +68,7 @@ import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pip
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
+  @Output() onImgClick: EventEmitter<{index: number, uri: string}> = new EventEmitter<{index: number, uri: string}>();
 
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;

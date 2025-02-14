@@ -195,7 +195,7 @@
     @if (embed | isEmbedImagesView) {
       <post-embed-images
         [embed]="embed"
-        (onImgClick)="openDialog($event)"
+        (onImgClick)="openDialog()"
       />
     }
 
@@ -222,7 +222,7 @@
       @if (embed.media | isEmbedImagesView) {
         <post-embed-images
           [embed]="embed.media"
-          (onImgClick)="openDialog($event)"
+          (onImgClick)="openDialog()"
         />
       }
 

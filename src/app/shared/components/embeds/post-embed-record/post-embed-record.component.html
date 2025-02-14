@@ -142,6 +142,7 @@
     <post-embed-images
       [embed]="media"
       [class]="margin"
+      (onImgClick)="onImgClick.emit({index: $event, uri: $any(embed.record).uri})"
     />
   }
 
@@ -172,6 +173,7 @@
       <post-embed-images
         [embed]="media.media"
         [class]="margin"
+        (onImgClick)="onImgClick.emit({index: $event, uri: $any(embed.record).uri})"
       />
     }
     @if (media.media | isEmbedVideoView) {
