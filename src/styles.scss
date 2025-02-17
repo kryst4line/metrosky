@@ -65,6 +65,10 @@
       transition: 1.5s opacity ease;
     }
   }
+
+  * {
+    scrollbar-color: rgba(255,255,255,0.5) transparent;
+  }
 }
 
 .app-container{

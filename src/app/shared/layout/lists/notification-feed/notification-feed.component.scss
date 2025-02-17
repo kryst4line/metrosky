@@ -1,6 +1,2 @@
 @use 'styles';
 @include styles.inner-dialog;
-
-:host(::ng-deep ag-virtual-scroll) .items-container {
-  padding-right: 0.5rem;
-}
