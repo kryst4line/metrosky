@@ -99,7 +99,7 @@
       </div>
     }
     <p-editor
-      [modules]="{mention: mentionConfig, keyboard:{bindings:keyboardBindings}}"
+      [modules]="{mention: mentionConfig, keyboard:{bindings:keyboardBindings}, toolbar: false}"
       [formats]="['bold', 'mention']"
       (onInit)="onEditorInit($event)"
       styleClass="w-[30rem] h-32"
