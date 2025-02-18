@@ -15,6 +15,7 @@
         [feedViewPost]="post"
         (onPostClick)="openPost($event.post().uri)"
         (onEmbedClick)="openPost($any($event.record).uri)"
+        class="cursor-pointer"
       />
     }
   </ag-virtual-scroll>

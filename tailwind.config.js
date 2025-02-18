@@ -41,6 +41,9 @@ module.exports = {
             '.msky-text-darkwhite': {
               color: 'rgba(255, 255, 255, 0.7)'
             },
+            '.msky-text-link': {
+              color: 'rgba(100, 255, 255, 0.9)'
+            },
             '.msky-text-header': {
               color: 'rgba(207, 255, 255, 0.9)',
               fontSize: '2.4rem',

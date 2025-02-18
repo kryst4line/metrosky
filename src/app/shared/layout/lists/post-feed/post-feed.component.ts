@@ -96,7 +96,8 @@ export class PostFeedComponent implements OnInit {
       maskStyleClass: 'inner-dialog !absolute',
       style: {background: 'transparent', height: '100%'},
       focusOnShow: false,
-      width: '450px'
+      width: '450px',
+      duplicate: true
     });
 
     this.dialog.onClose.subscribe({

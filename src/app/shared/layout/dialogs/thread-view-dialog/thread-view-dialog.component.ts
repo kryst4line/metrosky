@@ -3,7 +3,7 @@ import {
   FeedPostCardDetailComponent
 } from "~/src/app/shared/components/cards/feed-post-card-detail/feed-post-card-detail.component";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {AppBskyFeedDefs} from "@atproto/api";
@@ -17,6 +17,7 @@ import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post
 import {BlockedPost, NotFoundPost, ThreadViewPost} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import {ThreadReply} from "~/src/app/api/models/thread-reply";
 import {NgTemplateOutlet} from "@angular/common";
+import {AgVirtualScrollModule} from "ag-virtual-scroll";
 
 @Component({
   selector: 'thread-view-dialog',
@@ -24,7 +25,8 @@ import {NgTemplateOutlet} from "@angular/common";
     FeedPostCardDetailComponent,
     NgIcon,
     forwardRef(() => FeedPostCardComponent),
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    AgVirtualScrollModule
   ],
   templateUrl: './thread-view-dialog.component.html',
   styleUrl: './thread-view-dialog.component.scss',
@@ -39,12 +41,15 @@ export class ThreadViewDialogComponent {
   post: SignalizedFeedViewPost;
   parents: SignalizedFeedViewPost[] = [];
   replies: ThreadReply[] = [];
+  dialog: DynamicDialogRef;
 
   constructor(
     protected ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private postService: PostService,
     private messageService: MessageService,
+    private dialogService: DialogService,
+    private parentRef: ElementRef,
     private cdRef: ChangeDetectorRef
   ) {
     this.loadThread();
@@ -118,5 +123,27 @@ export class ThreadViewDialogComponent {
         (reply.replies as Array<ThreadViewPost | NotFoundPost | BlockedPost>).map(nestedReply => this.parseReplies(nestedReply))
     }
     return threadReply;
+  }
+
+  onPostClick(uri: string) {
+    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
+      data: {
+        uri: uri,
+      },
+      appendTo: this.parentRef.nativeElement,
+      maskStyleClass: 'inner-dialog !absolute',
+      style: {background: 'transparent', height: '100%'},
+      focusOnShow: false,
+      width: '450px',
+      duplicate: true
+    });
+
+    this.dialog.onClose.subscribe({
+      next: () => {
+        this.dialog.destroy();
+        this.dialog = undefined;
+        this.cdRef.markForCheck();
+      }
+    });
   }
 }

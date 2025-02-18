@@ -1,77 +1,82 @@
-
+<div
+  class="h-full flex flex-col"
+  [class]="dialog ? 'invisible' : 'visible'"
+>
   <div
-    class="h-full flex flex-col"
+    class="h-12 w-full flex items-center px-2 gap-2 shrink-0 cursor-pointer hover:underline decoration-1"
+    (click)="ref.close();"
   >
-    <div
-      class="h-12 w-full flex items-center px-2 gap-2 shrink-0 cursor-pointer hover:underline"
-      (click)="ref.close()"
-    >
+    <button>
       <ng-icon
         name="tablerChevronLeft"
         class="text-[2rem]"
       />
-      <span
-        class="msky-text-subheader text-[1.5rem]"
-      >
-        thread view
-      </span>
-    </div>
-
-    @if (post) {
-      <div #scroll
-           class="flex flex-col flex-1 min-h-0 overflow-y-auto pr-2"
-      >
-        <div
-          class="flex flex-col max-w-[90%]"
-        >
-          @for (parent of parents; track parent.uuid) {
-            <feed-post-card
-              [feedViewPost]="parent"
-            />
-          }
-        </div>
-
-        <feed-post-card-detail #main
-                               [feedViewPost]="post"
-        />
-
-        <div
-          class="flex flex-col w-[95%] self-end"
-        >
-          @for (reply of replies; track reply.uuid) {
-            <ng-container
-              [ngTemplateOutlet]="threadReplyTemplate"
-              [ngTemplateOutletContext]="{threadReply: reply}"
-            />
-          }
-        </div>
-      </div>
-    } @else {
-      <div
-        class="w-full h-full flex justify-center items-center"
-      >
-        <ng-icon
-          name="tablerLoader2"
-          color="rgba(207, 255, 255, 0.9)"
-          class="text-[5rem] animate-spin"
-        />
-      </div>
-    }
+    </button>
+    <span
+      class="msky-text-subheader text-[1.5rem]"
+    >
+      thread view
+    </span>
   </div>
+
+  @if (post) {
+    <div #scroll
+         class="flex flex-col flex-1 min-h-0 overflow-y-auto pr-2"
+    >
+      <div
+        class="flex flex-col max-w-[90%]"
+      >
+        @for (parent of parents; track parent.uuid) {
+          <feed-post-card
+            [feedViewPost]="parent"
+            (onPostClick)="onPostClick(parent.post().uri)"
+            class="cursor-pointer"
+          />
+        }
+      </div>
+
+      <feed-post-card-detail #main
+                             [feedViewPost]="post"
+      />
+
+      <div
+        class="flex flex-col w-[95%] self-end"
+      >
+        @for (reply of replies; track reply.uuid) {
+          <ng-container
+            [ngTemplateOutlet]="threadReplyTemplate"
+            [ngTemplateOutletContext]="{threadReply: reply}"
+          />
+        }
+      </div>
+    </div>
+  } @else {
+    <div
+      class="w-full h-full flex justify-center items-center"
+    >
+      <ng-icon
+        name="tablerLoader2"
+        color="rgba(207, 255, 255, 0.9)"
+        class="text-[5rem] animate-spin"
+      />
+    </div>
+  }
+</div>
 
 <ng-template #threadReplyTemplate
   let-threadReply="threadReply"
 >
   <feed-post-card
     [feedViewPost]="threadReply.post"
-    class="w-full"
+    (onPostClick)="onPostClick($event.post().uri)"
+    class="w-full cursor-pointer"
   />
   @if (threadReply.replies && threadReply.replies.length) {
     <div
       class="flex w-full"
     >
       <div
-        class="h-full w-[2px] bg-[rgba(207, 255, 255, 0.9)] bg-clip-content pb-2 ml-1 mr-3 shrink-0 rounded-sm"
+        class="h-full w-[2px] msky-bg-dark-15 !bg-clip-content -mt-2 mr-3 shrink-0 rounded-sm"
       ></div>
       <div
         class="flex flex-col w-full items-end min-w-0"
