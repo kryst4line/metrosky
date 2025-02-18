@@ -6,6 +6,6 @@ import {AppBskyActorDefs} from "@atproto/api";
 })
 export class DisplayNamePipe implements PipeTransform {
   transform(author: AppBskyActorDefs.ProfileViewBasic): string {
-    return author.displayName.length ? author.displayName : `@${author.handle}`;
+    return author.displayName?.length ? author.displayName : `@${author.handle}`;
   }
 }
