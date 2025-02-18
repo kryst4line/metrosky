@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
+  Input, OnDestroy,
   Output, signal, WritableSignal
 } from '@angular/core';
 import {Editor, EditorInitEvent} from "primeng/editor";
@@ -19,7 +19,7 @@ import {
   Subscription
 } from "rxjs";
 import {AppBskyActorSearchActorsTypeahead} from "@atproto/api";
-import Quill from "quill";
+import Quill, {Delta} from "quill";
 import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
@@ -71,11 +71,13 @@ import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-gua
   styleUrl: './post-composer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostComposerComponent {
+export class PostComposerComponent implements OnDestroy {
   @Input() loading = false;
   @Output() onPublishPost: EventEmitter<string> = new EventEmitter<string>;
   postCompose: WritableSignal<PostCompose>
   embedSuggestions: WritableSignal<Array<RecordEmbed | ExternalEmbed>> = signal([]);
+
+  pasteListener: EventListener = (event: any) => this.postService.attachMedia(event.clipboardData.files);
 
   editor: Quill;
   keyboardBindings = [
@@ -153,6 +155,12 @@ export class PostComposerComponent {
     });
     //Remove tabulation
     delete this.editor.keyboard.bindings['Tab'];
+
+    this.editor.container.addEventListener('paste', this.pasteListener);
+  }
+
+  ngOnDestroy() {
+    removeEventListener('paste', this.pasteListener);
   }
 
   get text(): string {
