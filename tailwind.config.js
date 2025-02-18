@@ -19,7 +19,6 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-primeui'),
-    require('tailwind-scrollbar'),
     plugin(function ({ addComponents, matchUtilities, theme }) {
         // matchUtilities(
         //   {
