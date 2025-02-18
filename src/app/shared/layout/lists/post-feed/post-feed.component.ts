@@ -53,7 +53,6 @@ export class PostFeedComponent implements OnInit {
 
   initData() {
     this.loading = true;
-    agent.getFollowers({actor: 'gfdh'}).
     agent.getTimeline({
       limit: 15
     }).then(
