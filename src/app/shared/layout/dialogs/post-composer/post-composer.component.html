@@ -7,7 +7,7 @@
     @let mediaEmbed = postCompose().mediaEmbed();
 
     <div
-      class="flex grow justify-end items-end"
+      class="flex grow w-full justify-end items-end"
     >
       @if (mediaEmbed | isMediaEmbedImage) {
         <div
@@ -40,7 +40,7 @@
       @else if (mediaEmbed | isMediaEmbedExternal) {
         <post-embed-external-preview
           [embed]="mediaEmbed"
-          class="block max-w-[30rem] h-32"
+          class="block max-w-[30rem] w-full h-32"
         />
       }
     </div>
@@ -138,6 +138,7 @@
       <button
         class="ui-button flex items-center !p-[0.625rem]"
         pRipple
+        [disabled]="((mediaEmbed | isMediaEmbedImage) && mediaEmbed.images.length > 3) || (!(mediaEmbed | isMediaEmbedImage) && mediaEmbed)"
         (click)="uploader.click()"
       >
         <input

@@ -1,3 +1,5 @@
-.darken-bg {
-  backdrop-filter: brightness(0.6) blur(50px) saturate(2);
+.deck-bg {
+  background-size: 100% 100%;
+  background-position: 0 0,0 0,0 0,0 0;
+  background-image: radial-gradient(99% 68% at 35% 55%, #016eaf 0%, #00000000 100%),linear-gradient(90deg, #007bb7 0%, #007bb780 7%, #007bb750 11%, #00000000 24%),radial-gradient(75% 75% at 50% 50%, #003b75 0%, #003b75 100%);
 }

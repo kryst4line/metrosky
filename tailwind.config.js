@@ -35,27 +35,39 @@ module.exports = {
         // })
         addComponents(
           {
+            '.msky-text-white': {
+              color: 'rgba(255, 255, 255, 0.85)'
+            },
+            '.msky-text-darkwhite': {
+              color: 'rgba(255, 255, 255, 0.7)'
+            },
             '.msky-text-header': {
-              color: 'rgba(255,255,255,0.85)',
+              color: 'rgba(207, 255, 255, 0.9)',
               fontSize: '2.4rem',
               fontWeight: 'lighter'
             },
             '.msky-text-subheader': {
-              color: 'rgba(255,255,255,0.8)',
+              color: 'rgba(207, 255, 255, 0.85)',
               fontSize: '1.6rem',
               fontWeight: 'lighter'
             },
             '.msky-text-body': {
-              color: 'rgba(255,255,255,0.85)',
+              color: 'rgba(207, 255, 255, 0.9)',
               fontSize: '14px'
             },
             '.msky-text-body-secondary': {
-              color: 'rgba(255,255,255,0.7)',
+              color: 'rgba(207, 255, 255, 0.8)',
               fontSize: '1rem'
             },
             '.msky-text-caption': {
-              color: 'rgba(255,255,255,0.7)',
+              color: 'rgba(207, 255, 255, 0.7)',
               fontSize: '0.8rem'
+            },
+            '.msky-bg-dark-075': {
+              background: 'rgba(0,0,0,0.075)'
+            },
+            '.msky-bg-dark-1': {
+              background: 'rgba(0,0,0,0.1)'
             },
             '.msky-bg-dark-15': {
               background: 'rgba(0,0,0,0.15)'

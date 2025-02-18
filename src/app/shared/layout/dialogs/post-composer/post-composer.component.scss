@@ -33,6 +33,11 @@ button.ui-button {
     background: rgba(255,255,255,0.3);
     outline: none;
   }
+
+  &:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
 }
 
 :host(::ng-deep post-embed-record) #base {

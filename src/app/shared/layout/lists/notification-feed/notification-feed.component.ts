@@ -134,7 +134,7 @@ export class NotificationFeedComponent implements OnInit {
             const notification = response.data.notifications[0];
             const lastNotification = this.notifications[0];
 
-            if (notification.indexedAt !== lastNotification.notification.indexedAt) {
+            if (notification?.indexedAt !== lastNotification?.notification.indexedAt) {
               this.initData();
             } else {
               this.manageRefresh();

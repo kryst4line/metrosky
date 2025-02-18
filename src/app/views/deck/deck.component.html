@@ -1,5 +1,5 @@
 <div
-  class="flex h-full w-full min-h-0 min-w-0 darken-bg"
+  class="flex h-full w-full min-h-0 min-w-0 deck-bg"
   ng2FileDrop
   (onFileDrop)="onFileDrop($event)"
 >
@@ -19,7 +19,7 @@
       </div>
       <post-feed
         [triggerRefresh]="refreshFeeds"
-        class="w-[28rem] flex-1 min-h-0"
+        class="w-[30rem] flex-1 min-h-0"
       />
     </div>
     <div class="flex flex-col">
@@ -28,7 +28,7 @@
       >
         notifications
       </div>
-      <notification-feed class="w-[28rem] flex-1 min-h-0"/>
+      <notification-feed class="w-[30rem] flex-1 min-h-0"/>
     </div>
   </div>
 </div>
