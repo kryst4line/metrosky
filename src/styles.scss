@@ -69,6 +69,42 @@
   * {
     scrollbar-color: rgba(255,255,255,0.5) transparent;
   }
+
+  button.ui-button {
+    &, &-rg, &-lg {
+      border: medium none;
+      border-spacing: 0;
+      list-style: none outside none;
+      margin: 0;
+      text-align: center;
+      text-decoration: none;
+      text-indent: 0;
+
+      background: rgba(255,255,255,0.2);
+      font-weight: 300;
+      color: rgba(255,255,255,0.85);
+
+      &:hover, &:focus, &:focus-visible {
+        background: rgba(255,255,255,0.3);
+        outline: none;
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+    }
+
+    &-rg {
+      padding: 0 1rem;
+      height: 2.25rem;
+    }
+
+    &-lg {
+      padding: 0 1rem;
+      height: 2.5rem;
+    }
+  }
 }
 
 .app-container{
@@ -91,12 +127,23 @@
     --p-dialog-shadow: none;
 
     .p-dialog {
-      max-height: 100%;
-      max-width: 100%;
       border: 0;
+      background: #002047;
+      max-height: fit-content;
 
       .p-dialog-content {
         overflow-y: hidden;
+      }
+    }
+
+    &.feed {
+      .p-dialog {
+        max-height: 100%;
+        max-width: 100%;
+        height: 100%;
+        width: 100%;
+
+        background: transparent;
       }
     }
   }

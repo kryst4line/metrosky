@@ -1,0 +1,197 @@
+@if (author) {
+  <div
+    class="h-[50rem] flex"
+  >
+    <div
+      class="h-full w-[30rem] flex flex-col"
+    >
+      <img
+        [src]="author.banner"
+        alt="{{author | displayName}}'s banner"
+        class="w-[30rem] h-[10rem]"
+      />
+
+      <div
+        class="relative w-full h-0"
+      >
+        <img
+          [src]="author.avatar"
+          alt="{{author | displayName}}'s avatar"
+          class="h-24 w-24 absolute ml-4 -translate-y-12"
+          style="box-shadow: 0 0 8px rgba(255, 255, 255, 0.3)"
+        />
+      </div>
+
+      <div
+        class="flex flex-row-reverse px-3 mt-3"
+      >
+        <ng-container
+          [ngTemplateOutlet]="followBtn"
+        />
+      </div>
+
+      <div
+        class="flex flex-col px-4 mt-2"
+      >
+        <a
+          class="msky-text-white text-[1.5rem] font-bold"
+        >
+          {{author | displayName}}
+        </a>
+        @if (author.displayName) {
+          <a
+            [href]="'https://bsky.app/profile/' + author.handle"
+            target="_blank"
+            class="msky-text-body hover:underline cursor-pointer"
+          >
+            {{'@' + author.handle}}
+          </a>
+        }
+
+        <div
+          class="flex mt-3 gap-4 text-lg font-light msky-text-white"
+        >
+          <a
+            class="hover:underline cursor-pointer"
+          >
+            {{author.postsCount | numberFormatter}} posts
+          </a>
+          <a
+            class="hover:underline cursor-pointer"
+          >
+            {{author.followersCount | numberFormatter}} followers
+          </a>
+          <a
+            class="hover:underline cursor-pointer"
+          >
+            {{author.followsCount | numberFormatter}} following
+          </a>
+        </div>
+
+        <rich-text-display
+          [text]="author.description"
+          class="!msky-text-white msky-text-body mt-3"
+        />
+      </div>
+
+      <div
+        class="w-full h-40 flex mt-auto"
+      >
+        <div
+          class="mode-selector"
+          [class.active]="viewMode() == AuthorViewMode.POSTS"
+          (click)="viewMode.set(AuthorViewMode.POSTS)"
+        >
+          <ng-icon
+            name="tablerMenu2"
+            class="text-[3.5rem]"
+            color="rgba(255,255,255,0.85)"
+          />
+          <span
+            class="text-xl font-light msky-text-white pointer-events-none"
+          >
+            posts
+          </span>
+        </div>
+        <div
+          class="mode-selector"
+          [class.active]="viewMode() == AuthorViewMode.MEDIA"
+          (click)="viewMode.set(AuthorViewMode.MEDIA)"
+        >
+          <ng-icon
+            name="tablerPhoto"
+            class="text-[3.5rem]"
+            color="rgba(255,255,255,0.85)"
+          />
+          <span
+            class="text-xl font-light msky-text-white pointer-events-none"
+          >
+            media
+          </span>
+        </div>
+        <div
+          class="mode-selector"
+          [class.active]="viewMode() !== AuthorViewMode.POSTS && viewMode() !== AuthorViewMode.MEDIA"
+          (click)="viewMode.set(AuthorViewMode.MORE)"
+        >
+          <ng-icon
+            name="tablerGridDots"
+            class="text-[3.5rem]"
+            color="rgba(255,255,255,0.85)"
+          />
+          <span
+            class="text-xl font-light msky-text-white pointer-events-none"
+          >
+            more
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="h-full w-[30rem] deck-bg p-4"
+    >
+      <ng-container
+        [ngTemplateOutlet]="
+        viewMode() == AuthorViewMode.POSTS ? posts :
+        viewMode() == AuthorViewMode.MEDIA ? media :
+        more
+      "
+      />
+    </div>
+  </div>
+}
+
+<ng-template #followBtn
+>
+  @if (author.did | isLoggedUser) {
+    <button
+      class="ui-button-rg"
+    >
+      That's you!
+    </button>
+  }
+  @else if (author.viewer.following) {
+    <button
+      class="ui-button-rg"
+    >
+      <ng-icon
+        name="tablerCheck"
+        class="pt-[2px] -ml-[2px]"
+      />
+      Following
+    </button>
+  }
+  @else {
+    <button
+      class="ui-button-rg"
+    >
+      <ng-icon
+        name="tablerUserPlus"
+        class="pt-[2px] -ml-[2px]"
+      />
+      Follow
+    </button>
+  }
+</ng-template>
+
+<ng-template #posts
+>
+  <author-feed
+    [author]="author.did"
+    [includePins]="true"
+  />
+</ng-template>
+
+<ng-template #media
+>
+  <author-feed
+    [author]="author.did"
+    [filter]="'posts_with_media'"
+  />
+</ng-template>
+
+<ng-template #more
+>
+  No, you can't stalk this person yet 👀
+</ng-template>

@@ -17,16 +17,14 @@ import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post
 import {BlockedPost, NotFoundPost, ThreadViewPost} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import {ThreadReply} from "~/src/app/api/models/thread-reply";
 import {NgTemplateOutlet} from "@angular/common";
-import {AgVirtualScrollModule} from "ag-virtual-scroll";
 
 @Component({
   selector: 'thread-view-dialog',
   imports: [
-    FeedPostCardDetailComponent,
-    NgIcon,
+    forwardRef(() => FeedPostCardDetailComponent),
+    forwardRef(() => NgIcon),
     forwardRef(() => FeedPostCardComponent),
     NgTemplateOutlet,
-    AgVirtualScrollModule
   ],
   templateUrl: './thread-view-dialog.component.html',
   styleUrl: './thread-view-dialog.component.scss',

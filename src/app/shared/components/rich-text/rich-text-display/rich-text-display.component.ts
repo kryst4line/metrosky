@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,16 +9,23 @@ import {
   TemplateRef,
   ViewChild,
   ViewChildren,
-  ViewContainerRef
 } from '@angular/core';
 import {Facet, RichText, RichTextSegment} from "@atproto/api";
+import {agent} from "~/src/app/core/bsky.api";
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'rich-text-display',
   imports: [],
   templateUrl: './rich-text-display.component.html',
   styleUrl: './rich-text-display.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DialogService
+  ]
 })
 export class RichTextDisplayComponent implements OnInit {
   @Input() text: string;
@@ -32,7 +39,8 @@ export class RichTextDisplayComponent implements OnInit {
   @ViewChild('link', {read: TemplateRef}) linkTemplate: TemplateRef<any>;
 
   constructor(
-    private hostContainerRef: ViewContainerRef
+    private cdRef: ChangeDetectorRef,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -43,10 +51,34 @@ export class RichTextDisplayComponent implements OnInit {
       }
     );
 
-    this.segments = [...rt.segments()];
+    if (!this.facets) {
+      rt.detectFacets(agent).then(() => {
+        this.segments = [...rt.segments()];
+        this.cdRef.markForCheck();
+      });
+    } else {
+      this.segments = [...rt.segments()];
+    }
   }
 
-  manageClick(event: any) {
-    console.log(event)
+  openAuthor(event: MouseEvent, did: string) {
+    if (!window.getSelection().toString().length) {
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'inner-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
   }
 }

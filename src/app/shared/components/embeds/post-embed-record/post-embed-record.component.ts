@@ -34,6 +34,10 @@ import {
 import {LinkExtractorStarterPackPipe} from "~/src/app/shared/utils/pipes/link-extractor-starterpack.pipe";
 import {NgIcon} from "@ng-icons/core";
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'post-embed-record',
@@ -63,7 +67,10 @@ import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pip
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DialogService
+  ]
 })
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
@@ -73,6 +80,11 @@ export class PostEmbedRecordComponent {
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 
+  constructor(
+    private dialogService: DialogService
+  ) {
+  }
+
   openEmbed(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
       this.onEmbedClick.emit(this.embed);
@@ -80,9 +92,21 @@ export class PostEmbedRecordComponent {
     event.stopPropagation();
   }
 
-  openAuthor(event: MouseEvent) {
+  openAuthor(event: MouseEvent, did: string) {
     if (!window.getSelection().toString().length) {
-
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'inner-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
     }
     event.preventDefault();
     event.stopPropagation();

@@ -11,6 +11,7 @@ import NotificationUtils from "~/src/app/shared/utils/notification-utils";
 import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/notifications/is-post-notification";
 import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
 import {MessageService} from "~/src/app/api/services/message.service";
+import {NgIcon} from "@ng-icons/core";
 
 @Component({
   selector: 'notification-feed',
@@ -20,6 +21,7 @@ import {MessageService} from "~/src/app/api/services/message.service";
     AgVirtualScrollModule,
     IsNotificationArrayPipe,
     NotificationCardComponent,
+    NgIcon,
   ],
   templateUrl: './notification-feed.component.html',
   styleUrl: './notification-feed.component.scss',
@@ -30,7 +32,7 @@ import {MessageService} from "~/src/app/api/services/message.service";
 export class NotificationFeedComponent implements OnInit {
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
-  notifications: Notification[] = [];
+  notifications: Notification[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;

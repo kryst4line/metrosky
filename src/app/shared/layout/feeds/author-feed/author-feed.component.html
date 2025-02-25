@@ -1,0 +1,34 @@
+
+<div #feed
+  class="relative w-full h-full min-h-0 flex-1"
+>
+  @if (posts) {
+    <ag-virtual-scroll
+      #vs
+      [items]="posts"
+      [height]="'100%'"
+      [min-row-height]="150"
+      [class]="dialog ? 'invisible' : 'visible'"
+      (onItemsRender)="nextData($event); manageRefresh();"
+    >
+      @for (post of vs.items; track post.uuid; let i = $index) {
+        <feed-post-card
+          [feedViewPost]="post"
+          (onPostClick)="openPost($event.post().uri)"
+          (onEmbedClick)="openPost($any($event.record).uri)"
+          class="cursor-pointer"
+        />
+      }
+    </ag-virtual-scroll>
+  } @else {
+    <div
+      class="w-full h-full flex justify-center items-center"
+    >
+      <ng-icon
+        name="tablerLoader2"
+        color="rgba(207, 255, 255, 0.9)"
+        class="text-[5rem] animate-spin"
+      />
+    </div>
+  }
+</div>

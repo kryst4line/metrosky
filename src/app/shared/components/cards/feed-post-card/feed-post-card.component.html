@@ -23,7 +23,7 @@
     >
       <a #avatar
          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
-         (click)="openAuthor($event)"
+         (click)="openAuthor($event, feedViewPost.post().author.did)"
       >
         <img
           [src]="feedViewPost.post().author.avatar"
@@ -82,7 +82,7 @@
           <a
             class="hover:underline font-semibold"
             [href]="'https://bsky.app/profile/' + reason.by.handle"
-            (click)="openAuthor($event)"
+            (click)="openAuthor($event, reason.by.did)"
           >
             {{ reason.by | displayName }}
           </a>
@@ -127,7 +127,7 @@
         <a
           class="hover:underline font-semibold"
           [href]="'https://bsky.app/profile/' + reply.parent.author.handle"
-          (click)="openAuthor($event)"
+          (click)="openAuthor($event, reply.parent.author.did)"
         >
           {{ reply.parent.author | displayName }}
         </a>
@@ -145,14 +145,14 @@
     @if (author.displayName.trim().length) {
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event)"
+        (click)="openAuthor($event, feedViewPost.post().author.did)"
         class="msky-text-body text-[1rem] font-semibold fit-text shrink-1 grow-0 leading-none h-full"
       >
         {{ author.displayName }}
       </a>
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event)"
+        (click)="openAuthor($event, feedViewPost.post().author.did)"
         class="msky-text-caption fit-text shrink-0 grow basis-0 min-w-0"
       >
         {{ '@' + author.handle }}
@@ -160,7 +160,7 @@
     } @else {
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event)"
+        (click)="openAuthor($event, feedViewPost.post().author.did)"
         class="font-semibold"
       >
         {{ '@' + author.handle }}

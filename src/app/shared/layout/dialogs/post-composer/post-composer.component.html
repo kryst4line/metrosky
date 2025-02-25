@@ -49,7 +49,7 @@
     >
       @if (mediaEmbed) {
         <button
-          class="ui-button !mr-auto"
+          class="ui-button-rg !mr-auto"
           pRipple
           (click)="postCompose().mediaEmbed.set(undefined)"
         >
@@ -91,7 +91,7 @@
           replying to <b>{{ postCompose().reply().author | displayName }}</b>
         </span>
         <button
-          class="ui-button !bg-transparent !font-normal !h-auto !px-2 !ml-auto !text-[18px] hover:!underline collapse group-hover:visible"
+          class="ui-button-lg !bg-transparent !font-normal !h-auto !px-2 !ml-auto !text-[18px] hover:!underline collapse group-hover:visible"
           (click)="postCompose().reply.set(undefined)"
         >
           cancel
@@ -108,7 +108,7 @@
       class="h-10 flex justify-end items-center gap-2"
     >
       <button
-        class="ui-button flex items-center !p-4 !pl-3 !mr-auto"
+        class="ui-button-lg flex items-center !p-4 !pl-3 !mr-auto"
         pRipple
         (click)="postCompose.set(undefined)"
       >
@@ -136,7 +136,7 @@
       }
 
       <button
-        class="ui-button flex items-center !p-[0.625rem]"
+        class="ui-button-lg flex items-center !p-[0.625rem]"
         pRipple
         [disabled]="((mediaEmbed | isMediaEmbedImage) && mediaEmbed.images.length > 3) || (!(mediaEmbed | isMediaEmbedImage) && mediaEmbed)"
         (click)="uploader.click()"
@@ -156,7 +156,7 @@
       </button>
 
       <button
-        class="ui-button"
+        class="ui-button-lg"
         pRipple
         (click)="onPublishPost.emit(text)"
       >
@@ -203,7 +203,7 @@
 
       @if (recordEmbed) {
         <button
-          class="ui-button !ml-auto"
+          class="ui-button-lg !ml-auto"
           pRipple
           (click)="postCompose().recordEmbed.set(undefined)"
         >
@@ -221,7 +221,7 @@
     @switch (embed.recordType) {
       @case ('POST') {
         <button
-          class="ui-button"
+          class="ui-button-lg"
           pRipple
           (click)="embedQuote()"
         >
@@ -230,7 +230,7 @@
       }
       @case ('FEED') {
         <button
-          class="ui-button"
+          class="ui-button-lg"
           pRipple
           (click)="embedFeed()"
         >
@@ -239,7 +239,7 @@
       }
       @case ('LIST') {
         <button
-          class="ui-button"
+          class="ui-button-lg"
           pRipple
           (click)="embedList()"
         >
@@ -248,7 +248,7 @@
       }
       @case ('STARTER_PACK') {
         <button
-          class="ui-button"
+          class="ui-button-lg"
           pRipple
           (click)="embedStarterPack()"
         >
@@ -259,7 +259,7 @@
   }
   @if (embed.type == 'EXTERNAL' && !postCompose().mediaEmbed()) {
     <button
-      class="ui-button"
+      class="ui-button-lg"
       pRipple
       (click)="embedLink()"
     >

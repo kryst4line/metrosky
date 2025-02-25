@@ -1,0 +1,40 @@
+
+<div #feed
+  class="relative w-full h-full min-h-0 flex-1"
+>
+  @if (notifications) {
+    <ag-virtual-scroll
+      #vs
+      [items]="notifications"
+      [height]="'100%'"
+      [min-row-height]="110"
+      [class]="dialog ? 'invisible' : 'visible'"
+      (onItemsRender)="nextData($event)"
+    >
+      @for (notification of vs.items; track notification.uuid) {
+        @if (notification | isPostNotification) {
+          <feed-post-card
+            [feedViewPost]="notification.feedViewPost"
+            (onPostClick)="openPost($event.post().uri)"
+            (onEmbedClick)="openPost($any($event.record).uri)"
+          />
+        } @else {
+          <notification-card
+            [notification]="notification"
+            (onNotificationClick)="openNotification($event)"
+          />
+        }
+      }
+    </ag-virtual-scroll>
+  } @else {
+    <div
+      class="w-full h-full flex justify-center items-center"
+    >
+      <ng-icon
+        name="tablerLoader2"
+        color="rgba(207, 255, 255, 0.9)"
+        class="text-[5rem] animate-spin"
+      />
+    </div>
+  }
+</div>

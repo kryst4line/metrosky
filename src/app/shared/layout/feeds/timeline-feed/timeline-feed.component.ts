@@ -9,22 +9,24 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
 import {Subject} from "rxjs";
+import {NgIcon} from "@ng-icons/core";
 
 @Component({
-  selector: 'post-feed',
+  selector: 'timeline-feed',
   imports: [
     CommonModule,
     FeedPostCardComponent,
     AgVirtualScrollModule,
+    NgIcon,
   ],
-  templateUrl: './post-feed.component.html',
-  styleUrl: './post-feed.component.scss'
+  templateUrl: './timeline-feed.component.html',
+  styleUrl: './timeline-feed.component.scss'
 })
-export class PostFeedComponent implements OnInit {
+export class TimelineFeedComponent implements OnInit {
   @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
-  posts: SignalizedFeedViewPost[] = [];
+  posts: SignalizedFeedViewPost[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
@@ -48,7 +50,7 @@ export class PostFeedComponent implements OnInit {
           this.reloadReady = true;
         }
       }
-    })
+    });
   }
 
   initData() {
@@ -93,10 +95,9 @@ export class PostFeedComponent implements OnInit {
         uri: uri
       },
       appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog !absolute',
-      style: {background: 'transparent', height: '100%'},
+      maskStyleClass: 'inner-dialog feed',
+      autoZIndex: false,
       focusOnShow: false,
-      width: '450px',
       duplicate: true
     });
 

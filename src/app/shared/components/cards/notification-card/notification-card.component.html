@@ -73,6 +73,7 @@
       <a>
         <img
           [src]="author.avatar"
+          (click)="openAuthor($event, author.did)"
           alt="{{author | displayName}}'s avatar"
           class="h-8"
         >
@@ -95,16 +96,16 @@
     @switch (notification.authors.length) {
       @case (1) {
         <a
+          (click)="openAuthor($event, notification.authors[0].did)"
           class="font-bold hover:underline"
-          [href]=""
         >
           {{notification.authors[0] | displayName}}
         </a>
       }
       @case (2) {
         <a
+          (click)="openAuthor($event, notification.authors[0].did)"
           class="font-bold hover:underline"
-          [href]=""
         >
           {{notification.authors[0] | displayName}}
         </a>
@@ -112,16 +113,16 @@
         and
 
         <a
+          (click)="openAuthor($event, notification.authors[1].did)"
           class="font-bold hover:underline"
-          [href]=""
         >
           {{notification.authors[1] | displayName}}
         </a>
       }
       @default {
         <a
+          (click)="openAuthor($event, notification.authors[0].did)"
           class="font-bold hover:underline"
-          [href]=""
         >
           {{notification.authors[0] | displayName}}
         </a>

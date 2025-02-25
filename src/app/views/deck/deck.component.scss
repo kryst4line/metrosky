@@ -1,3 +1,6 @@
+@use 'styles';
+@include styles.inner-dialog;
+
 .deck-bg {
   background-size: 100% 100%;
   background-position: 0 0,0 0,0 0,0 0;

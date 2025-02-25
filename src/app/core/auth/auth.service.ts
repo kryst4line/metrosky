@@ -7,6 +7,7 @@ import {MessageService} from "~/src/app/api/services/message.service";
 import {HttpErrorResponse} from "@angular/common/http";
 
 const TOKEN_KEY = 'session';
+const LOGGED_USER = 'logged_user';
 
 @Injectable({
   providedIn: 'root',
@@ -27,8 +28,14 @@ export class AuthService {
     if (sessionData) {
       agent.resumeSession(JSON.parse(sessionData)).then(
         () => {
-          this.authenticationState.next(true);
           localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
+
+          //store user info in localStorage
+          agent.getProfile({actor: agent.session.did}).then(response => {
+            localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
+          });
+
+          this.authenticationState.next(true);
         }
       );
     }
@@ -38,6 +45,12 @@ export class AuthService {
     from(agent.login(credentials)).subscribe({
       next: () => {
         localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
+
+        //store user info in localStorage
+        agent.getProfile({actor: agent.session.did}).then(response => {
+          localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
+        });
+
         this.authenticationState.next(true);
         this.router.navigate(['']);
       },

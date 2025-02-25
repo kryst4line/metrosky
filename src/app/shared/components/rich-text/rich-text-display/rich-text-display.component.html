@@ -15,7 +15,7 @@
       <a
         href="https://bsky.app/profile/{{segment.mention?.did}}"
         class="hover:underline msky-text-link"
-        (click)="$event.stopPropagation(); $event.preventDefault()"
+        (click)="openAuthor($event, segment.mention?.did)"
       >
         {{segment.text}}
       </a>

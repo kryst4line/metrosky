@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CardModule} from "primeng/card";
+import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
@@ -32,11 +31,13 @@ import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/ri
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
 import {MessageService} from '~/src/app/api/services/message.service'
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 
 @Component({
   selector: 'feed-post-card-detail',
   imports: [
-    CardModule,
     IsEmbedImagesViewPipe,
     DisplayNamePipe,
     NgIcon,
@@ -54,7 +55,7 @@ import {MessageService} from '~/src/app/api/services/message.service'
     Menu,
     NgTemplateOutlet,
     IsFeedPostRecordPipe,
-    RichTextDisplayComponent
+    forwardRef(() => RichTextDisplayComponent)
   ],
   templateUrl: './feed-post-card-detail.component.html',
   styleUrl: './feed-post-card-detail.component.scss',
@@ -101,7 +102,8 @@ export class FeedPostCardDetailComponent {
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialogService: DialogService
   ) {}
 
   replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
@@ -186,6 +188,22 @@ export class FeedPostCardDetailComponent {
   }
 
   openAuthor(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: this.feedViewPost.post().author.did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'inner-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
+    }
+
     event.preventDefault();
     event.stopPropagation();
   }
