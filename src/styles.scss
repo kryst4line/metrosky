@@ -157,6 +157,10 @@
       .p-dialog-content {
         overflow-y: hidden;
         height: 90%;
+
+        &:has(author-view-dialog) {
+          max-height: 60rem;
+        }
       }
     }
   }
