@@ -64,7 +64,7 @@ export class NotificationCardComponent {
           actor: did
         },
         appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'inner-dialog',
+        maskStyleClass: 'full-dialog',
         modal: true,
         dismissableMask: true,
         autoZIndex: false,

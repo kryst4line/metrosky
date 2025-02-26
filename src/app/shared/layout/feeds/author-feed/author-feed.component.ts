@@ -119,7 +119,7 @@ export class AuthorFeedComponent implements OnInit {
         uri: uri
       },
       appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog feed',
+      maskStyleClass: 'inner-dialog',
       autoZIndex: false,
       focusOnShow: false,
       width: '450px',

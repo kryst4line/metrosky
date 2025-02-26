@@ -68,7 +68,7 @@ export class RichTextDisplayComponent implements OnInit {
           actor: did
         },
         appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'inner-dialog',
+        maskStyleClass: 'full-dialog',
         modal: true,
         dismissableMask: true,
         autoZIndex: false,

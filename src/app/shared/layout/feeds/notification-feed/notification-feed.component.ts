@@ -94,8 +94,9 @@ export class NotificationFeedComponent implements OnInit {
         uri: uri
       },
       appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog !absolute',
+      maskStyleClass: 'inner-dialog',
       style: {background: 'transparent', height: '100%'},
+      autoZIndex: false,
       focusOnShow: false,
       width: '450px'
     });

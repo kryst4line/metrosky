@@ -129,7 +129,7 @@ export class ThreadViewDialogComponent {
         uri: uri,
       },
       appendTo: this.parentRef.nativeElement,
-      maskStyleClass: 'inner-dialog !absolute',
+      maskStyleClass: 'inner-dialog',
       style: {background: 'transparent', height: '100%'},
       focusOnShow: false,
       width: '450px',

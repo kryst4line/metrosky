@@ -194,7 +194,7 @@ export class FeedPostCardDetailComponent {
           actor: this.feedViewPost.post().author.did
         },
         appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'inner-dialog',
+        maskStyleClass: 'full-dialog',
         modal: true,
         dismissableMask: true,
         autoZIndex: false,
