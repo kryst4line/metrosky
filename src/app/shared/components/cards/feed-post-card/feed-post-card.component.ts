@@ -108,8 +108,7 @@ export class FeedPostCardComponent {
       }
     }
   ];
-
-  repostMenuItems: MenuItem[]
+  repostMenuItems: MenuItem[];
 
   constructor(
     private postService: PostService,
@@ -197,6 +196,10 @@ export class FeedPostCardComponent {
       this.onPostClick.emit(this.feedViewPost);
     }
     event.stopPropagation();
+  }
+
+  openImage(uri: string, index: number) {
+    this.postService.openImage(uri, index);
   }
 
   openAuthor(event: MouseEvent, did: string) {

@@ -11,6 +11,31 @@
     font-size: 1rem;
     font-family: 'Open Sans', sans-serif;
     border-radius: 0 !important;
+
+    .mention {
+      background: #cee4ff;
+      padding: 0 2px;
+    }
+  }
+
+  .ql-mention-list {
+    background: #003678;
+  }
+
+  .ql-mention-list-item {
+    font-size: 1rem;
+    font-family: "Open Sans", sans-serif;
+    padding: 0.35rem 0.75rem;
+    text-box-trim: none;
+    cursor: pointer;
+
+    &.selected {
+      background: #004ca9;
+    }
+
+    > span {
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
   }
 }
 

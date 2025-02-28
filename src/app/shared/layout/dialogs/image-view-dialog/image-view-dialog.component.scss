@@ -1,0 +1,29 @@
+:host(::ng-deep p-galleria) {
+  --p-galleria-indicator-button-active-background: #007bb7;
+  --p-galleria-indicator-button-width: 0.75rem;
+  --p-galleria-indicator-button-height: 0.75rem;
+
+  .p-galleria {
+    height: 100%;
+  }
+
+  p-galleriacontent {
+    width: 100%;
+  }
+
+  .p-galleria-content {
+    height: 100%;
+  }
+
+  .p-galleria-items-container {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .p-galleria-indicator-list {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

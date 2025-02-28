@@ -13,6 +13,8 @@ import {PostCompose} from "~/src/app/api/models/post-compose";
 import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "~/src/app/api/models/embed";
 import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ImageViewDialogComponent} from "~/src/app/shared/layout/dialogs/image-view-dialog/image-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
   new Map<string, WritableSignal<AppBskyFeedDefs.PostView>>();
@@ -23,8 +25,10 @@ export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
 export class PostService {
   public postCompose: WritableSignal<PostCompose> = signal(undefined);
 
-  constructor(private imageCompressService: NgxImageCompressService) {
-  }
+  constructor(
+    private imageCompressService: NgxImageCompressService,
+    private dialogService: DialogService
+  ) {}
 
   setPost(post: AppBskyFeedDefs.PostView): WritableSignal<AppBskyFeedDefs.PostView> {
     const existingPost = posts.get(post.uri);
@@ -44,6 +48,85 @@ export class PostService {
 
   createPost() {
     this.postCompose.set(new PostCompose());
+  }
+
+  like(uri: string, cid: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      from(agent.like(uri, cid)).subscribe({
+        next: () => {
+          agent.getPosts({
+            uris: [uri]
+          }).then(response => {
+            this.setPost(response.data.posts[0]);
+            resolve();
+          });
+        }, error: err => reject(err.message)
+      })
+    })
+  }
+
+  deleteLike(uri: string, likeKey: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      from(agent.deleteLike(likeKey)).subscribe({
+        next: () => {
+          agent.getPosts({
+            uris: [uri]
+          }).then(response => {
+            this.setPost(response.data.posts[0]);
+            resolve();
+          });
+        }, error: err => reject(err.message)
+      })
+    })
+  }
+
+  repost(uri: string, cid: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      from(agent.repost(uri, cid)).subscribe({
+        next: () => {
+          agent.getPosts({
+            uris: [uri]
+          }).then(response => {
+            this.setPost(response.data.posts[0]);
+            resolve();
+          });
+        }, error: err => reject(err.message)
+      });
+    });
+  }
+
+  deleteRepost(uri: string, repostKey: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      from(agent.deleteRepost(repostKey)).subscribe({
+        next: () => {
+          agent.getPosts({
+            uris: [uri]
+          }).then(response => {
+            this.setPost(response.data.posts[0]);
+            resolve();
+          });
+        }, error: err => reject(err.message)
+      });
+    });
+  }
+
+  renewRepost(uri: string, cid: string, repostKey: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      from(agent.deleteRepost(repostKey)).subscribe({
+        next: () => {
+          from(agent.repost(uri, cid)).subscribe({
+            next: () => {
+              agent.getPosts({
+                uris: [uri]
+              }).then(response => {
+                this.setPost(response.data.posts[0]);
+                resolve();
+              });
+            }, error: err => reject(err.message)
+          });
+        }, error: err => reject(err.message)
+      });
+    });
   }
 
   replyPost(uri: string) {
@@ -271,5 +354,25 @@ export class PostService {
         })
       }
     });
+  }
+
+  openImage(uri: string, index: number) {
+    const ref = this.dialogService.open(ImageViewDialogComponent, {
+      data: {
+        uri: uri,
+        index: index
+      },
+      appendTo: document.querySelector('app-deck'),
+      maskStyleClass: 'full-dialog',
+      modal: true,
+      dismissableMask: true,
+      autoZIndex: false,
+      style: {height: '100%'},
+      focusOnShow: false,
+      duplicate: true,
+      closeOnEscape: true,
+    });
+
+    ref.onClose.subscribe(() => ref.destroy());
   }
 }

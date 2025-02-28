@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef, forwardRef,
-  Input,
+  Input, OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -33,7 +33,7 @@ import {NgIcon} from "@ng-icons/core";
   styleUrl: './author-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthorFeedComponent implements OnInit {
+export class AuthorFeedComponent implements OnInit, OnDestroy {
   @Input() author: string;
   @Input() filter?:
     | 'posts_with_replies'
@@ -71,6 +71,11 @@ export class AuthorFeedComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.triggerRefresh?.unsubscribe();
+    clearTimeout(this.reloadTimeout);
   }
 
   initData() {
@@ -122,7 +127,6 @@ export class AuthorFeedComponent implements OnInit {
       maskStyleClass: 'inner-dialog',
       autoZIndex: false,
       focusOnShow: false,
-      width: '450px',
       duplicate: true
     });
 

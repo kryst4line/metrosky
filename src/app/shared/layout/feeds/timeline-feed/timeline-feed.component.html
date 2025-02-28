@@ -8,7 +8,7 @@
       [items]="posts"
       [height]="'100%'"
       [min-row-height]="150"
-      [class]="dialog ? 'invisible' : 'visible'"
+      [class]="dialog ? '!hidden' : undefined"
       (onItemsRender)="nextData($event); manageRefresh();"
     >
       @for (post of vs.items; track post.uuid; let i = $index) {

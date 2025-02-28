@@ -123,7 +123,7 @@ export class ThreadViewDialogComponent {
     return threadReply;
   }
 
-  onPostClick(uri: string) {
+  openPost(uri: string) {
     this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
       data: {
         uri: uri,
@@ -132,7 +132,6 @@ export class ThreadViewDialogComponent {
       maskStyleClass: 'inner-dialog',
       style: {background: 'transparent', height: '100%'},
       focusOnShow: false,
-      width: '450px',
       duplicate: true
     });
 
@@ -143,5 +142,9 @@ export class ThreadViewDialogComponent {
         this.cdRef.markForCheck();
       }
     });
+  }
+
+  log(event: any) {
+    console.log("DEVELOPMENT LOG: ", event);
   }
 }

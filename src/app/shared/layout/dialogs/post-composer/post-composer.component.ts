@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {Editor, EditorInitEvent} from "primeng/editor";
 import "quill-mention/autoregister";
-import "quill-mention/dist/quill.mention.css"
 import {agent} from "~/src/app/core/bsky.api";
 import {
   debounceTime,
@@ -19,7 +18,7 @@ import {
   Subscription
 } from "rxjs";
 import {AppBskyActorSearchActorsTypeahead} from "@atproto/api";
-import Quill, {Delta} from "quill";
+import Quill from "quill";
 import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";

@@ -180,13 +180,6 @@ export class FeedPostCardDetailComponent {
     console.log("DEVELOPMENT LOG: ", event)
   }
 
-  openPost(event: MouseEvent) {
-    if (!window.getSelection().toString().length) {
-      this.onPostClick.emit(this.feedViewPost);
-    }
-    event.stopPropagation();
-  }
-
   openAuthor(event: MouseEvent) {
     if (!window.getSelection().toString().length) {
       this.dialogService.open(AuthorViewDialogComponent, {
@@ -208,8 +201,8 @@ export class FeedPostCardDetailComponent {
     event.stopPropagation();
   }
 
-  openDialog() {
-    this.messageService.warnIcon('This feature is not implemented yet.', 'Welp!');
+  openImage(uri:string, index: number) {
+    this.postService.openImage(uri, index);
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {

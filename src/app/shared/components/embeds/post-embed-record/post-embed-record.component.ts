@@ -75,15 +75,14 @@ import {DialogService} from "primeng/dynamicdialog";
 export class PostEmbedRecordComponent {
   @Input() embed: AppBskyEmbedRecord.View;
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
-  @Output() onImgClick: EventEmitter<{index: number, uri: string}> = new EventEmitter<{index: number, uri: string}>();
+  @Output() onImgClick: EventEmitter<{index: number, uri: string}> = new EventEmitter<{uri: string, index: number}>();
 
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 
   constructor(
     private dialogService: DialogService
-  ) {
-  }
+  ) {}
 
   openEmbed(event: MouseEvent) {
     if (!window.getSelection().toString().length) {

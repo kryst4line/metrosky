@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -29,7 +29,7 @@ import {NgIcon} from "@ng-icons/core";
     DialogService
   ]
 })
-export class NotificationFeedComponent implements OnInit {
+export class NotificationFeedComponent implements OnInit, OnDestroy {
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
   notifications: Notification[];
@@ -47,6 +47,10 @@ export class NotificationFeedComponent implements OnInit {
 
   ngOnInit() {
     this.initData();
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.reloadTimeout);
   }
 
   initData() {
@@ -95,10 +99,8 @@ export class NotificationFeedComponent implements OnInit {
       },
       appendTo: this.feed.nativeElement,
       maskStyleClass: 'inner-dialog',
-      style: {background: 'transparent', height: '100%'},
       autoZIndex: false,
       focusOnShow: false,
-      width: '450px'
     });
 
     this.dialog.onClose.subscribe({

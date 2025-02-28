@@ -142,7 +142,7 @@
     <post-embed-images
       [embed]="media"
       [class]="margin"
-      (onImgClick)="onImgClick.emit({index: $event, uri: $any(embed.record).uri})"
+      (onImgClick)="onImgClick.emit({uri: $any(embed.record).uri, index: $event})"
     />
   }
 
@@ -150,6 +150,7 @@
     <post-embed-video
       [embed]="media"
       [class]="margin"
+      (click)="$event.stopPropagation()"
     />
   }
 
@@ -173,13 +174,14 @@
       <post-embed-images
         [embed]="media.media"
         [class]="margin"
-        (onImgClick)="onImgClick.emit({index: $event, uri: $any(embed.record).uri})"
+        (onImgClick)="onImgClick.emit({uri: $any(embed.record).uri, index: $event})"
       />
     }
     @if (media.media | isEmbedVideoView) {
       <post-embed-video
         [embed]="media.media"
         [class]="margin"
+        (click)="$event.stopPropagation()"
       />
     }
     @if (media.media | isEmbedExternalView) {
@@ -192,6 +194,7 @@
     <post-embed-record
       [embed]="media.record"
       [class]="margin"
+      (onEmbedClick)="onEmbedClick.emit($event)"
     />
   }
 </ng-template>

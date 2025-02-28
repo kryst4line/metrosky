@@ -37,32 +37,38 @@ module.exports = {
             '.msky-text-white': {
               color: 'rgba(255, 255, 255, 0.85)'
             },
+            '.msky-text-lightwhite': {
+              color: 'rgba(255, 255, 255, 0.9)'
+            },
             '.msky-text-darkwhite': {
               color: 'rgba(255, 255, 255, 0.7)'
+            },
+            '.msky-text-lightblue': {
+              color: 'rgba(207, 255, 255, 0.9)'
             },
             '.msky-text-link': {
               color: 'rgba(100, 255, 255, 0.9)'
             },
             '.msky-text-header': {
-              color: 'rgba(207, 255, 255, 0.9)',
+              color: 'rgba(255, 255, 255, 0.9)',
               fontSize: '2.4rem',
               fontWeight: 'lighter'
             },
             '.msky-text-subheader': {
-              color: 'rgba(207, 255, 255, 0.85)',
+              color: 'rgba(255, 255, 255, 0.85)',
               fontSize: '1.6rem',
               fontWeight: 'lighter'
             },
             '.msky-text-body': {
-              color: 'rgba(207, 255, 255, 0.9)',
+              color: 'rgba(255, 255, 255, 0.85)',
               fontSize: '14px'
             },
             '.msky-text-body-secondary': {
-              color: 'rgba(207, 255, 255, 0.8)',
+              color: 'rgba(255, 255, 255, 0.8)',
               fontSize: '1rem'
             },
             '.msky-text-caption': {
-              color: 'rgba(207, 255, 255, 0.7)',
+              color: 'rgba(255, 255, 255, 0.7)',
               fontSize: '0.8rem'
             },
             '.msky-bg-dark-075': {

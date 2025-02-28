@@ -1,6 +1,6 @@
 <div
   class="h-full flex flex-col"
-  [class]="dialog ? 'invisible' : 'visible'"
+  [class]="dialog ? '!hidden' : 'visible'"
 >
   <div
     class="h-12 w-full flex items-center px-2 gap-2 shrink-0 cursor-pointer hover:underline decoration-1"
@@ -31,14 +31,16 @@
         @for (parent of parents; track parent.uuid) {
           <feed-post-card
             [feedViewPost]="parent"
-            (onPostClick)="onPostClick(parent.post().uri)"
+            (onPostClick)="openPost(parent.post().uri)"
+            (onEmbedClick)="openPost($any($event.record).uri)"
             class="cursor-pointer"
           />
         }
       </div>
 
       <feed-post-card-detail #main
-                             [feedViewPost]="post"
+        [feedViewPost]="post"
+        (onEmbedClick)="openPost($any($event.record).uri)"
       />
 
       <div
@@ -70,7 +72,8 @@
 >
   <feed-post-card
     [feedViewPost]="threadReply.post"
-    (onPostClick)="onPostClick($event.post().uri)"
+    (onPostClick)="openPost($event.post().uri)"
+    (onEmbedClick)="openPost($any($event.record).uri)"
     class="w-full cursor-pointer"
   />
   @if (threadReply.replies && threadReply.replies.length) {

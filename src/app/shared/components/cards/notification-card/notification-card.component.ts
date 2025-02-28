@@ -24,6 +24,7 @@ import {
   AuthorViewDialogComponent
 } from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 import {DialogService} from "primeng/dynamicdialog";
+import {PostService} from "~/src/app/api/services/post.service";
 
 @Component({
   selector: 'notification-card',
@@ -54,6 +55,7 @@ export class NotificationCardComponent {
   @Output() onNotificationClick: EventEmitter<Notification> = new EventEmitter<Notification>;
 
   constructor(
+    private postService: PostService,
     private dialogService: DialogService
   ) {}
 
@@ -75,5 +77,9 @@ export class NotificationCardComponent {
     }
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  openImage(index: number) {
+    this.postService.openImage(this.notification.uri, index);
   }
 }

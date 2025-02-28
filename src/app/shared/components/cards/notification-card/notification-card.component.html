@@ -171,6 +171,7 @@
   @if (embed | isEmbedImagesView) {
     <post-embed-images
       [embed]="embed"
+      (onImgClick)="openImage($event)"
       class="mt-2"
     />
   }
@@ -178,6 +179,7 @@
   @if (embed | isEmbedVideoView) {
     <post-embed-video
       [embed]="embed"
+      (click)="$event.stopPropagation()"
       class="mt-2"
     />
   }

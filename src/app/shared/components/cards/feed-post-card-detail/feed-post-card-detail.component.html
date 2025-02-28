@@ -1,6 +1,5 @@
 <div #base
   class="flex flex-col p-4 mb-2 msky-bg-dark-15 hover:msky-bg-dark-20"
-  (click)="openPost($event)"
 >
 
   <div
@@ -66,11 +65,11 @@
     <div #displayName
          class="flex flex-col w-fit max-w-full min-w-0 justify-center hover:underline"
     >
-      @if (author.displayName.trim().length) {
+      @if (author.displayName?.trim().length) {
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-body text-[20px] fit-text shrink-1"
+          class="msky-text-body text-[20px] font-semibold fit-text shrink-1"
           style="text-box: trim-both"
         >
           {{ author.displayName }}
@@ -93,7 +92,6 @@
       }
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #record
@@ -106,7 +104,7 @@
       <rich-text-display
         [text]="record.text"
         [facets]="record.facets"
-        class="msky-text-body text-[1rem] cursor-text"
+        class="msky-text-body text-[1rem] cursor-auto"
       />
     </div>
   }
@@ -122,7 +120,7 @@
     @if (embed | isEmbedImagesView) {
       <post-embed-images
         [embed]="embed"
-        (onImgClick)="openDialog()"
+        (onImgClick)="openImage(feedViewPost.post().uri, $event)"
       />
     }
 
@@ -141,6 +139,8 @@
     @if (embed | isEmbedRecordView) {
       <post-embed-record
         [embed]="embed"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
       />
     }
 
@@ -148,7 +148,7 @@
       @if (embed.media | isEmbedImagesView) {
         <post-embed-images
           [embed]="embed.media"
-          (onImgClick)="openDialog()"
+          (onImgClick)="openImage(feedViewPost.post().uri, $event)"
         />
       }
 
@@ -166,6 +166,8 @@
 
       <post-embed-record
         [embed]="embed.record"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
         class="block mt-4"
       />
     }

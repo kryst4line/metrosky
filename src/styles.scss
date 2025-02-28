@@ -147,12 +147,18 @@
     --p-dialog-footer-padding: 0;
     --p-dialog-header-gap: 0;
     --p-dialog-footer-gap: 0;
-    --p-dialog-shadow: 0 0 25px rgba(0,0,0,0.3);
+    --p-dialog-shadow: 0 0 25px rgba(255,255,255,0.2);
 
     .p-dialog {
       border: 0;
       background: #002047;
       max-height: fit-content;
+
+      &:has(p-galleria) {
+        --p-galleria-border-width: 0;
+
+        width: 80%;
+      }
 
       .p-dialog-content {
         overflow-y: hidden;

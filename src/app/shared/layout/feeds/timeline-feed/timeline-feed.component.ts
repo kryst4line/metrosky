@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -22,7 +22,7 @@ import {NgIcon} from "@ng-icons/core";
   templateUrl: './timeline-feed.component.html',
   styleUrl: './timeline-feed.component.scss'
 })
-export class TimelineFeedComponent implements OnInit {
+export class TimelineFeedComponent implements OnInit, OnDestroy {
   @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
@@ -51,6 +51,11 @@ export class TimelineFeedComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.triggerRefresh?.unsubscribe();
+    clearTimeout(this.reloadTimeout);
   }
 
   initData() {
@@ -155,6 +160,4 @@ export class TimelineFeedComponent implements OnInit {
   log(event: any) {
     console.log(event)
   }
-
-  protected readonly open = open;
 }

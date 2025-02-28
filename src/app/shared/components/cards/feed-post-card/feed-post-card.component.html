@@ -140,19 +140,19 @@
   let-author="author"
 >
   <div #displayName
-       class="flex w-fit max-w-full min-w-0  items-baseline hover:underline gap-2"
+       class="flex w-fit max-w-full min-w-0 items-baseline gap-2"
   >
-    @if (author.displayName.trim().length) {
+    @if (author.displayName?.trim().length) {
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event, feedViewPost.post().author.did)"
-        class="msky-text-body text-[1rem] font-semibold fit-text shrink-1 grow-0 leading-none h-full"
+        (click)="openAuthor($event, author.did)"
+        class="msky-text-body text-[1rem] font-semibold fit-text shrink-1 grow-0 leading-none h-full hover:underline"
       >
         {{ author.displayName }}
       </a>
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event, feedViewPost.post().author.did)"
+        (click)="openAuthor($event, author.did)"
         class="msky-text-caption fit-text shrink-0 grow basis-0 min-w-0"
       >
         {{ '@' + author.handle }}
@@ -160,8 +160,8 @@
     } @else {
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
-        (click)="openAuthor($event, feedViewPost.post().author.did)"
-        class="font-semibold"
+        (click)="openAuthor($event, author.did)"
+        class="font-semibold hover:underline"
       >
         {{ '@' + author.handle }}
       </a>
@@ -195,13 +195,14 @@
     @if (embed | isEmbedImagesView) {
       <post-embed-images
         [embed]="embed"
-        (onImgClick)="openDialog()"
+        (onImgClick)="openImage(feedViewPost.post().uri, $event)"
       />
     }
 
     @if (embed | isEmbedVideoView) {
       <post-embed-video
         [embed]="embed"
+        (click)="$event.stopPropagation()"
       />
     }
 
@@ -215,6 +216,7 @@
       <post-embed-record
         [embed]="embed"
         (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
       />
     }
 
@@ -222,13 +224,14 @@
       @if (embed.media | isEmbedImagesView) {
         <post-embed-images
           [embed]="embed.media"
-          (onImgClick)="openDialog()"
+          (onImgClick)="openImage(feedViewPost.post().uri, $event)"
         />
       }
 
       @if (embed.media | isEmbedVideoView) {
         <post-embed-video
           [embed]="embed.media"
+          (click)="$event.stopPropagation()"
         />
       }
 
@@ -240,7 +243,8 @@
 
       <post-embed-record
         [embed]="embed.record"
-        (onEmbedClick)="$event"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
         class="block mt-4"
       />
     }
