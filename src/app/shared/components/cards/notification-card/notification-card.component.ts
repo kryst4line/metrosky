@@ -20,6 +20,11 @@ import {
   PostEmbedImagesComponent
 } from "~/src/app/shared/components/embeds/post-embed-images/post-embed-images.component";
 import {PostEmbedVideoComponent} from "~/src/app/shared/components/embeds/post-embed-video/post-embed-video.component";
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
+import {PostService} from "~/src/app/api/services/post.service";
 
 @Component({
   selector: 'notification-card',
@@ -41,8 +46,40 @@ import {PostEmbedVideoComponent} from "~/src/app/shared/components/embeds/post-e
   templateUrl: './notification-card.component.html',
   styleUrl: './notification-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DialogService
+  ]
 })
 export class NotificationCardComponent {
   @Input() notification: Notification;
   @Output() onNotificationClick: EventEmitter<Notification> = new EventEmitter<Notification>;
+
+  constructor(
+    private postService: PostService,
+    private dialogService: DialogService
+  ) {}
+
+  openAuthor(event: MouseEvent, did: string) {
+    if (!window.getSelection().toString().length) {
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'full-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openImage(index: number) {
+    this.postService.openImage(this.notification.uri, index);
+  }
 }

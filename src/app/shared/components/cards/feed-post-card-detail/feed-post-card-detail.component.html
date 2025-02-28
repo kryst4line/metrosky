@@ -1,8 +1,6 @@
 <div #base
-  class="flex flex-col p-4 mb-2 cursor-pointer msky-bg-dark-20 hover:msky-bg-dark-25"
-  (click)="openPost($event)"
+  class="flex flex-col p-4 mb-2 msky-bg-dark-15 hover:msky-bg-dark-20"
 >
-
 
   <div
     class="flex flex-col flex-1 min-w-0"
@@ -48,7 +46,7 @@
   let-author="author"
 >
   <div
-    class="flex w-full gap-3"
+    class="flex w-full gap-4"
   >
     <div
       class="w-14 shrink-0"
@@ -67,11 +65,12 @@
     <div #displayName
          class="flex flex-col w-fit max-w-full min-w-0 justify-center hover:underline"
     >
-      @if (author.displayName.trim().length) {
+      @if (author.displayName?.trim().length) {
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="text-[20px] fit-text shrink-1"
+          class="msky-text-body text-[20px] font-semibold fit-text shrink-1"
+          style="text-box: trim-both"
         >
           {{ author.displayName }}
         </a>
@@ -93,7 +92,6 @@
       }
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #record
@@ -106,7 +104,7 @@
       <rich-text-display
         [text]="record.text"
         [facets]="record.facets"
-        class="msky-text-body text-[1rem]"
+        class="msky-text-body text-[1rem] cursor-auto"
       />
     </div>
   }
@@ -122,7 +120,7 @@
     @if (embed | isEmbedImagesView) {
       <post-embed-images
         [embed]="embed"
-        (onImgClick)="openDialog($event)"
+        (onImgClick)="openImage(feedViewPost.post().uri, $event)"
       />
     }
 
@@ -141,6 +139,8 @@
     @if (embed | isEmbedRecordView) {
       <post-embed-record
         [embed]="embed"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
       />
     }
 
@@ -148,7 +148,7 @@
       @if (embed.media | isEmbedImagesView) {
         <post-embed-images
           [embed]="embed.media"
-          (onImgClick)="openDialog($event)"
+          (onImgClick)="openImage(feedViewPost.post().uri, $event)"
         />
       }
 
@@ -166,6 +166,8 @@
 
       <post-embed-record
         [embed]="embed.record"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        (onImgClick)="openImage($event.uri, $event.index)"
         class="block mt-4"
       />
     }
@@ -233,6 +235,7 @@
       <ng-icon
         name="tablerMessage"
         class="text-[1.25rem]"
+        color="rgba(207, 255, 255, 0.9)"
         (click)="replyPost(post, $event)"
       />
       @if (post.replyCount) {
@@ -249,7 +252,7 @@
     >
       <ng-icon
         name="tablerRepeat"
-        [color]="post.viewer.repost ? 'green' : undefined"
+        [color]="post.viewer.repost ? 'green' : 'rgba(207, 255, 255, 0.9)'"
         class="text-[1.25rem]"
         (click)="openRepostMenu(repostMenu, $event)"
       />
@@ -272,20 +275,13 @@
     <div
       class="flex flex-1 items-center gap-2"
     >
-      @if (post.viewer.like) {
-        <ng-icon
-          name="tablerHeartFill"
-          [color]="'red'"
-          class="text-[1.25rem]"
-          (click)="deleteLike($event)"
-        />
-      } @else {
-        <ng-icon
-          name="tablerHeart"
-          class="text-[1.25rem]"
-          (click)="like($event)"
-        />
-      }
+      <ng-icon
+        [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+        [color]="post.viewer.like ? 'red' : 'rgba(207, 255, 255, 0.9)'"
+        class="text-[1.25rem]"
+        (click)="post.viewer.like ? deleteLike($event) : like($event)"
+      />
+
       @if (post.likeCount) {
         <span
           class="msky-text-body text-[1rem]  leading-none"
@@ -301,6 +297,7 @@
       <ng-icon
         name="tablerDots"
         class="text-[1.25rem]"
+        color="rgba(207, 255, 255, 0.9)"
         (click)="moreMenu.toggle($event); $event.stopPropagation()"
       />
       <p-menu

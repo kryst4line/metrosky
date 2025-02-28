@@ -1,0 +1,31 @@
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.2);
+  font-weight: 300;
+  color: rgba(255,255,255,0.85);
+
+  &:hover, &:focus, &:focus-visible {
+    background: rgba(255,255,255,0.3);
+  }
+  &.active {
+    background: rgba(255,255,255,0.4);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+.deck-bg {
+  background-size: 100% 100%;
+  background-position: 0 0,0 0,0 0,0 0;
+  background-image: radial-gradient(99% 68% at 35% 55%, #016eaf 0%, #00000000 100%),linear-gradient(90deg, #007bb7 0%, #007bb780 7%, #007bb750 11%, #00000000 24%),radial-gradient(75% 75% at 50% 50%, #003b75 0%, #003b75 100%);
+}

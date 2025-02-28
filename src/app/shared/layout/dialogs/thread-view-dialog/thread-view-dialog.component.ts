@@ -3,7 +3,7 @@ import {
   FeedPostCardDetailComponent
 } from "~/src/app/shared/components/cards/feed-post-card-detail/feed-post-card-detail.component";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {AppBskyFeedDefs} from "@atproto/api";
@@ -21,10 +21,10 @@ import {NgTemplateOutlet} from "@angular/common";
 @Component({
   selector: 'thread-view-dialog',
   imports: [
-    FeedPostCardDetailComponent,
-    NgIcon,
+    forwardRef(() => FeedPostCardDetailComponent),
+    forwardRef(() => NgIcon),
     forwardRef(() => FeedPostCardComponent),
-    NgTemplateOutlet
+    NgTemplateOutlet,
   ],
   templateUrl: './thread-view-dialog.component.html',
   styleUrl: './thread-view-dialog.component.scss',
@@ -39,12 +39,15 @@ export class ThreadViewDialogComponent {
   post: SignalizedFeedViewPost;
   parents: SignalizedFeedViewPost[] = [];
   replies: ThreadReply[] = [];
+  dialog: DynamicDialogRef;
 
   constructor(
     protected ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private postService: PostService,
     private messageService: MessageService,
+    private dialogService: DialogService,
+    private parentRef: ElementRef,
     private cdRef: ChangeDetectorRef
   ) {
     this.loadThread();
@@ -90,7 +93,6 @@ export class ThreadViewDialogComponent {
             });
           }
 
-
           this.cdRef.markForCheck();
           setTimeout(() => {
             if (thread.parent) {
@@ -119,5 +121,30 @@ export class ThreadViewDialogComponent {
         (reply.replies as Array<ThreadViewPost | NotFoundPost | BlockedPost>).map(nestedReply => this.parseReplies(nestedReply))
     }
     return threadReply;
+  }
+
+  openPost(uri: string) {
+    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
+      data: {
+        uri: uri,
+      },
+      appendTo: this.parentRef.nativeElement,
+      maskStyleClass: 'inner-dialog',
+      style: {background: 'transparent', height: '100%'},
+      focusOnShow: false,
+      duplicate: true
+    });
+
+    this.dialog.onClose.subscribe({
+      next: () => {
+        this.dialog.destroy();
+        this.dialog = undefined;
+        this.cdRef.markForCheck();
+      }
+    });
+  }
+
+  log(event: any) {
+    console.log("DEVELOPMENT LOG: ", event);
   }
 }

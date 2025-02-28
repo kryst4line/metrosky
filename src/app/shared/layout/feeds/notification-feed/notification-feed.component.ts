@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -11,6 +11,7 @@ import NotificationUtils from "~/src/app/shared/utils/notification-utils";
 import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/notifications/is-post-notification";
 import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
 import {MessageService} from "~/src/app/api/services/message.service";
+import {NgIcon} from "@ng-icons/core";
 
 @Component({
   selector: 'notification-feed',
@@ -20,6 +21,7 @@ import {MessageService} from "~/src/app/api/services/message.service";
     AgVirtualScrollModule,
     IsNotificationArrayPipe,
     NotificationCardComponent,
+    NgIcon,
   ],
   templateUrl: './notification-feed.component.html',
   styleUrl: './notification-feed.component.scss',
@@ -27,10 +29,10 @@ import {MessageService} from "~/src/app/api/services/message.service";
     DialogService
   ]
 })
-export class NotificationFeedComponent implements OnInit {
+export class NotificationFeedComponent implements OnInit, OnDestroy {
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
-  notifications: Notification[] = [];
+  notifications: Notification[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
@@ -45,6 +47,10 @@ export class NotificationFeedComponent implements OnInit {
 
   ngOnInit() {
     this.initData();
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.reloadTimeout);
   }
 
   initData() {
@@ -92,10 +98,9 @@ export class NotificationFeedComponent implements OnInit {
         uri: uri
       },
       appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog !absolute',
-      style: {background: 'transparent', height: '100%'},
+      maskStyleClass: 'inner-dialog',
+      autoZIndex: false,
       focusOnShow: false,
-      width: '450px'
     });
 
     this.dialog.onClose.subscribe({
@@ -134,7 +139,7 @@ export class NotificationFeedComponent implements OnInit {
             const notification = response.data.notifications[0];
             const lastNotification = this.notifications[0];
 
-            if (notification.indexedAt !== lastNotification.notification.indexedAt) {
+            if (notification?.indexedAt !== lastNotification?.notification.indexedAt) {
               this.initData();
             } else {
               this.manageRefresh();

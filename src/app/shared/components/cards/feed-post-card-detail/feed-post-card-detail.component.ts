@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CardModule} from "primeng/card";
+import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
@@ -26,17 +25,19 @@ import {
 } from "~/src/app/shared/components/embeds/post-embed-external/post-embed-external.component";
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
+import {MessageService} from '~/src/app/api/services/message.service'
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 
 @Component({
   selector: 'feed-post-card-detail',
   imports: [
-    CardModule,
     IsEmbedImagesViewPipe,
     DisplayNamePipe,
     NgIcon,
@@ -54,7 +55,7 @@ import {PostService} from "~/src/app/api/services/post.service";
     Menu,
     NgTemplateOutlet,
     IsFeedPostRecordPipe,
-    RichTextDisplayComponent
+    forwardRef(() => RichTextDisplayComponent)
   ],
   templateUrl: './feed-post-card-detail.component.html',
   styleUrl: './feed-post-card-detail.component.scss',
@@ -69,7 +70,6 @@ export class FeedPostCardDetailComponent {
   @Input() feedViewPost: SignalizedFeedViewPost;
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>();
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
-  ref: DynamicDialogRef;
   processingAction: boolean = false;
 
   moreMenuItems: MenuItem[] = [
@@ -102,6 +102,7 @@ export class FeedPostCardDetailComponent {
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
+    private messageService: MessageService,
     private dialogService: DialogService
   ) {}
 
@@ -179,27 +180,29 @@ export class FeedPostCardDetailComponent {
     console.log("DEVELOPMENT LOG: ", event)
   }
 
-  openPost(event: MouseEvent) {
-    if (!window.getSelection().toString().length) {
-      this.onPostClick.emit(this.feedViewPost);
-    }
-    event.stopPropagation();
-  }
-
   openAuthor(event: MouseEvent) {
+    if (!window.getSelection().toString().length) {
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: this.feedViewPost.post().author.did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'full-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
+    }
+
     event.preventDefault();
     event.stopPropagation();
   }
 
-  openDialog(index: number) {
-    this.ref = this.dialogService.open(ThreadViewDialogComponent, {
-      modal: true,
-      dismissableMask: true,
-      data: {
-        post: this.feedViewPost.post()
-      },
-      focusOnShow: false
-    });
+  openImage(uri:string, index: number) {
+    this.postService.openImage(uri, index);
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {

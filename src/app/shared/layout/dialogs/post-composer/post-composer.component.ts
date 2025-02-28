@@ -2,12 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
+  Input, OnDestroy,
   Output, signal, WritableSignal
 } from '@angular/core';
 import {Editor, EditorInitEvent} from "primeng/editor";
 import "quill-mention/autoregister";
-import "quill-mention/dist/quill.mention.css"
 import {agent} from "~/src/app/core/bsky.api";
 import {
   debounceTime,
@@ -71,11 +70,13 @@ import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-gua
   styleUrl: './post-composer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostComposerComponent {
+export class PostComposerComponent implements OnDestroy {
   @Input() loading = false;
   @Output() onPublishPost: EventEmitter<string> = new EventEmitter<string>;
   postCompose: WritableSignal<PostCompose>
   embedSuggestions: WritableSignal<Array<RecordEmbed | ExternalEmbed>> = signal([]);
+
+  pasteListener: EventListener = (event: any) => this.postService.attachMedia(event.clipboardData.files);
 
   editor: Quill;
   keyboardBindings = [
@@ -153,6 +154,12 @@ export class PostComposerComponent {
     });
     //Remove tabulation
     delete this.editor.keyboard.bindings['Tab'];
+
+    this.editor.container.addEventListener('paste', this.pasteListener);
+  }
+
+  ngOnDestroy() {
+    removeEventListener('paste', this.pasteListener);
   }
 
   get text(): string {

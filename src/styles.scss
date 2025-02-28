@@ -18,7 +18,7 @@
   margin: 0;
 
   background-color: #000;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(207, 255, 255, 0.9);
   font-size: 16px;
 
   $metro-dark-background: #0A0A0B;
@@ -65,6 +65,46 @@
       transition: 1.5s opacity ease;
     }
   }
+
+  * {
+    scrollbar-color: rgba(255,255,255,0.5) transparent;
+  }
+
+  button.ui-button {
+    &, &-rg, &-lg {
+      border: medium none;
+      border-spacing: 0;
+      list-style: none outside none;
+      margin: 0;
+      text-align: center;
+      text-decoration: none;
+      text-indent: 0;
+
+      background: rgba(255,255,255,0.2);
+      font-weight: 300;
+      color: rgba(255,255,255,0.85);
+
+      &:hover, &:focus, &:focus-visible {
+        background: rgba(255,255,255,0.3);
+        outline: none;
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+    }
+
+    &-rg {
+      padding: 0 1rem;
+      height: 2.25rem;
+    }
+
+    &-lg {
+      padding: 0 1rem;
+      height: 2.5rem;
+    }
+  }
 }
 
 .app-container{
@@ -76,7 +116,7 @@
   background-size: cover;
 }
 
-@mixin inner-dialog {
+@mixin custom-dialog {
   :host(::ng-deep p-dynamicdialog) .inner-dialog {
     position: absolute !important;
     --p-dialog-header-padding: 0;
@@ -87,12 +127,46 @@
     --p-dialog-shadow: none;
 
     .p-dialog {
+      border: 0;
       max-height: 100%;
       max-width: 100%;
-      border: 0;
+      height: 100%;
+      width: 100%;
+      background: transparent;
 
       .p-dialog-content {
         overflow-y: hidden;
+      }
+    }
+  }
+
+  :host(::ng-deep p-dynamicdialog) .full-dialog {
+    position: absolute !important;
+    --p-dialog-header-padding: 0;
+    --p-dialog-content-padding: 0;
+    --p-dialog-footer-padding: 0;
+    --p-dialog-header-gap: 0;
+    --p-dialog-footer-gap: 0;
+    --p-dialog-shadow: 0 0 25px rgba(255,255,255,0.2);
+
+    .p-dialog {
+      border: 0;
+      background: #002047;
+      max-height: fit-content;
+
+      &:has(p-galleria) {
+        --p-galleria-border-width: 0;
+
+        width: 80%;
+      }
+
+      .p-dialog-content {
+        overflow-y: hidden;
+        height: 90%;
+
+        &:has(author-view-dialog) {
+          max-height: 60rem;
+        }
       }
     }
   }

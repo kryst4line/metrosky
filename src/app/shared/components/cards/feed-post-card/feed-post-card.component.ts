@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CardModule} from "primeng/card";
+import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {IsFeedDefsReasonRepostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-reasonrepost";
@@ -30,7 +29,6 @@ import {
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {IsFeedDefsReasonPinPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-reasonpin";
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
@@ -38,11 +36,14 @@ import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guard
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
+import {MessageService} from "~/src/app/api/services/message.service";
+import {
+  AuthorViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 
 @Component({
   selector: 'feed-post-card',
   imports: [
-    CardModule,
     IsEmbedImagesViewPipe,
     IsFeedDefsReasonRepostPipe,
     DisplayNamePipe,
@@ -66,7 +67,7 @@ import {PostService} from "~/src/app/api/services/post.service";
     IsFeedDefsReasonPinPipe,
     IsFeedDefsNotFoundPostPipe,
     IsFeedDefsBlockedPostPipe,
-    RichTextDisplayComponent
+    forwardRef(() => RichTextDisplayComponent)
   ],
   templateUrl: './feed-post-card.component.html',
   styleUrl: './feed-post-card.component.scss',
@@ -107,12 +108,12 @@ export class FeedPostCardComponent {
       }
     }
   ];
-
-  repostMenuItems: MenuItem[]
+  repostMenuItems: MenuItem[];
 
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
+    private messageService: MessageService,
     private dialogService: DialogService
   ) {}
 
@@ -197,20 +198,33 @@ export class FeedPostCardComponent {
     event.stopPropagation();
   }
 
-  openAuthor(event: MouseEvent) {
+  openImage(uri: string, index: number) {
+    this.postService.openImage(uri, index);
+  }
+
+  openAuthor(event: MouseEvent, did: string) {
+    if (!window.getSelection().toString().length) {
+      this.dialogService.open(AuthorViewDialogComponent, {
+        data: {
+          actor: did
+        },
+        appendTo: document.querySelector('app-deck'),
+        maskStyleClass: 'full-dialog',
+        modal: true,
+        dismissableMask: true,
+        autoZIndex: false,
+        style: {height: '100%'},
+        focusOnShow: false,
+        duplicate: true
+      });
+    }
+
     event.preventDefault();
     event.stopPropagation();
   }
 
-  openDialog(index: number) {
-    this.ref = this.dialogService.open(ThreadViewDialogComponent, {
-      modal: true,
-      dismissableMask: true,
-      data: {
-        post: this.feedViewPost.post()
-      },
-      focusOnShow: false
-    });
+  openDialog() {
+    this.messageService.warnIcon('This feature is not implemented yet.', 'Welp!');
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {

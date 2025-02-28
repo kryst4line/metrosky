@@ -11,27 +11,31 @@
     font-size: 1rem;
     font-family: 'Open Sans', sans-serif;
     border-radius: 0 !important;
+
+    .mention {
+      background: #cee4ff;
+      padding: 0 2px;
+    }
   }
-}
 
-button.ui-button {
-  border: medium none;
-  border-spacing: 0;
-  list-style: none outside none;
-  margin: 0;
-  text-align: center;
-  text-decoration: none;
-  text-indent: 0;
+  .ql-mention-list {
+    background: #003678;
+  }
 
-  background: rgba(255,255,255,0.2);
-  padding: 0 1rem;
-  font-weight: 300;
-  color: rgba(255,255,255,0.85);
-  height: 2.5rem;
+  .ql-mention-list-item {
+    font-size: 1rem;
+    font-family: "Open Sans", sans-serif;
+    padding: 0.35rem 0.75rem;
+    text-box-trim: none;
+    cursor: pointer;
 
-  &:hover, &:focus, &:focus-visible {
-    background: rgba(255,255,255,0.3);
-    outline: none;
+    &.selected {
+      background: #004ca9;
+    }
+
+    > span {
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
   }
 }
 

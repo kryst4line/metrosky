@@ -1,10 +1,9 @@
 import {Component, OnInit, WritableSignal} from '@angular/core';
-import {PostFeedComponent} from "~/src/app/shared/layout/lists/post-feed/post-feed.component";
-import {NotificationFeedComponent} from "~/src/app/shared/layout/lists/notification-feed/notification-feed.component";
+import {TimelineFeedComponent} from "~/src/app/shared/layout/feeds/timeline-feed/timeline-feed.component";
+import {NotificationFeedComponent} from "~/src/app/shared/layout/feeds/notification-feed/notification-feed.component";
 import {SidebarComponent} from "~/src/app/shared/components/navigation/sidebar/sidebar.component";
 import {PostComposerComponent} from "~/src/app/shared/layout/dialogs/post-composer/post-composer.component";
 import {Drawer} from "primeng/drawer";
-import {NgIcon} from "@ng-icons/core";
 import {PostService} from "~/src/app/api/services/post.service";
 import {Subject} from "rxjs";
 import {MessageService} from "~/src/app/api/services/message.service";
@@ -15,7 +14,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 @Component({
   selector: 'app-deck',
   imports: [
-    PostFeedComponent,
+    TimelineFeedComponent,
     NotificationFeedComponent,
     SidebarComponent,
     PostComposerComponent,

@@ -11,15 +11,15 @@ import {DialogService} from "primeng/dynamicdialog";
 import {provideIcons} from "@ng-icons/core";
 import {
   tablerAlertTriangle,
-  tablerArrowForward, tablerChevronLeft,
+  tablerArrowForward, tablerCheck, tablerChevronLeft,
   tablerCircleSquare, tablerCircleX,
-  tablerDots,
+  tablerDots, tablerGridDots,
   tablerHash,
   tablerHeart,
   tablerInfoCircle,
   tablerLink,
-  tablerList, tablerLoader2,
-  tablerMessage, tablerPaperclip,
+  tablerList, tablerLoader2, tablerMenu2,
+  tablerMessage, tablerPaperclip, tablerPhoto,
   tablerPin,
   tablerRepeat,
   tablerSearch,
@@ -68,5 +68,9 @@ export const iconsProvider: Provider = provideIcons({
   tablerUser,
   tablerCircleX,
   tablerPaperclip,
-  tablerChevronLeft
+  tablerChevronLeft,
+  tablerCheck,
+  tablerPhoto,
+  tablerGridDots,
+  tablerMenu2
 });

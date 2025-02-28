@@ -1,0 +1,203 @@
+@if (images) {
+  <div
+    class="flex flex-col h-full bg-[#080819]"
+  >
+    <p-galleria #gallery
+      [value]="images"
+      [showItemNavigators]="images.length > 1"
+      [showThumbnails]="false"
+      [showIndicators]="images.length > 1"
+      [showItemNavigatorsOnHover]="true"
+      [circular]="true"
+      [activeIndex]="initialIndex"
+      class="h-full w-full min-h-0 flex-1"
+    >
+      <ng-template #item let-item>
+        <img
+          [src]="item.fullsize"
+          (click)="window.open(item.fullsize, '_blank')"
+          class="max-w-full max-h-full w-auto h-auto block cursor-pointer"
+        />
+      </ng-template>
+    </p-galleria>
+    <div
+      class="flex w-full p-4 flex-0 gap-4 bg-[#002047]"
+    >
+      <div
+        class="w-12 h-12 shrink-0"
+      >
+        <a #avatar
+           [href]="'https://bsky.app/profile/' + post().author.handle"
+           (click)="openAuthor($event, post().author.did)"
+        >
+          <img
+            [src]="post().author.avatar"
+            alt="{{post().author | displayName}}'s avatar"
+          />
+        </a>
+      </div>
+
+      <div
+        class="flex flex-col w-full"
+      >
+        <ng-container
+          [ngTemplateOutlet]="header"
+          [ngTemplateOutletContext]="{author: post().author}"
+        />
+
+        <ng-container
+          [ngTemplateOutlet]="record"
+          [ngTemplateOutletContext]="{record: post().record}"
+        />
+
+        <ng-container
+          [ngTemplateOutlet]="buttons"
+          [ngTemplateOutletContext]="{post: post()}"
+        />
+      </div>
+    </div>
+  </div>
+}
+
+<ng-template #header
+             let-author="author"
+>
+  <div #displayName
+       class="flex w-fit max-w-full min-w-0 items-baseline gap-2"
+  >
+    @if (author.displayName.trim().length) {
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event, author.did)"
+        class="msky-text-body text-lg font-semibold fit-text shrink-1 grow-0 leading-none h-full hover:underline"
+      >
+        {{ author.displayName }}
+      </a>
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event, author.did)"
+        class="msky-text-caption fit-text shrink-0 grow basis-0 min-w-0"
+      >
+        {{ '@' + author.handle }}
+      </a>
+    } @else {
+      <a
+        [href]="'https://bsky.app/profile/' + author.handle"
+        (click)="openAuthor($event, author.did)"
+        class="font-semibold hover:underline"
+      >
+        {{ '@' + author.handle }}
+      </a>
+    }
+  </div>
+</ng-template>
+
+<ng-template #record
+             let-record="record"
+>
+  @if ((record | isFeedPostRecord) && record.text.length) {
+    <div
+         class="mt-2"
+    >
+      <rich-text-display
+        [text]="record.text"
+        [facets]="record.facets"
+        class="msky-text-body block w-fit cursor-auto"
+      />
+    </div>
+  }
+</ng-template>
+
+<ng-template #buttons
+             let-post="post"
+>
+  <div #buttons
+       class="w-full mt-4 flex items-center gap-12"
+  >
+    <div
+      class="flex items-center gap-2 cursor-pointer"
+      (click)="reply($event)"
+    >
+      <ng-icon
+        name="tablerMessage"
+        class="text-[1.25rem]"
+        color="rgba(207, 255, 255, 0.9)"
+      />
+      @if (post.replyCount) {
+        <span
+          class="msky-text-body text-[1rem]  leading-none"
+        >
+          {{ post.replyCount | numberFormatter }}
+        </span>
+      }
+    </div>
+
+    <div
+      class="flex items-center gap-1  cursor-pointer"
+      (click)="openRepostMenu(repostMenu, $event)"
+    >
+      <ng-icon
+        name="tablerRepeat"
+        [color]="post.viewer.repost ? 'green' : 'rgba(207, 255, 255, 0.9)'"
+        class="text-[1.25rem]"
+      />
+
+      @if (post.repostCount) {
+        <span
+          class="msky-text-body text-[1rem] leading-none"
+        >
+          {{ post.repostCount | numberFormatter }}
+        </span>
+      }
+
+      <p-menu
+        #repostMenu popup
+        [model]="repostMenuItems"
+        appendTo="body"
+        class="msky-text-body block"
+      />
+    </div>
+
+    <div
+      class="flex items-center gap-2 cursor-pointer"
+      (click)="like($event)"
+    >
+      <ng-icon
+        [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+        [color]="post.viewer.like ? 'red' : 'rgba(207, 255, 255, 0.9)'"
+        class="text-[1.25rem]"
+      />
+
+      @if (post.likeCount) {
+        <span
+          class="msky-text-body text-[1rem]  leading-none"
+        >
+          {{ post.likeCount | numberFormatter }}
+        </span>
+      }
+    </div>
+
+    <ng-icon
+      name="tablerDots"
+      class="text-[1.25rem] cursor-pointer"
+      color="rgba(207, 255, 255, 0.9)"
+      (click)="moreMenu.toggle($event); $event.stopPropagation()"
+    />
+    <p-menu
+      #moreMenu popup
+      [model]="moreMenuItems"
+      appendTo="body"
+      class="msky-text-body block"
+    />
+
+    <a
+      [href]="post.uri | linkExtractor: post.author.handle"
+      target="_blank"
+      [title]="$any(post.record).createdAt | date: 'medium'"
+      class="msky-text-caption hover:underline w-8 leading-none ml-auto"
+      (click)="$event.stopPropagation()"
+    >
+      {{ $any(post.record).createdAt | dateFormatter }}
+    </a>
+  </div>
+</ng-template>

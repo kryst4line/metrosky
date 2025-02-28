@@ -1,30 +1,51 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef, forwardRef,
+  Input, OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
+import {
+  ThreadViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
 import {Subject} from "rxjs";
+import {NgIcon} from "@ng-icons/core";
 
 @Component({
-  selector: 'post-feed',
+  selector: 'author-feed',
   imports: [
     CommonModule,
-    FeedPostCardComponent,
+    forwardRef(() => FeedPostCardComponent),
     AgVirtualScrollModule,
+    NgIcon,
   ],
-  templateUrl: './post-feed.component.html',
-  styleUrl: './post-feed.component.scss'
+  templateUrl: './author-feed.component.html',
+  styleUrl: './author-feed.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostFeedComponent implements OnInit {
+export class AuthorFeedComponent implements OnInit, OnDestroy {
+  @Input() author: string;
+  @Input() filter?:
+    | 'posts_with_replies'
+    | 'posts_no_replies'
+    | 'posts_with_media'
+    | 'posts_and_author_threads'
+    | 'posts_with_video';
+  @Input() includePins?: boolean;
   @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
-  posts: SignalizedFeedViewPost[] = [];
+  posts: SignalizedFeedViewPost[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
@@ -33,14 +54,15 @@ export class PostFeedComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.initData();
 
     //Listen to new posts to refresh
-    this.triggerRefresh.subscribe({
+    this.triggerRefresh?.subscribe({
       next: () => {
         if (this.virtualScroll.currentScroll == 0) {
           this.initData();
@@ -48,17 +70,26 @@ export class PostFeedComponent implements OnInit {
           this.reloadReady = true;
         }
       }
-    })
+    });
+  }
+
+  ngOnDestroy() {
+    this.triggerRefresh?.unsubscribe();
+    clearTimeout(this.reloadTimeout);
   }
 
   initData() {
     this.loading = true;
-    agent.getTimeline({
+    agent.getAuthorFeed({
+      actor: this.author,
+      filter: this.filter ?? 'posts_no_replies',
+      includePins: this.includePins ?? false,
       limit: 15
     }).then(
       response => {
         this.lastPostCursor = response.data.cursor;
         this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
+        this.cdRef.markForCheck();
         setTimeout(() => {
           this.loading = false;
           this.manageRefresh();
@@ -93,16 +124,17 @@ export class PostFeedComponent implements OnInit {
         uri: uri
       },
       appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog !absolute',
-      style: {background: 'transparent', height: '100%'},
+      maskStyleClass: 'inner-dialog',
+      autoZIndex: false,
       focusOnShow: false,
-      width: '450px'
+      duplicate: true
     });
 
     this.dialog.onClose.subscribe({
       next: () => {
         this.dialog.destroy();
         this.dialog = undefined;
+        this.cdRef.markForCheck();
       }
     });
   }
@@ -153,6 +185,4 @@ export class PostFeedComponent implements OnInit {
   log(event: any) {
     console.log(event)
   }
-
-  protected readonly open = open;
 }
