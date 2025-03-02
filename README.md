@@ -14,29 +14,30 @@ Maybe you can mention me or this repo in the acknowledgements too
   <p>
     Your classic multicolumn client for Bluesky, now in Metro UI style 
   </p>
+    
+  <!-- Badges -->
+  <p>
+    <a href="https://github.com/kryst4line/metrosky/graphs/contributors">
+      <img src="https://img.shields.io/github/contributors/kryst4line/metrosky" alt="contributors" />
+    </a>
+    <a href="">
+      <img src="https://img.shields.io/github/last-commit/kryst4line/metrosky" alt="last update" />
+    </a>
+    <a href="https://github.com/kryst4line/metrosky/issues/">
+      <img src="https://img.shields.io/github/issues/kryst4line/metrosky" alt="open issues" />
+    </a>
+    <a href="https://github.com/Louis3797/awesome-readme-template/stargazers">
+      <img src="https://img.shields.io/github/stars/kryst4line/metrosky" alt="stars" />
+    </a>
+  </p>
   
-  
-<!-- Badges -->
-<p>
-  <a href="https://github.com/kryst4line/metrosky/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/kryst4line/metrosky" alt="contributors" />
-  </a>
-  <a href="">
-    <img src="https://img.shields.io/github/last-commit/kryst4line/metrosky" alt="last update" />
-  </a>
-  <a href="https://github.com/kryst4line/metrosky/issues/">
-    <img src="https://img.shields.io/github/issues/kryst4line/metrosky" alt="open issues" />
-  </a>
-  <a href="https://github.com/Louis3797/awesome-readme-template/stargazers">
-    <img src="https://img.shields.io/github/stars/kryst4line/metrosky" alt="stars" />
-  </a>
-</p>
+  <p>
+    <a href="">
+      <img src="https://img.shields.io/github/package-json/dependency-version/kryst4line/metrosky/@angular/core" alt="angular version" />
+    </a>
+  </p>
 
-<p>
-  <a href="">
-    <img src="https://img.shields.io/github/package-json/dependency-version/kryst4line/metrosky/@angular/core" alt="angular version" />
-  </a>
-</p>
+  [![Repobeats analytics image](https://repobeats.axiom.co/api/embed/b91e825d74528f905289f0df10d2bca516f62be3.svg "Repobeats analytics image")](https://github.com/kryst4line/metrosky/pulse)
 
 </div>
 
