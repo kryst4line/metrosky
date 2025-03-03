@@ -63,13 +63,13 @@
     </div>
 
     <div #displayName
-         class="flex flex-col w-fit max-w-full min-w-0 justify-center hover:underline"
+         class="flex flex-col w-fit max-w-full min-w-0 justify-center"
     >
       @if (author.displayName?.trim().length) {
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-body text-[20px] font-semibold fit-text shrink-1"
+          class="msky-text-body text-[20px] font-semibold fit-text shrink-1 hover:underline"
           style="text-box: trim-both"
         >
           {{ author.displayName }}
@@ -77,7 +77,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-caption text-[14px] fit-text shrink-1"
+          class="msky-text-caption text-[14px] fit-text w-fit shrink-1"
         >
           {{ '@' + author.handle }}
         </a>
@@ -85,7 +85,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="font-semibold"
+          class="msky-text-body text-[20px] font-semibold fit-text shrink-1 hover:underline"
         >
           {{ '@' + author.handle }}
         </a>
@@ -181,7 +181,7 @@
     [href]="post.uri | linkExtractor: post.author.handle"
     target="_blank"
     [title]="$any(post.record).createdAt | date: 'medium'"
-    class="msky-text-caption text-[14px] hover:underline mt-4"
+    class="msky-text-caption text-[14px] w-fit hover:underline mt-4"
     (click)="$event.stopPropagation()"
   >
     {{ $any(post.record).createdAt | date: 'medium' }}
@@ -205,7 +205,7 @@
 
     @if (post.repostCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.repostCount + ' reposts' }}
