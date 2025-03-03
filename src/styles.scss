@@ -152,7 +152,11 @@
     .p-dialog {
       border: 0;
       background: #002047;
-      max-height: fit-content;
+      max-height: 90%;
+
+      &:has(author-view-dialog) {
+        max-height: 55rem;
+      }
 
       &:has(p-galleria) {
         --p-galleria-border-width: 0;
@@ -163,10 +167,6 @@
       .p-dialog-content {
         overflow-y: hidden;
         height: 90%;
-
-        &:has(author-view-dialog) {
-          max-height: 60rem;
-        }
       }
     }
   }
