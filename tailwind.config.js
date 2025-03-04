@@ -11,6 +11,23 @@ module.exports = {
       fontFamily: {
         'sans': 'Open Sans'
       },
+      animation: {
+        pingonce: 'pingonce 1s ease-in-out'
+      },
+      keyframes: {
+        pingonce: {
+          '0%': {
+            opacity: 0
+          },
+          '1%': {
+            opacity: 1
+          },
+          '75%, 100%': {
+            transform: 'scale(3)',
+            opacity: 0
+          }
+        }
+      },
       color: 'rgba(255,255,255,0.85)',
       lineHeight: {
         'snug': '1.4'

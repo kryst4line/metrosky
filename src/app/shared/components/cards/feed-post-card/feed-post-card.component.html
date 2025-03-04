@@ -190,7 +190,7 @@
 >
   <div #content
        id="content"
-       class="mt-4 flex flex-col"
+       class="mt-4 flex flex-col peer/embed"
   >
     @if (embed | isEmbedImagesView) {
       <post-embed-images
@@ -255,81 +255,108 @@
   let-post="post"
 >
   <div #buttons
-       class="w-full mt-4 flex justify-between items-center buttons"
+       class="w-full -mb-4 flex justify-between items-center mt-3 peer-[]/embed:mt-0"
   >
     <div
-      class="flex flex-1 h-4"
+      class="flex flex-1"
     >
       <div
-        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+        class="flex-1"
       >
-        <ng-icon
-          name="tablerMessage"
+        <button
+          class="flex gap-1 items-center p-3 hover:msky-bg-dark-15"
           (click)="replyPost(post, $event)"
-        />
-        @if (post.replyCount) {
-          <span
-            class="msky-text-caption leading-none"
-          >
+        >
+          <ng-icon
+            name="tablerMessage"
+            class="text-[18px]"
+          />
+          @if (post.replyCount) {
+            <span
+              class="msky-text-caption leading-none text-rg"
+            >
             {{ post.replyCount | numberFormatter }}
           </span>
-        }
+          }
+        </button>
       </div>
       <div
-        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+        class="flex-1"
       >
-        <ng-icon
-          name="tablerRepeat"
-          [color]="post.viewer.repost ? 'green' : undefined"
+        <button
+          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15"
+          [class.msky-bg-dark-15]="repostMenu.visible"
           (click)="openRepostMenu(repostMenu, $event)"
-        />
+        >
+          <ng-icon
+            name="tablerRepeat"
+            class="text-[18px]"
+            [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+          />
+          <ng-icon #rtAnim
+            name="tablerRepeat"
+            [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+            class="absolute text-[18px] opacity-0"
+          />
+
+          @if (post.repostCount) {
+            <span
+              class="msky-text-caption leading-none text-rg"
+            >
+            {{ post.repostCount | numberFormatter }}
+          </span>
+          }
+        </button>
+
         <p-menu
           #repostMenu popup
           [model]="repostMenuItems"
           appendTo="body"
           class="msky-text-body block"
         />
-
-        @if (post.repostCount) {
-          <span
-            class="msky-text-caption leading-none"
-          >
-            {{ post.repostCount | numberFormatter }}
-          </span>
-        }
       </div>
 
       <div
-        class="flex flex-1 max-w-[4.5rem] items-center gap-1"
+        class="flex-1"
       >
-        @if (post.viewer.like) {
+        <button
+          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15"
+          (click)="post.viewer.like ? deleteLike($event) : like($event)"
+          [disabled]="processingAction"
+        >
           <ng-icon
-            name="tablerHeartFill"
-            [color]="'red'"
-            (click)="deleteLike($event)"
+            [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+            [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+            class="text-[18px]"
           />
-        } @else {
-          <ng-icon
-            name="tablerHeart"
-            (click)="like($event)"
+          <ng-icon #likeAnim
+            [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+            [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+            class="absolute text-[18px] opacity-0"
           />
-        }
-        @if (post.likeCount) {
-          <span
-            class="msky-text-caption leading-none"
-          >
+          @if (post.likeCount) {
+            <span
+              class="msky-text-caption leading-none text-rg"
+            >
             {{ post.likeCount | numberFormatter }}
           </span>
-        }
+          }
+        </button>
       </div>
 
       <div
         class="flex-0"
       >
-        <ng-icon
-          name="tablerDots"
+        <button
+          class="relative flex items-center p-3 hover:msky-bg-dark-15"
+          [class.msky-bg-dark-15]="moreMenu.visible"
           (click)="moreMenu.toggle($event); $event.stopPropagation()"
-        />
+        >
+          <ng-icon
+            name="tablerDots"
+            class="text-[18px]"
+          />
+        </button>
         <p-menu
           #moreMenu popup
           [model]="moreMenuItems"
@@ -339,14 +366,18 @@
       </div>
     </div>
 
-    <a
-      [href]="post.uri | linkExtractor: post.author.handle"
-      target="_blank"
-      [title]="$any(post.record).createdAt | date: 'medium'"
-      class="msky-text-caption hover:underline w-8 text-end leading-none"
-      (click)="$event.stopPropagation()"
+    <div
+      class="w-10 flex justify-end"
     >
-      {{ $any(post.record).createdAt | dateFormatter }}
-    </a>
+      <a
+        [href]="post.uri | linkExtractor: post.author.handle"
+        target="_blank"
+        [title]="$any(post.record).createdAt | date: 'medium'"
+        class="msky-text-caption hover:underline w-fit leading-none"
+        (click)="$event.stopPropagation()"
+      >
+        {{ $any(post.record).createdAt | dateFormatter }}
+      </a>
+    </div>
   </div>
 </ng-template>

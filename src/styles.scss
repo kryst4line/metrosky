@@ -11,14 +11,19 @@
 }
 
 :root, body {
-  //font-family: "Open Sans", sans-serif;
-  //--font-sans: '';
+  --green-rt: rgba(80, 255, 100, 0.9);
+  --red-like: rgba(255,20,80,0.9);
+  --msky-white: rgba(255, 255, 255, 0.85);
+  --msky-lightwhite: rgba(255, 255, 255, 0.9);
+  --msky-darkwhite: rgba(255, 255, 255, 0.7);
+
+  font-family: "Open Sans", sans-serif;
   height: 100%;
   padding: 0;
   margin: 0;
 
   background-color: #000;
-  color: rgba(207, 255, 255, 0.9);
+  color: var(--msky-white);
   font-size: 16px;
 
   $metro-dark-background: #0A0A0B;
