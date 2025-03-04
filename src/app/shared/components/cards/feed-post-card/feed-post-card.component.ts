@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -126,9 +126,7 @@ export class FeedPostCardComponent {
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
     private messageService: MessageService,
-    private dialogService: DialogService,
-    private elementRef: ElementRef,
-    private cdRef: ChangeDetectorRef
+    private dialogService: DialogService
   ) {}
 
   replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
@@ -264,9 +262,9 @@ export class FeedPostCardComponent {
 
   redoRepost() {
     this.processingAction = true;
-    agent.deleteRepost(this.feedViewPost.post().viewer.repost).then(
-      () => this.repost()
-    );
+    from(agent.deleteRepost(this.feedViewPost.post().viewer.repost)).subscribe({
+      next: () => this.repost()
+    }).add(() => this.processingAction = false);
   }
 
   log(event: any) {

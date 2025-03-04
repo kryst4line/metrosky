@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
@@ -34,6 +43,7 @@ import {MessageService} from '~/src/app/api/services/message.service'
 import {
   AuthorViewDialogComponent
 } from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {from} from "rxjs";
 
 @Component({
   selector: 'feed-post-card-detail',
@@ -70,6 +80,9 @@ export class FeedPostCardDetailComponent {
   @Input() feedViewPost: SignalizedFeedViewPost;
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>();
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
+
+  @ViewChild('likeAnim', {read: ElementRef}) likeAnimation: ElementRef<HTMLElement>;
+  @ViewChild('rtAnim', {read: ElementRef}) repostAnimation: ElementRef<HTMLElement>;
   processingAction: boolean = false;
 
   moreMenuItems: MenuItem[] = [
@@ -112,61 +125,129 @@ export class FeedPostCardDetailComponent {
   }
 
   like(event: MouseEvent) {
+    event.stopPropagation();
+
+    // Update UI
+    this.feedViewPost.post.update(post => {
+      post.viewer.like = 'placeholder';
+      return post;
+    });
+
+    // Show animation
+    if (this.likeAnimation.nativeElement.classList.contains('animate-pingonce')) {
+      this.likeAnimation.nativeElement.classList.remove('animate-pingonce');
+    }
+    setTimeout(() => this.likeAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+
+    // API call
     this.processingAction = true;
-    agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
-      () => {
+    from(agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid)).subscribe({
+      next: () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
-          this.processingAction = false;
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.feedViewPost.post.update(post => {
+          post.viewer.like = undefined;
+          return post;
         });
       }
-    );
-    event.stopPropagation();
+    }).add(() => this.processingAction = false);
   }
 
   deleteLike(event: MouseEvent) {
+    event.stopPropagation();
+
+    // Update UI
+    const likeRef = this.feedViewPost.post().viewer.like;
+    this.feedViewPost.post.update(post => {
+      post.viewer.like = undefined;
+      return post;
+    });
+
+    // API call
     this.processingAction = true;
-    agent.deleteLike(this.feedViewPost.post().viewer.like).then(
-      () => {
+    from(agent.deleteLike(this.feedViewPost.post().viewer.like)).subscribe({
+      next: () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
-          this.processingAction = false;
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.feedViewPost.post.update(post => {
+          post.viewer.like = likeRef;
+          return post;
         });
       }
-    );
-    event.stopPropagation();
+    }).add(() => this.processingAction = false);
   }
 
   repost() {
+    // Update UI
+    this.feedViewPost.post.update(post => {
+      post.viewer.repost = 'placeholder';
+      return post;
+    });
+
+    // Show animation
+    if (this.repostAnimation.nativeElement.classList.contains('animate-pingonce')) {
+      this.repostAnimation.nativeElement.classList.remove('animate-pingonce');
+    }
+    setTimeout(() => this.repostAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+
+    // API call
     this.processingAction = true;
-    agent.repost(this.feedViewPost.post().uri, this.feedViewPost.post().cid).then(
-      () => {
+    from(agent.repost(this.feedViewPost.post().uri, this.feedViewPost.post().cid)).subscribe({
+      next: () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
-          this.processingAction = false;
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.feedViewPost.post.update(post => {
+          post.viewer.repost = undefined;
+          return post;
         });
       }
-    );
+    }).add(() => this.processingAction = false);
   }
 
   deleteRepost() {
+    // Update UI
+    const rtRef = this.feedViewPost.post().viewer.repost;
+    this.feedViewPost.post.update(post => {
+      post.viewer.repost = undefined;
+      return post;
+    });
+
+    // API call
     this.processingAction = true;
-    agent.deleteRepost(this.feedViewPost.post().viewer.repost).then(
-      () => {
+    from(agent.deleteRepost(this.feedViewPost.post().viewer.repost)).subscribe({
+      next: () => {
         agent.getPosts({
           uris: [this.feedViewPost.post().uri]
         }).then(response => {
           this.feedViewPost.post.set(response.data.posts[0]);
-          this.processingAction = false;
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.feedViewPost.post.update(post => {
+          post.viewer.repost = rtRef;
+          return post;
         });
       }
-    );
+    }).add(() => this.processingAction = false);
   }
 
   redoRepost() {
