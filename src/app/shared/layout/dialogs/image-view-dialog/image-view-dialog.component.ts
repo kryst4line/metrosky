@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnInit,
+  OnInit, ViewChild,
   WritableSignal
 } from '@angular/core';
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -54,7 +54,12 @@ export class ImageViewDialogComponent implements OnInit {
   post: WritableSignal<AppBskyFeedDefs.PostView>;
   images: AppBskyEmbedImages.ViewImage[];
   initialIndex: number = 0;
+
+  @ViewChild('likeAnim', {read: ElementRef}) likeAnimation: ElementRef<HTMLElement>;
+  @ViewChild('rtAnim', {read: ElementRef}) repostAnimation: ElementRef<HTMLElement>;
   processingAction = false;
+
+  protected readonly window = window;
 
   moreMenuItems: MenuItem[] = [
     {
@@ -120,6 +125,7 @@ export class ImageViewDialogComponent implements OnInit {
         this.cdRef.markForCheck();
       },
       error: err => {
+        this.messageService.error(err.message, 'Oops!');
         this.ref.close();
       }
     })
@@ -131,54 +137,136 @@ export class ImageViewDialogComponent implements OnInit {
   }
 
   like(event: MouseEvent) {
-    if (!this.processingAction) {
-      this.processingAction = true;
-
-      let likePromise;
-
-      if (this.post().viewer.like) {
-        likePromise = this.postService.deleteLike(this.post().uri, this.post().viewer.like);
-      } else {
-        likePromise = this.postService.like(this.post().uri, this.post().cid);
-      }
-
-      likePromise
-        .catch(err => this.messageService.error(err, 'Oops!'))
-        .finally(() => this.processingAction = false);
-    }
-
     event.stopPropagation();
+
+    // Update UI
+    this.post.update(post => {
+      post.viewer.like = 'placeholder';
+      return post;
+    });
+
+    // Show animation
+    if (this.likeAnimation.nativeElement.classList.contains('animate-pingonce')) {
+      this.likeAnimation.nativeElement.classList.remove('animate-pingonce');
+    }
+    setTimeout(() => this.likeAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+
+    // API call
+    this.processingAction = true;
+    from(agent.like(this.post().uri, this.post().cid)).subscribe({
+      next: () => {
+        agent.getPosts({
+          uris: [this.post().uri]
+        }).then(response => {
+          this.post.set(response.data.posts[0]);
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.post.update(post => {
+          post.viewer.like = undefined;
+          return post;
+        });
+      }
+    }).add(() => this.processingAction = false);
+  }
+
+  deleteLike(event: MouseEvent) {
+    event.stopPropagation();
+
+    // Update UI
+    const likeRef = this.post().viewer.like;
+    this.post.update(post => {
+      post.viewer.like = undefined;
+      return post;
+    });
+
+    // API call
+    this.processingAction = true;
+    from(agent.deleteLike(this.post().viewer.like)).subscribe({
+      next: () => {
+        agent.getPosts({
+          uris: [this.post().uri]
+        }).then(response => {
+          this.post.set(response.data.posts[0]);
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.post.update(post => {
+          post.viewer.like = likeRef;
+          return post;
+        });
+      }
+    }).add(() => this.processingAction = false);
   }
 
   repost() {
-    if (!this.processingAction) {
-      this.processingAction = true;
+    // Update UI
+    this.post.update(post => {
+      post.viewer.repost = 'placeholder';
+      return post;
+    });
 
-      let repostPromise;
-
-      if (this.post().viewer.repost) {
-        repostPromise = this.postService.deleteRepost(this.post().uri, this.post().viewer.repost);
-      } else {
-        repostPromise = this.postService.repost(this.post().uri, this.post().cid);
-      }
-
-      repostPromise
-        .catch(err => this.messageService.error(err, 'Oops!'))
-        .finally(() => {
-          this.processingAction = false;
-          this.cdRef.markForCheck();
-        });
+    // Show animation
+    if (this.repostAnimation.nativeElement.classList.contains('animate-pingonce')) {
+      this.repostAnimation.nativeElement.classList.remove('animate-pingonce');
     }
+    setTimeout(() => this.repostAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+
+    // API call
+    this.processingAction = true;
+    from(agent.repost(this.post().uri, this.post().cid)).subscribe({
+      next: () => {
+        agent.getPosts({
+          uris: [this.post().uri]
+        }).then(response => {
+          this.post.set(response.data.posts[0]);
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.post.update(post => {
+          post.viewer.repost = undefined;
+          return post;
+        });
+      }
+    }).add(() => this.processingAction = false);
   }
 
-  renewRepost() {
-    if (!this.processingAction) {
-      this.processingAction = true;
+  deleteRepost() {
+    // Update UI
+    const rtRef = this.post().viewer.repost;
+    this.post.update(post => {
+      post.viewer.repost = undefined;
+      return post;
+    });
 
-      this.postService.renewRepost(this.post().uri, this.post().cid, this.post().viewer.repost)
-        .catch(err => this.messageService.error(err, 'Oops!'))
-        .finally(() => this.processingAction = false);
-    }
+    // API call
+    this.processingAction = true;
+    from(agent.deleteRepost(this.post().viewer.repost)).subscribe({
+      next: () => {
+        agent.getPosts({
+          uris: [this.post().uri]
+        }).then(response => {
+          this.post.set(response.data.posts[0]);
+        });
+      },
+      error: err => {
+        this.messageService.error(err.message, 'Oops!');
+        this.post.update(post => {
+          post.viewer.repost = rtRef;
+          return post;
+        });
+      }
+    }).add(() => this.processingAction = false);
+  }
+
+  redoRepost() {
+    this.processingAction = true;
+    from(agent.deleteRepost(this.post().viewer.repost)).subscribe({
+      next: () => this.repost()
+    }).add(() => this.processingAction = false);
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {
@@ -190,7 +278,7 @@ export class ImageViewDialogComponent implements OnInit {
       },
       {
         label: 'Redo repost',
-        command: () => this.renewRepost(),
+        command: () => this.redoRepost(),
         visible: !!this.post().viewer.repost,
         disabled: this.processingAction
       },
@@ -223,6 +311,4 @@ export class ImageViewDialogComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
   }
-
-  protected readonly window = window;
 }

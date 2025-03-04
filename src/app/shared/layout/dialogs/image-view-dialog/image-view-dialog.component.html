@@ -15,6 +15,7 @@
       <ng-template #item let-item>
         <img
           [src]="item.fullsize"
+          [alt]="item.alt"
           (click)="window.open(item.fullsize, '_blank')"
           class="max-w-full max-h-full w-auto h-auto block cursor-pointer"
         />
@@ -112,39 +113,44 @@
              let-post="post"
 >
   <div #buttons
-       class="w-full mt-4 flex items-center gap-12"
+       class="w-full mt-3 -mb-4 flex items-center gap-12"
   >
-    <div
-      class="flex items-center gap-2 cursor-pointer"
+    <button
+      class="relative flex gap-2 items-center p-3 hover:msky-bg-light-20"
       (click)="reply($event)"
     >
       <ng-icon
         name="tablerMessage"
-        class="text-[1.25rem]"
-        color="rgba(207, 255, 255, 0.9)"
+        class="text-[18px]"
       />
       @if (post.replyCount) {
         <span
-          class="msky-text-body text-[1rem]  leading-none"
+          class="msky-text-body text-rg leading-none"
         >
           {{ post.replyCount | numberFormatter }}
         </span>
       }
-    </div>
+    </button>
 
-    <div
-      class="flex items-center gap-1  cursor-pointer"
+    <button
+      class="relative flex gap-2 items-center p-3 hover:msky-bg-light-20"
+      [class.msky-bg-light-20]="repostMenu.visible"
       (click)="openRepostMenu(repostMenu, $event)"
     >
       <ng-icon
         name="tablerRepeat"
-        [color]="post.viewer.repost ? 'green' : 'rgba(207, 255, 255, 0.9)'"
-        class="text-[1.25rem]"
+        class="text-[18px]"
+        [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+      />
+      <ng-icon #rtAnim
+        name="tablerRepeat"
+        [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+        class="absolute text-[18px] opacity-0"
       />
 
       @if (post.repostCount) {
         <span
-          class="msky-text-body text-[1rem] leading-none"
+          class="msky-text-body text-rg leading-none"
         >
           {{ post.repostCount | numberFormatter }}
         </span>
@@ -154,47 +160,58 @@
         #repostMenu popup
         [model]="repostMenuItems"
         appendTo="body"
-        class="msky-text-body block"
+        class="msky-text-body hidden"
       />
-    </div>
+    </button>
 
-    <div
-      class="flex items-center gap-2 cursor-pointer"
-      (click)="like($event)"
+    <button
+      class="relative flex gap-2 items-center p-3 hover:msky-bg-light-20"
+      (click)="post.viewer.like ? deleteLike($event) : like($event)"
+      [disabled]="processingAction"
     >
       <ng-icon
         [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
-        [color]="post.viewer.like ? 'red' : 'rgba(207, 255, 255, 0.9)'"
-        class="text-[1.25rem]"
+        [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+        class="text-[18px]"
+      />
+      <ng-icon #likeAnim
+        [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+        [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+        class="absolute text-[18px] opacity-0"
       />
 
       @if (post.likeCount) {
         <span
-          class="msky-text-body text-[1rem]  leading-none"
+          class="msky-text-body text-rg  leading-none"
         >
           {{ post.likeCount | numberFormatter }}
         </span>
       }
-    </div>
+    </button>
 
-    <ng-icon
-      name="tablerDots"
-      class="text-[1.25rem] cursor-pointer"
-      color="rgba(207, 255, 255, 0.9)"
+    <button
+      class="relative flex gap-2 items-center p-3 hover:msky-bg-light-20"
+      [class.msky-bg-light-20]="moreMenu.visible"
       (click)="moreMenu.toggle($event); $event.stopPropagation()"
-    />
-    <p-menu
-      #moreMenu popup
-      [model]="moreMenuItems"
-      appendTo="body"
-      class="msky-text-body block"
-    />
+    >
+      <ng-icon
+        name="tablerDots"
+        class="text-[18px]"
+      />
+
+      <p-menu
+        #moreMenu popup
+        [model]="moreMenuItems"
+        appendTo="body"
+        class="msky-text-body hidden"
+      />
+    </button>
 
     <a
       [href]="post.uri | linkExtractor: post.author.handle"
       target="_blank"
       [title]="$any(post.record).createdAt | date: 'medium'"
-      class="msky-text-caption hover:underline w-8 leading-none ml-auto"
+      class="msky-text-caption hover:underline w-8 ml-auto"
       (click)="$event.stopPropagation()"
     >
       {{ $any(post.record).createdAt | dateFormatter }}

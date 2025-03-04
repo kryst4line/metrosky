@@ -252,9 +252,9 @@ export class FeedPostCardDetailComponent {
 
   redoRepost() {
     this.processingAction = true;
-    agent.deleteRepost(this.feedViewPost.post().viewer.repost).then(
-      () => this.repost()
-    );
+    from(agent.deleteRepost(this.feedViewPost.post().viewer.repost)).subscribe({
+      next: () => this.repost()
+    }).add(() => this.processingAction = false);
   }
 
   log(event: any) {
