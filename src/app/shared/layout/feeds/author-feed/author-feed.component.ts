@@ -102,7 +102,10 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     if (!this.loading && scrollEvent.endIndex == this.posts.length -1) {
       this.loading = true;
 
-      agent.getTimeline({
+      agent.getAuthorFeed({
+        actor: this.author,
+        filter: this.filter ?? 'posts_no_replies',
+        includePins: this.includePins ?? false,
         cursor: this.lastPostCursor,
         limit: 15
       }).then(
