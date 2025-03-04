@@ -2,31 +2,34 @@
   class="flex flex-col w-20 h-full shrink-0 bg-[#002047] hover:w-80 transition-width ease-out duration-300 overflow-hidden justify-around"
 >
   <div #topButton
-    class="flex items-center shrink-0 select-none"
+    class="flex shrink-0 select-none cursor-pointer hover:msky-bg-light-20"
   >
     <a
       class="flex-shrink-0"
     >
       <img
-        src="icon.webp"
+        [src]="loggedUser.avatar ?? 'icon.webp'"
         alt="Your avatar"
-        class="w-20"
+        class="w-20 h-20"
       />
     </a>
 
     <div
-      class="flex flex-col shrink-0 h-full justify-center gap-1 px-4 max-w-full min-w-0 flex-1"
+      class="flex flex-col shrink-0 h-full justify-center px-4 max-w-full min-w-0 flex-1"
     >
       <span
-        class="msky-text-subheader !msky-text-white whitespace-nowrap overflow-hidden text-ellipsis leading-none"
+        class="msky-text-subheader !msky-text-white whitespace-nowrap overflow-hidden text-ellipsis [text-box-trim: trim-both]"
       >
-        {{ 'Placeholder' }}
+        {{ loggedUser?.displayName ?? '@'+loggedUser?.handle }}
       </span>
-      <span
-        class="msky-text-caption !msky-text-darkwhite whitespace-nowrap overflow-hidden text-ellipsis"
-      >
-        {{ '@placeholder.bsky.social' }}
-      </span>
+
+      @if (loggedUser?.displayName) {
+        <span
+          class="msky-text-caption text-[14px] !msky-text-darkwhite whitespace-nowrap overflow-hidden text-ellipsis"
+        >
+          {{ '@'+loggedUser?.handle }}
+        </span>
+      }
     </div>
   </div>
   <div #arrayButtons

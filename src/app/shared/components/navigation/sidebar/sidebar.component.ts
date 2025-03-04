@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular
 import {RippleModule} from "primeng/ripple";
 import {NgIcon} from "@ng-icons/core";
 import {NgTemplateOutlet} from "@angular/common";
+import {AppBskyActorDefs} from "@atproto/api";
 
 @Component({
   selector: 'sidebar',
@@ -16,4 +17,9 @@ import {NgTemplateOutlet} from "@angular/common";
 })
 export class SidebarComponent {
   @Output() onActionPost: EventEmitter<void> = new EventEmitter<void>;
+  loggedUser: AppBskyActorDefs.ProfileViewDetailed;
+
+  ngOnInit() {
+    this.loggedUser = JSON.parse(localStorage.getItem('logged_user')) as AppBskyActorDefs.ProfileViewDetailed;
+  }
 }
