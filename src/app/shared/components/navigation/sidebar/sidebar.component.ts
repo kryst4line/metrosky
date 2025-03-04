@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {RippleModule} from "primeng/ripple";
 import {NgIcon} from "@ng-icons/core";
 import {NgTemplateOutlet} from "@angular/common";
@@ -15,7 +15,7 @@ import {AppBskyActorDefs} from "@atproto/api";
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Output() onActionPost: EventEmitter<void> = new EventEmitter<void>;
   loggedUser: AppBskyActorDefs.ProfileViewDetailed;
 
