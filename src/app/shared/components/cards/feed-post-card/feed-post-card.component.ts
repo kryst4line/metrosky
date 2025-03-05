@@ -144,20 +144,21 @@ export class FeedPostCardComponent {
     });
 
     // Show animation
-    if (this.likeAnimation.nativeElement.classList.contains('animate-pingonce')) {
-      this.likeAnimation.nativeElement.classList.remove('animate-pingonce');
-    }
-    setTimeout(() => this.likeAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+    this.likeAnimation.nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.likeAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
 
-    // API call
+    // API call (delayed to not step over placeholder change)
     this.processingAction = true;
     from(agent.like(this.feedViewPost.post().uri, this.feedViewPost.post().cid)).subscribe({
       next: () => {
-        agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
-        }).then(response => {
-          this.feedViewPost.post.set(response.data.posts[0]);
-        });
+        setTimeout(() => {
+          from(agent.getPosts({
+            uris: [this.feedViewPost.post().uri]
+          })).subscribe({
+            next: response => this.feedViewPost.post.set(response.data.posts[0]),
+            error: err => this.messageService.error(err.message, 'Oops!')
+          });
+        }, 100);
       },
       error: err => {
         this.messageService.error(err.message, 'Oops!');
@@ -179,15 +180,18 @@ export class FeedPostCardComponent {
       return post;
     });
 
-    // API call
+    // API call (delayed to not step over placeholder change)
     this.processingAction = true;
-    from(agent.deleteLike(this.feedViewPost.post().viewer.like)).subscribe({
+    from(agent.deleteLike(likeRef)).subscribe({
       next: () => {
-        agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
-        }).then(response => {
-          this.feedViewPost.post.set(response.data.posts[0]);
-        });
+        setTimeout(() => {
+          from(agent.getPosts({
+            uris: [this.feedViewPost.post().uri]
+          })).subscribe({
+            next: response => this.feedViewPost.post.set(response.data.posts[0]),
+            error: err => this.messageService.error(err.message, 'Oops!')
+          });
+        }, 200);
       },
       error: err => {
         this.messageService.error(err.message, 'Oops!');
@@ -207,20 +211,21 @@ export class FeedPostCardComponent {
     });
 
     // Show animation
-    if (this.repostAnimation.nativeElement.classList.contains('animate-pingonce')) {
-      this.repostAnimation.nativeElement.classList.remove('animate-pingonce');
-    }
-    setTimeout(() => this.repostAnimation.nativeElement.classList.add('animate-pingonce'), 100);
+    this.repostAnimation.nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.repostAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
 
-    // API call
+    // API call (delayed to not step over placeholder change)
     this.processingAction = true;
     from(agent.repost(this.feedViewPost.post().uri, this.feedViewPost.post().cid)).subscribe({
       next: () => {
-        agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
-        }).then(response => {
-          this.feedViewPost.post.set(response.data.posts[0]);
-        });
+        setTimeout(() => {
+          from(agent.getPosts({
+            uris: [this.feedViewPost.post().uri]
+          })).subscribe({
+            next: response => this.feedViewPost.post.set(response.data.posts[0]),
+            error: err => this.messageService.error(err.message, 'Oops!')
+          });
+        }, 100);
       },
       error: err => {
         this.messageService.error(err.message, 'Oops!');
@@ -234,21 +239,24 @@ export class FeedPostCardComponent {
 
   deleteRepost() {
     // Update UI
-    const rtRef = this.feedViewPost.post().viewer.repost;
+    const rtRef = this.feedViewPost.post().viewer.repost.toString();
     this.feedViewPost.post.update(post => {
       post.viewer.repost = undefined;
       return post;
     });
 
-    // API call
+    // API call (delayed to not step over placeholder change)
     this.processingAction = true;
-    from(agent.deleteRepost(this.feedViewPost.post().viewer.repost)).subscribe({
+    from(agent.deleteRepost(rtRef)).subscribe({
       next: () => {
-        agent.getPosts({
-          uris: [this.feedViewPost.post().uri]
-        }).then(response => {
-          this.feedViewPost.post.set(response.data.posts[0]);
-        });
+        setTimeout(() => {
+          from(agent.getPosts({
+            uris: [this.feedViewPost.post().uri]
+          })).subscribe({
+            next: response => this.feedViewPost.post.set(response.data.posts[0]),
+            error: err => this.messageService.error(err.message, 'Oops!')
+          });
+        }, 200);
       },
       error: err => {
         this.messageService.error(err.message, 'Oops!');
@@ -263,7 +271,8 @@ export class FeedPostCardComponent {
   redoRepost() {
     this.processingAction = true;
     from(agent.deleteRepost(this.feedViewPost.post().viewer.repost)).subscribe({
-      next: () => this.repost()
+      next: () => this.repost(),
+      error: err => this.messageService.error(err.message, 'Oops!')
     }).add(() => this.processingAction = false);
   }
 
