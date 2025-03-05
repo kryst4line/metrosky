@@ -66,6 +66,7 @@
         >
           <a
             class="hover:underline cursor-pointer"
+            (click)="viewMode.set(AuthorViewMode.POSTS)"
           >
             {{author.postsCount | numberFormatter}} posts
           </a>
@@ -167,6 +168,7 @@
   @else if (author.viewer.following) {
     <button
       class="ui-button-rg"
+      (click)="unfollowUser()"
     >
       <ng-icon
         name="tablerCheck"
@@ -178,6 +180,7 @@
   @else {
     <button
       class="ui-button-rg"
+      (click)="followUser()"
     >
       <ng-icon
         name="tablerUserPlus"

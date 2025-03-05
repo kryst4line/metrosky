@@ -69,6 +69,26 @@ export class AuthorViewDialogComponent implements OnInit {
       }, error: err => this.messageService.error(err.message, 'Oops!')
     });
   }
+
+  followUser() {
+    from(agent.follow(this.author.did)).subscribe({
+      next: response => {
+        this.author.viewer.following = response.uri;
+        this.cdRef.markForCheck();
+        this.messageService.success(`You are now following ${this.author.displayName ?? this.author.handle}`);
+      }, error: err => this.messageService.error(err.message, 'Oops!')
+    });
+  }
+
+  unfollowUser() {
+    from(agent.deleteFollow(this.author.viewer.following)).subscribe({
+      next: () => {
+        this.author.viewer.following = undefined;
+        this.cdRef.markForCheck();
+        this.messageService.success(`You unfollowed ${this.author.displayName ?? this.author.handle}`);
+      }, error: err => this.messageService.error(err.message, 'Oops!')
+    });
+  }
 }
 
 enum AuthorViewMode {
