@@ -34,19 +34,32 @@
         class="flex flex-col px-4 mt-2 shrink-1 min-h-0"
       >
         <a
-          class="msky-text-white text-[1.5rem] font-bold"
+          class="msky-text-white text-[1.5rem] font-bold cursor-default"
         >
           {{author | displayName}}
         </a>
-        @if (author.displayName) {
-          <a
-            [href]="'https://bsky.app/profile/' + author.handle"
-            target="_blank"
-            class="w-fit msky-text-body msky-text-darkwhite hover:underline cursor-pointer"
-          >
-            {{'@' + author.handle}}
-          </a>
-        }
+
+        <div
+          class="flex gap-2"
+        >
+          @if (author.displayName) {
+            <a
+              [href]="'https://bsky.app/profile/' + author.handle"
+              target="_blank"
+              class="w-fit msky-text-body msky-text-darkwhite hover:underline cursor-pointer"
+            >
+              {{'@' + author.handle}}
+            </a>
+          }
+
+          @if (author.viewer.followedBy) {
+            <div
+              class="p-[6px] text-[13px] msky-bg-light-20 msky-text-white [text-box:trim-both_cap_alphabetic] cursor-default"
+            >
+              follows you
+            </div>
+          }
+        </div>
 
         <div
           class="flex mt-3 gap-4 text-lg font-light msky-text-white"
@@ -148,7 +161,7 @@
     <button
       class="ui-button-rg"
     >
-      That's you!
+      that's you!
     </button>
   }
   @else if (author.viewer.following) {
@@ -159,7 +172,7 @@
         name="tablerCheck"
         class="pt-[2px] -ml-[2px]"
       />
-      Following
+      following
     </button>
   }
   @else {
@@ -170,7 +183,7 @@
         name="tablerUserPlus"
         class="pt-[2px] -ml-[2px]"
       />
-      Follow
+      follow
     </button>
   }
 </ng-template>
