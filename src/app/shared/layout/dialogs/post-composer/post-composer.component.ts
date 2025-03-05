@@ -33,7 +33,7 @@ import {
   PostEmbedRecordComponent
 } from "~/src/app/shared/components/embeds/post-embed-record/post-embed-record.component";
 import {EmbedService} from "~/src/app/api/services/embed.service";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
 import {
   PostEmbedExternalPreviewComponent
@@ -136,7 +136,7 @@ export class PostComposerComponent implements OnDestroy {
   constructor(
     protected postService: PostService,
     private embedService: EmbedService,
-    private messageService: MessageService
+    private messageService: MskyMessageService
   ) {
     this.postCompose = this.postService.postCompose;
     this.mentionResults$ = this.mentionSubject.pipe(

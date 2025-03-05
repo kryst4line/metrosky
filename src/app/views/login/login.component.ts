@@ -6,7 +6,7 @@ import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {ButtonModule} from "primeng/button";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 
 @Component({
   selector: 'app-login',
@@ -30,7 +30,7 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MskyMessageService
   ) {}
 
   onLogin() {

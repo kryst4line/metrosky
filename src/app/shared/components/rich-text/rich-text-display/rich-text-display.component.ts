@@ -12,10 +12,8 @@ import {
 } from '@angular/core';
 import {Facet, RichText, RichTextSegment} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
-import {
-  AuthorViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 import {DialogService} from "primeng/dynamicdialog";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'rich-text-display',
@@ -40,7 +38,7 @@ export class RichTextDisplayComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: MskyDialogService
   ) {}
 
   ngOnInit() {
@@ -62,23 +60,9 @@ export class RichTextDisplayComponent implements OnInit {
   }
 
   openAuthor(event: MouseEvent, did: string) {
-    if (!window.getSelection().toString().length) {
-      this.dialogService.open(AuthorViewDialogComponent, {
-        data: {
-          actor: did
-        },
-        appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'full-dialog',
-        modal: true,
-        dismissableMask: true,
-        autoZIndex: false,
-        style: {height: '100%'},
-        focusOnShow: false,
-        duplicate: true
-      });
-    }
-
     event.preventDefault();
     event.stopPropagation();
+
+    this.dialogService.openAuthor(did);
   }
 }

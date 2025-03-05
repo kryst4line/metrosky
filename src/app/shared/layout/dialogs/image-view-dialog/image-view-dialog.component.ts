@@ -6,17 +6,14 @@ import {
   OnInit, ViewChild,
   WritableSignal
 } from '@angular/core';
-import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {agent} from "~/src/app/core/bsky.api";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {PostService} from "~/src/app/api/services/post.service";
 import {from} from "rxjs";
 import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs} from "@atproto/api";
 import {GalleriaModule} from "primeng/galleria";
-import {
-  AuthorViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {
@@ -28,6 +25,7 @@ import {DateFormatterPipe} from "~/src/app/shared/utils/pipes/date-formatter.pip
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'image-view-dialog',
@@ -91,9 +89,8 @@ export class ImageViewDialogComponent implements OnInit {
     protected ref: DynamicDialogRef,
     protected config: DynamicDialogConfig,
     private postService: PostService,
-    private messageService: MessageService,
-    private dialogService: DialogService,
-    private parentRef: ElementRef,
+    private messageService: MskyMessageService,
+    private dialogService: MskyDialogService,
     private cdRef: ChangeDetectorRef,
     private linkExtractorPipe: LinkExtractorPipe
   ) {}
@@ -301,23 +298,9 @@ export class ImageViewDialogComponent implements OnInit {
   }
 
   openAuthor(event: MouseEvent, did: string) {
-    if (!window.getSelection().toString().length) {
-      this.dialogService.open(AuthorViewDialogComponent, {
-        data: {
-          actor: did
-        },
-        appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'full-dialog',
-        modal: true,
-        dismissableMask: true,
-        autoZIndex: false,
-        style: {height: '100%'},
-        focusOnShow: false,
-        duplicate: true
-      });
-    }
-
     event.preventDefault();
     event.stopPropagation();
+
+    this.dialogService.openAuthor(did);
   }
 }

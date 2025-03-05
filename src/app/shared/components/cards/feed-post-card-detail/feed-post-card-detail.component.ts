@@ -39,11 +39,9 @@ import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
-import {MessageService} from '~/src/app/api/services/message.service'
-import {
-  AuthorViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {MskyMessageService} from '~/src/app/api/services/msky-message.service'
 import {from} from "rxjs";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'feed-post-card-detail',
@@ -115,8 +113,8 @@ export class FeedPostCardDetailComponent {
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
-    private messageService: MessageService,
-    private dialogService: DialogService
+    private messageService: MskyMessageService,
+    private dialogService: MskyDialogService
   ) {}
 
   replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
@@ -271,28 +269,14 @@ export class FeedPostCardDetailComponent {
   }
 
   openAuthor(event: MouseEvent) {
-    if (!window.getSelection().toString().length) {
-      this.dialogService.open(AuthorViewDialogComponent, {
-        data: {
-          actor: this.feedViewPost.post().author.did
-        },
-        appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'full-dialog',
-        modal: true,
-        dismissableMask: true,
-        autoZIndex: false,
-        style: {height: '100%'},
-        focusOnShow: false,
-        duplicate: true
-      });
-    }
-
     event.preventDefault();
     event.stopPropagation();
+
+    this.dialogService.openAuthor(this.feedViewPost.post().author.did);
   }
 
   openImage(uri:string, index: number) {
-    this.postService.openImage(uri, index);
+    this.dialogService.openImagePost(uri, index);
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {

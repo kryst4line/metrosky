@@ -6,7 +6,7 @@ import {PostComposerComponent} from "~/src/app/shared/layout/dialogs/post-compos
 import {Drawer} from "primeng/drawer";
 import {PostService} from "~/src/app/api/services/post.service";
 import {Subject} from "rxjs";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {FileUploadModule} from "ng2-file-upload";
 import {PostCompose} from "~/src/app/api/models/post-compose";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -32,7 +32,7 @@ export class DeckComponent implements OnInit {
 
   constructor(
     protected postService: PostService,
-    private messageService: MessageService
+    private messageService: MskyMessageService
   ) {}
 
   ngOnInit() {

@@ -9,7 +9,7 @@ import {NgIcon} from "@ng-icons/core";
 import {AppBskyFeedDefs} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
 import {from} from "rxjs";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {PostService} from "~/src/app/api/services/post.service";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
@@ -45,7 +45,7 @@ export class ThreadViewDialogComponent {
     protected ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private postService: PostService,
-    private messageService: MessageService,
+    private messageService: MskyMessageService,
     private dialogService: DialogService,
     private parentRef: ElementRef,
     private cdRef: ChangeDetectorRef

@@ -2,17 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, forwardRef,
+  forwardRef,
   OnInit,
   signal,
   WritableSignal
 } from '@angular/core';
-import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DynamicDialogConfig} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
-import {MessageService} from "~/src/app/api/services/message.service";
-import {PostService} from "~/src/app/api/services/post.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {AgVirtualScrollModule} from "ag-virtual-scroll";
 import {ProfileViewDetailed} from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
@@ -23,6 +22,7 @@ import {
 import {AuthorFeedComponent} from "~/src/app/shared/layout/feeds/author-feed/author-feed.component";
 import {NgTemplateOutlet} from "@angular/common";
 import {IsLoggedUserPipe} from "~/src/app/shared/utils/pipes/is-logged-user.pipe";
+import {from} from "rxjs";
 
 @Component({
   selector: 'author-view-dialog',
@@ -50,12 +50,8 @@ export class AuthorViewDialogComponent implements OnInit {
   protected readonly AuthorViewMode = AuthorViewMode;
 
   constructor(
-    protected ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
-    private postService: PostService,
-    private messageService: MessageService,
-    private dialogService: DialogService,
-    private parentRef: ElementRef,
+    private messageService: MskyMessageService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -64,11 +60,13 @@ export class AuthorViewDialogComponent implements OnInit {
   }
 
   loadAuthor() {
-    agent.getProfile({
+    from(agent.getProfile({
       actor: this.config.data.actor
-    }).then(response => {
-      this.author = response.data;
-      this.cdRef.markForCheck();
+    })).subscribe({
+      next: response => {
+        this.author = response.data;
+        this.cdRef.markForCheck();
+      }, error: err => this.messageService.error(err.message, 'Oops!')
     });
   }
 }

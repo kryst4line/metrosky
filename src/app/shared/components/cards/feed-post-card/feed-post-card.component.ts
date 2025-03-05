@@ -45,11 +45,9 @@ import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guard
 import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
-import {MessageService} from "~/src/app/api/services/message.service";
-import {
-  AuthorViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {from} from "rxjs";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'feed-post-card',
@@ -125,8 +123,8 @@ export class FeedPostCardComponent {
   constructor(
     private postService: PostService,
     private linkExtractorPipe: LinkExtractorPipe,
-    private messageService: MessageService,
-    private dialogService: DialogService
+    private messageService: MskyMessageService,
+    private dialogService: MskyDialogService
   ) {}
 
   replyPost(post: AppBskyFeedDefs.PostView, event: MouseEvent) {
@@ -288,28 +286,14 @@ export class FeedPostCardComponent {
   }
 
   openImage(uri: string, index: number) {
-    this.postService.openImage(uri, index);
+    this.dialogService.openImagePost(uri, index);
   }
 
   openAuthor(event: MouseEvent, did: string) {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!window.getSelection().toString().length) {
-      this.dialogService.open(AuthorViewDialogComponent, {
-        data: {
-          actor: did
-        },
-        appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'full-dialog',
-        modal: true,
-        dismissableMask: true,
-        autoZIndex: false,
-        style: {height: '100%'},
-        focusOnShow: false,
-        duplicate: true
-      });
-    }
+    this.dialogService.openAuthor(did);
   }
 
   openRepostMenu(menu: Menu, event: MouseEvent) {
