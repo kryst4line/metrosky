@@ -11,31 +11,26 @@ Maybe you can mention me or this repo in the acknowledgements too
   <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/icon.webp" alt="logo" width="200" height="auto" />
   <h1>Metrosky</h1>
   
-  <p>
-    Your classic multicolumn client for Bluesky, now in Metro UI style 
-  </p>
-    
+  Your classic multicolumn client for Bluesky, now in Metro UI style
+   
+  <br>  
+
   <!-- Badges -->
-  <p>
-    <a href="https://github.com/kryst4line/metrosky/graphs/contributors">
-      <img src="https://img.shields.io/github/contributors/kryst4line/metrosky" alt="contributors" />
-    </a>
-    <a href="">
-      <img src="https://img.shields.io/github/last-commit/kryst4line/metrosky" alt="last update" />
-    </a>
-    <a href="https://github.com/kryst4line/metrosky/issues/">
-      <img src="https://img.shields.io/github/issues/kryst4line/metrosky" alt="open issues" />
-    </a>
-    <a href="https://github.com/Louis3797/awesome-readme-template/stargazers">
-      <img src="https://img.shields.io/github/stars/kryst4line/metrosky" alt="stars" />
-    </a>
-  </p>
-  
-  <p>
-    <a href="">
-      <img src="https://img.shields.io/github/package-json/dependency-version/kryst4line/metrosky/@angular/core" alt="angular version" />
-    </a>
-  </p>
+  ![angular](https://img.shields.io/badge/Angular%2019-%23DD0031.svg?logo=angular&logoColor=white)
+  ![angular](https://img.shields.io/badge/PrimeNG-%23DD0031.svg?logo=primeng&logoColor=white)
+
+  [![contributors](https://img.shields.io/github/contributors/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/graphs/contributors)
+  [![commits](https://img.shields.io/github/last-commit/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/commits/main)
+  [![bug issues](https://img.shields.io/github/issues/kryst4line/metrosky/bug)](https://github.com/kryst4line/metrosky/issues)
+  [![stars](https://img.shields.io/github/stars/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/stargazers)
+
+  <br>
+
+  <!-- Social links:
+
+  [![bluesky link](https://img.shields.io/badge/Bluesky-%230285FF.svg?logo=bluesky&logoColor=white)](https://bsky.app/profile/metrosky.dragon.gal)
+
+  <br> -->
 
   [![Repobeats analytics image](https://repobeats.axiom.co/api/embed/b91e825d74528f905289f0df10d2bca516f62be3.svg "Repobeats analytics image")](https://github.com/kryst4line/metrosky/pulse)
 
