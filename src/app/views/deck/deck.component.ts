@@ -10,6 +10,7 @@ import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {FileUploadModule} from "ng2-file-upload";
 import {PostCompose} from "~/src/app/api/models/post-compose";
 import {HttpErrorResponse} from "@angular/common/http";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'app-deck',
@@ -32,6 +33,7 @@ export class DeckComponent implements OnInit {
 
   constructor(
     protected postService: PostService,
+    protected dialogService: MskyDialogService,
     private messageService: MskyMessageService
   ) {}
 

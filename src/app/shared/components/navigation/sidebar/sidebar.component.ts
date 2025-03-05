@@ -16,6 +16,11 @@ import {AppBskyActorDefs} from "@atproto/api";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit {
+  @Output() onActionProfile: EventEmitter<string> = new EventEmitter<string>;
+  @Output() onActionSearch: EventEmitter<void> = new EventEmitter<void>;
+  @Output() onActionLists: EventEmitter<void> = new EventEmitter<void>;
+  @Output() onActionFeeds: EventEmitter<void> = new EventEmitter<void>;
+  @Output() onActionSettings: EventEmitter<void> = new EventEmitter<void>;
   @Output() onActionPost: EventEmitter<void> = new EventEmitter<void>;
   loggedUser: AppBskyActorDefs.ProfileViewDetailed;
 

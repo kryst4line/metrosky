@@ -3,6 +3,7 @@
 >
   <div #topButton
     class="flex shrink-0 select-none cursor-pointer hover:msky-bg-light-20"
+    (click)="onActionProfile.emit(loggedUser.did)"
   >
     <a
       class="flex-shrink-0"
@@ -37,23 +38,23 @@
   >
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'profile', icon: 'tablerUser'}"
+      [ngTemplateOutletContext]="{title: 'profile', icon: 'tablerUser', action: onActionProfile, did: loggedUser.did}"
     />
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'search', icon: 'tablerSearch'}"
+      [ngTemplateOutletContext]="{title: 'search', icon: 'tablerSearch', action: onActionSearch}"
     />
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'lists', icon: 'tablerList'}"
+      [ngTemplateOutletContext]="{title: 'lists', icon: 'tablerList', action: onActionLists}"
     />
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'feeds', icon: 'tablerHash'}"
+      [ngTemplateOutletContext]="{title: 'feeds', icon: 'tablerHash', action: onActionFeeds}"
     />
     <ng-container
       [ngTemplateOutlet]="button"
-      [ngTemplateOutletContext]="{title: 'settings', icon: 'tablerSettings'}"
+      [ngTemplateOutletContext]="{title: 'settings', icon: 'tablerSettings', action: onActionSettings}"
     />
   </div>
   <div #bottomButton
@@ -70,11 +71,12 @@
   let-title="title"
   let-icon="icon"
   let-action="action"
+  let-did="did"
 >
   <a
     class="flex shrink-0 items-center h-20 hover:msky-bg-light-20 cursor-pointer"
     pRipple
-    (click)="action.emit()"
+    (click)="did ? action.emit(did) : action.emit()"
   >
     <div
       class="flex justify-center w-20 shrink-0"

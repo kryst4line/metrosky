@@ -4,6 +4,7 @@
   (onFileDrop)="onFileDrop($event)"
 >
   <sidebar
+    (onActionProfile)="dialogService.openAuthor($event)"
     (onActionPost)="postService.createPost()"
   />
 
