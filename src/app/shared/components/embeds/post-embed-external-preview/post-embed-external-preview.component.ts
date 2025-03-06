@@ -13,11 +13,15 @@ import {
 } from "~/src/app/api/models/snippet";
 import {SnippetUtils} from "~/src/app/shared/utils/snippet-utils";
 import {ExternalEmbed} from "~/src/app/api/models/embed";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'post-embed-external-preview',
   templateUrl: './post-embed-external-preview.component.html',
   styleUrl: './post-embed-external-preview.component.scss',
+  imports: [
+    NgOptimizedImage
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostEmbedExternalPreviewComponent implements OnInit {

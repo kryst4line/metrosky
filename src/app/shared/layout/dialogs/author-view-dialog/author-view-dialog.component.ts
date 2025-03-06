@@ -16,11 +16,9 @@ import {AgVirtualScrollModule} from "ag-virtual-scroll";
 import {ProfileViewDetailed} from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {NumberFormatterPipe} from "~/src/app/shared/utils/pipes/number-formatter.pipe";
-import {
-  RichTextDisplayComponent
-} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 import {AuthorFeedComponent} from "~/src/app/shared/layout/feeds/author-feed/author-feed.component";
-import {NgTemplateOutlet} from "@angular/common";
+import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {IsLoggedUserPipe} from "~/src/app/shared/utils/pipes/is-logged-user.pipe";
 import {from} from "rxjs";
 
@@ -31,10 +29,11 @@ import {from} from "rxjs";
     AgVirtualScrollModule,
     DisplayNamePipe,
     NumberFormatterPipe,
-    RichTextDisplayComponent,
+    RichTextComponent,
     forwardRef(() => AuthorFeedComponent),
     NgTemplateOutlet,
-    IsLoggedUserPipe
+    IsLoggedUserPipe,
+    NgOptimizedImage
   ],
   templateUrl: './author-view-dialog.component.html',
   styleUrl: './author-view-dialog.component.scss',

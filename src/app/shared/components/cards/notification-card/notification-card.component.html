@@ -70,13 +70,18 @@
     class="flex gap-2"
   >
     @for (author of notification.authors | slice : 0: 5; track author.did) {
-      <a>
+      <a
+        (click)="openAuthor($event, author.did)"
+        class="relative h-8 w-8"
+      >
         <img
-          [src]="author.avatar"
-          (click)="openAuthor($event, author.did)"
+          [ngSrc]="author.avatar"
           alt="{{author | displayName}}'s avatar"
-          class="h-8"
-        >
+          width="32"
+          height="32"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
+        />
       </a>
     }
     @if (notification.authors.length > 5) {

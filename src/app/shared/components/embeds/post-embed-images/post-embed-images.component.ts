@@ -1,9 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AppBskyEmbedImages} from "@atproto/api";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'post-embed-images',
-  imports: [],
+  imports: [
+    NgOptimizedImage
+  ],
   templateUrl: './post-embed-images.component.html',
   styleUrl: './post-embed-images.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

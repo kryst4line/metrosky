@@ -16,16 +16,16 @@ import {DialogService} from "primeng/dynamicdialog";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
-  selector: 'rich-text-display',
+  selector: 'rich-text',
   imports: [],
-  templateUrl: './rich-text-display.component.html',
-  styleUrl: './rich-text-display.component.scss',
+  templateUrl: './rich-text.component.html',
+  styleUrl: './rich-text.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     DialogService
   ]
 })
-export class RichTextDisplayComponent implements OnInit {
+export class RichTextComponent implements OnInit {
   @Input() text: string;
   @Input() facets: Facet[];
   @Output() onMentionClick: EventEmitter<any>

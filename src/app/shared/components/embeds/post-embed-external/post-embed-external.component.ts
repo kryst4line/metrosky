@@ -22,11 +22,13 @@ import videojs from "video.js";
 import type Player from "video.js/dist/types/player";
 type Options = typeof videojs.options;
 import {YouTubePlayer} from "@angular/youtube-player";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'post-embed-external',
   imports: [
-    YouTubePlayer
+    YouTubePlayer,
+    NgOptimizedImage
   ],
   templateUrl: './post-embed-external.component.html',
   styleUrl: './post-embed-external.component.scss',

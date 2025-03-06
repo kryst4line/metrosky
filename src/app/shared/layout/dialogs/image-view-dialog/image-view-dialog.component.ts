@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, forwardRef,
   OnInit, ViewChild,
   WritableSignal
 } from '@angular/core';
@@ -16,9 +16,7 @@ import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs} from "
 import {GalleriaModule} from "primeng/galleria";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
-import {
-  RichTextDisplayComponent
-} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 import {NgIcon} from "@ng-icons/core";
 import {NumberFormatterPipe} from "~/src/app/shared/utils/pipes/number-formatter.pipe";
 import {DateFormatterPipe} from "~/src/app/shared/utils/pipes/date-formatter.pipe";
@@ -26,6 +24,7 @@ import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pip
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'image-view-dialog',
@@ -33,12 +32,13 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     GalleriaModule,
     DisplayNamePipe,
     IsFeedPostRecordPipe,
-    RichTextDisplayComponent,
+    RichTextComponent,
     NgIcon,
     NumberFormatterPipe,
     DateFormatterPipe,
     LinkExtractorPipe,
-    Menu
+    Menu,
+    forwardRef(() => NgOptimizedImage)
   ],
   templateUrl: './image-view-dialog.component.html',
   styleUrl: './image-view-dialog.component.scss',

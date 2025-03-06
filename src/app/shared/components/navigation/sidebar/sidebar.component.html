@@ -9,9 +9,12 @@
       class="flex-shrink-0"
     >
       <img
-        [src]="loggedUser.avatar ?? 'icon.webp'"
+        [ngSrc]="loggedUser.avatar"
         alt="Your avatar"
-        class="w-20 h-20"
+        width="80"
+        height="80"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
       />
     </a>
 

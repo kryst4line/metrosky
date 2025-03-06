@@ -14,7 +14,7 @@ import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
-import {DatePipe, NgTemplateOutlet} from "@angular/common";
+import {DatePipe, NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {NumberFormatterPipe} from "~/src/app/shared/utils/pipes/number-formatter.pipe";
 import {
   PostEmbedImagesComponent
@@ -36,7 +36,7 @@ import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {DialogService} from "primeng/dynamicdialog";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
-import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
 import {MskyMessageService} from '~/src/app/api/services/msky-message.service'
@@ -63,7 +63,8 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     Menu,
     NgTemplateOutlet,
     IsFeedPostRecordPipe,
-    forwardRef(() => RichTextDisplayComponent)
+    forwardRef(() => RichTextComponent),
+    NgOptimizedImage
   ],
   templateUrl: './feed-post-card-detail.component.html',
   styleUrl: './feed-post-card-detail.component.scss',

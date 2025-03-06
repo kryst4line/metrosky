@@ -11,7 +11,7 @@ import {
   IsStarterPackNotificationPipe
 } from "~/src/app/shared/utils/pipes/type-guards/notifications/is-starterpack-notification.pipe";
 import {NgIcon} from "@ng-icons/core";
-import {NgTemplateOutlet, SlicePipe} from "@angular/common";
+import {NgOptimizedImage, NgTemplateOutlet, SlicePipe} from "@angular/common";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
@@ -38,7 +38,8 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     IsEmbedImagesViewPipe,
     IsEmbedVideoViewPipe,
     PostEmbedImagesComponent,
-    PostEmbedVideoComponent
+    PostEmbedVideoComponent,
+    NgOptimizedImage
   ],
   templateUrl: './notification-card.component.html',
   styleUrl: './notification-card.component.scss',

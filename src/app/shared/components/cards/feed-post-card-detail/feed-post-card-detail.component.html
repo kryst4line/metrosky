@@ -49,15 +49,19 @@
     class="flex w-full gap-4"
   >
     <div
-      class="w-14 shrink-0"
+      class="w-14 h-14 shrink-0"
     >
       <a #avatar
          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
          (click)="openAuthor($event)"
       >
         <img
-          [src]="feedViewPost.post().author.avatar"
+          [ngSrc]="feedViewPost.post().author.avatar"
           alt="{{feedViewPost.post().author | displayName}}'s avatar"
+          width="56"
+          height="56"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
         />
       </a>
     </div>
@@ -69,8 +73,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-body text-[20px] font-semibold fit-text shrink-1 hover:underline"
-          style="text-box: trim-both"
+          class="msky-text-body text-[20px] font-semibold fit-text [text-box: trim-both] shrink-1 hover:underline"
         >
           {{ author.displayName }}
         </a>
@@ -101,7 +104,7 @@
     <div #body
          class="mt-4"
     >
-      <rich-text-display
+      <rich-text
         [text]="record.text"
         [facets]="record.facets"
         class="msky-text-body text-[1rem] cursor-auto"

@@ -22,12 +22,17 @@
       class="w-14 shrink-0"
     >
       <a #avatar
+         class="block overflow-hidden relative h-14 w-14"
          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
          (click)="openAuthor($event, feedViewPost.post().author.did)"
       >
         <img
-          [src]="feedViewPost.post().author.avatar"
+          [ngSrc]="feedViewPost.post().author.avatar"
           alt="{{feedViewPost.post().author | displayName}}'s avatar"
+          width="56"
+          height="56"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
         />
       </a>
     </div>
@@ -176,7 +181,7 @@
     <div #body
          class="mt-2"
     >
-      <rich-text-display
+      <rich-text
         [text]="record.text"
         [facets]="record.facets"
         class="msky-text-body"

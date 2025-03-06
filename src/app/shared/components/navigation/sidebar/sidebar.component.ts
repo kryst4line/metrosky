@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {RippleModule} from "primeng/ripple";
 import {NgIcon} from "@ng-icons/core";
-import {NgTemplateOutlet} from "@angular/common";
+import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {AppBskyActorDefs} from "@atproto/api";
 
 @Component({
@@ -9,7 +9,8 @@ import {AppBskyActorDefs} from "@atproto/api";
   imports: [
     RippleModule,
     NgIcon,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    NgOptimizedImage
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',

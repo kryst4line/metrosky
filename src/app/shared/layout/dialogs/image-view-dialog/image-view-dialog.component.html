@@ -14,29 +14,34 @@
     >
       <ng-template #item let-item>
         <img
-          [src]="item.fullsize"
+          [ngSrc]="item.fullsize"
           [alt]="item.alt"
+          width="2000"
+          height="2000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur: false}"
+          class="w-full h-full object-contain cursor-pointer"
           (click)="window.open(item.fullsize, '_blank')"
-          class="max-w-full max-h-full w-auto h-auto block cursor-pointer"
         />
       </ng-template>
     </p-galleria>
     <div
       class="flex w-full p-4 flex-0 gap-4 bg-[#002047]"
     >
-      <div
-        class="w-12 h-12 shrink-0"
+      <a #avatar
+         [href]="'https://bsky.app/profile/' + post().author.handle"
+         (click)="openAuthor($event, post().author.did)"
+         class="block w-12 h-12 shrink-0"
       >
-        <a #avatar
-           [href]="'https://bsky.app/profile/' + post().author.handle"
-           (click)="openAuthor($event, post().author.did)"
-        >
-          <img
-            [src]="post().author.avatar"
-            alt="{{post().author | displayName}}'s avatar"
-          />
-        </a>
-      </div>
+        <img
+          [ngSrc]="post().author.avatar"
+          alt="{{post().author | displayName}}'s avatar"
+          width="48"
+          height="48"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
+        />
+      </a>
 
       <div
         class="flex flex-col w-full"
@@ -100,7 +105,7 @@
     <div
          class="mt-2"
     >
-      <rich-text-display
+      <rich-text
         [text]="record.text"
         [facets]="record.facets"
         class="msky-text-body block w-fit cursor-auto"

@@ -16,7 +16,7 @@ import {IsFeedDefsPostViewPipe} from "~/src/app/shared/utils/pipes/type-guards/i
 import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
-import {DatePipe, NgTemplateOutlet} from "@angular/common";
+import {DatePipe, NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {NumberFormatterPipe} from "~/src/app/shared/utils/pipes/number-formatter.pipe";
 import {DateFormatterPipe} from "~/src/app/shared/utils/pipes/date-formatter.pipe";
 import {
@@ -42,7 +42,7 @@ import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-
 import {IsFeedDefsReasonPinPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-reasonpin";
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
 import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
-import {RichTextDisplayComponent} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 import {AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {PostService} from "~/src/app/api/services/post.service";
 import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
@@ -75,7 +75,8 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     IsFeedDefsReasonPinPipe,
     IsFeedDefsNotFoundPostPipe,
     IsFeedDefsBlockedPostPipe,
-    forwardRef(() => RichTextDisplayComponent)
+    forwardRef(() => RichTextComponent),
+    NgOptimizedImage
   ],
   templateUrl: './feed-post-card.component.html',
   styleUrl: './feed-post-card.component.scss',
