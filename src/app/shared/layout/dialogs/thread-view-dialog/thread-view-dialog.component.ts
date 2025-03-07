@@ -108,7 +108,7 @@ export class ThreadViewDialogComponent {
                 behavior: 'smooth'
               });
             }
-          }, 50);
+          }, 100);
         } else {
           this.messageService.warnIcon("It wasn't possible to find the post.", 'Oops!');
         }
