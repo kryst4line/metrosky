@@ -29,12 +29,20 @@
         class="flex flex-col max-w-[90%]"
       >
         @for (parent of parents; track parent.uuid) {
-          <feed-post-card
-            [feedViewPost]="parent"
-            (onPostClick)="openPost(parent.post().uri)"
-            (onEmbedClick)="openPost($any($event.record).uri)"
-            class="cursor-pointer"
-          />
+          @if (parent | isSignalizedFeedViewPost) {
+            <feed-post-card
+              [feedViewPost]="parent"
+              (onPostClick)="openPost(parent.post().uri)"
+              (onEmbedClick)="openPost($any($event.record).uri)"
+              class="cursor-pointer"
+            />
+          }
+          @else {
+            <ng-container
+              [ngTemplateOutlet]="notPostViewTemplate"
+              [ngTemplateOutletContext]="{post: parent}"
+            />
+          }
         }
       </div>
 
@@ -70,12 +78,14 @@
 <ng-template #threadReplyTemplate
   let-threadReply="threadReply"
 >
-  <feed-post-card
-    [feedViewPost]="threadReply.post"
-    (onPostClick)="openPost($event.post().uri)"
-    (onEmbedClick)="openPost($any($event.record).uri)"
-    class="w-full cursor-pointer"
-  />
+  @if (threadReply.post) {
+    <feed-post-card
+      [feedViewPost]="threadReply.post"
+      (onPostClick)="openPost($event.post().uri)"
+      (onEmbedClick)="openPost($any($event.record).uri)"
+      class="w-full cursor-pointer"
+    />
+  }
   @if (threadReply.replies && threadReply.replies.length) {
     <div
       class="flex w-full"
@@ -95,4 +105,19 @@
       </div>
     </div>
   }
+</ng-template>
+
+<ng-template #notPostViewTemplate
+  let-post="post"
+>
+  <div
+    class="flex flex-col p-3 mb-2 cursor-default msky-bg-dark-15 hover:msky-bg-dark-20"
+  >
+    @if (post | isFeedDefsNotFoundPost) {
+      Post not found
+    }
+    @else if (post | isFeedDefsBlockedPost) {
+      Blocked post
+    }
+  </div>
 </ng-template>

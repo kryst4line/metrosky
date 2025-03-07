@@ -24,6 +24,9 @@ import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post
 import {BlockedPost, NotFoundPost, ThreadViewPost} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import {ThreadReply} from "~/src/app/api/models/thread-reply";
 import {NgTemplateOutlet} from "@angular/common";
+import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
+import {IsSignalizedFeedViewPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-signalized-feedviewpost";
+import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
 
 @Component({
   selector: 'thread-view-dialog',
@@ -32,6 +35,9 @@ import {NgTemplateOutlet} from "@angular/common";
     forwardRef(() => NgIcon),
     forwardRef(() => FeedPostCardComponent),
     NgTemplateOutlet,
+    IsFeedDefsNotFoundPostPipe,
+    IsSignalizedFeedViewPostPipe,
+    IsFeedDefsBlockedPostPipe,
   ],
   templateUrl: './thread-view-dialog.component.html',
   styleUrl: './thread-view-dialog.component.scss',
@@ -44,8 +50,8 @@ export class ThreadViewDialogComponent {
   @ViewChild('main', {read: ElementRef}) mainCard: ElementRef;
   @ViewChild('scroll', {read: ElementRef}) scrollDiv: ElementRef<HTMLDivElement>;
   post: SignalizedFeedViewPost;
-  parents: SignalizedFeedViewPost[] = [];
-  replies: ThreadReply[] = [];
+  parents: Array<SignalizedFeedViewPost | AppBskyFeedDefs.NotFoundPost | AppBskyFeedDefs.BlockedPost> = [];
+  replies: Array<ThreadReply | AppBskyFeedDefs.NotFoundPost | AppBskyFeedDefs.BlockedPost> = [];
   dialog: DynamicDialogRef;
 
   constructor(
@@ -83,13 +89,22 @@ export class ThreadViewDialogComponent {
               }, this.postService)
             );
             while (parent.parent) {
-              parent = parent.parent as AppBskyFeedDefs.ThreadViewPost;
-              this.parents.unshift(
-                PostUtils.parseFeedViewPost({
-                  $type: 'app.bsky.feed.defs#postView',
-                  post: parent.post as AppBskyFeedDefs.PostView
-                }, this.postService)
-              );
+              if (AppBskyFeedDefs.isThreadViewPost(parent.parent)) {
+                parent = parent.parent;
+
+                this.parents.unshift(
+                  PostUtils.parseFeedViewPost({
+                    $type: 'app.bsky.feed.defs#feedViewPost',
+                    post: parent.post
+                  }, this.postService)
+                );
+              } else if(AppBskyFeedDefs.isNotFoundPost(parent.parent)) {
+                parent = parent.parent;
+                this.parents.unshift(parent);
+              } else if (AppBskyFeedDefs.isBlockedPost(parent.parent)) {
+                parent = parent.parent;
+                this.parents.unshift(parent);
+              }
             }
           }
 
@@ -116,18 +131,22 @@ export class ThreadViewDialogComponent {
     })
   }
 
-  parseReplies(reply: ThreadViewPost | NotFoundPost | BlockedPost): ThreadReply {
-  let threadReply = new ThreadReply(
-      PostUtils.parseFeedViewPost({
-        $type: 'app.bsky.feed.defs#postView',
-        post: reply.post as AppBskyFeedDefs.PostView
-      }, this.postService)
-    );
-    if (reply.replies) {
-      threadReply.replies =
-        (reply.replies as Array<ThreadViewPost | NotFoundPost | BlockedPost>).map(nestedReply => this.parseReplies(nestedReply))
+  parseReplies(reply: ThreadViewPost | NotFoundPost | BlockedPost): ThreadReply | NotFoundPost | BlockedPost {
+    if (AppBskyFeedDefs.isThreadViewPost(reply)) {
+      let threadReply = new ThreadReply(
+        PostUtils.parseFeedViewPost({
+          $type: 'app.bsky.feed.defs#feedViewPost',
+          post: reply.post as AppBskyFeedDefs.PostView
+        }, this.postService)
+      );
+      if (reply.replies) {
+        threadReply.replies =
+          (reply.replies as Array<ThreadViewPost | NotFoundPost | BlockedPost>).map(nestedReply => this.parseReplies(nestedReply))
+      }
+      return threadReply;
+    } else {
+      return reply;
     }
-    return threadReply;
   }
 
   openPost(uri: string) {
