@@ -26,11 +26,11 @@ Maybe you can mention me or this repo in the acknowledgements too
 
   <br>
 
-  <!-- Social links:
+  Social link:
 
   [![bluesky link](https://img.shields.io/badge/Bluesky-%230285FF.svg?logo=bluesky&logoColor=white)](https://bsky.app/profile/metrosky.dragon.gal)
 
-  <br> -->
+  <br>
 
   [![Repobeats analytics image](https://repobeats.axiom.co/api/embed/b91e825d74528f905289f0df10d2bca516f62be3.svg "Repobeats analytics image")](https://github.com/kryst4line/metrosky/pulse)
 
