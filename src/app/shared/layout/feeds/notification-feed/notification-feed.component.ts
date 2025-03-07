@@ -93,6 +93,11 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
   }
 
   openPost(uri: string) {
+    // Mute all video players
+    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
     this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
       data: {
         uri: uri

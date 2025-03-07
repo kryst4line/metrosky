@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  ViewChild
+} from '@angular/core';
 import {
   FeedPostCardDetailComponent
 } from "~/src/app/shared/components/cards/feed-post-card-detail/feed-post-card-detail.component";
@@ -124,6 +131,11 @@ export class ThreadViewDialogComponent {
   }
 
   openPost(uri: string) {
+    // Mute all video players
+    this.parentRef.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
     this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
       data: {
         uri: uri,

@@ -73,7 +73,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-body text-[20px] font-semibold fit-text [text-box: trim-both] shrink-1 hover:underline"
+          class="msky-text-body text-[20px] font-semibold fit-text [text-box: trim-both] w-fit shrink-1 hover:underline"
         >
           {{ author.displayName }}
         </a>
@@ -124,6 +124,7 @@
       <post-embed-images
         [embed]="embed"
         (onImgClick)="openImage(feedViewPost.post().uri, $event)"
+        class="cursor-pointer"
       />
     }
 
@@ -199,7 +200,7 @@
   >
     @if (post.likeCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.likeCount + ' likes' }}
@@ -208,7 +209,7 @@
 
     @if (post.repostCount) {
       <a
-        class="text-[1rem] font-light msky-text-lightwhite hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.repostCount + ' reposts' }}
@@ -217,7 +218,7 @@
 
     @if (post.quoteCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.quoteCount + ' quotes' }}

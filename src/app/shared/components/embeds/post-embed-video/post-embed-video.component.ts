@@ -57,6 +57,10 @@ export class PostEmbedVideoComponent implements OnInit, OnDestroy {
     this.player.addChild('RemainingTimeDisplay', {});
   }
 
+  public mute() {
+    this.player.muted(true);
+  }
+
   ngOnDestroy() {
     this.player?.dispose();
   }
