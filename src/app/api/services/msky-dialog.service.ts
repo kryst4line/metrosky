@@ -18,7 +18,7 @@ export class MskyDialogService {
       data: {
         actor: did
       },
-      appendTo: document.querySelector('app-deck'),
+      appendTo: document.querySelector('app-deck > div > div'),
       maskStyleClass: 'full-dialog',
       modal: true,
       dismissableMask: true,
@@ -37,7 +37,7 @@ export class MskyDialogService {
         uri: uri,
         index: index
       },
-      appendTo: document.querySelector('app-deck'),
+      appendTo: document.querySelector('app-deck > div > div'),
       maskStyleClass: 'full-dialog',
       modal: true,
       dismissableMask: true,
