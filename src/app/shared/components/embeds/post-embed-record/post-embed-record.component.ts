@@ -6,7 +6,7 @@ import {
 } from "~/src/app/shared/utils/pipes/type-guards/is-embed-recordwithmedia-view.pipe";
 import {IsEmbedRecordViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-record-view.pipe";
 import {IsFeedPostRecordPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-post-record";
-import {NgTemplateOutlet} from "@angular/common";
+import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
 import {
   PostEmbedImagesComponent
@@ -34,10 +34,9 @@ import {
 import {LinkExtractorStarterPackPipe} from "~/src/app/shared/utils/pipes/link-extractor-starterpack.pipe";
 import {NgIcon} from "@ng-icons/core";
 import {LinkExtractorPipe} from "~/src/app/shared/utils/pipes/link-extractor.pipe";
-import {
-  AuthorViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 import {DialogService} from "primeng/dynamicdialog";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 
 @Component({
   selector: 'post-embed-record',
@@ -63,7 +62,9 @@ import {DialogService} from "primeng/dynamicdialog";
     IsGraphDefsStarterPackViewBasicPipe,
     LinkExtractorStarterPackPipe,
     NgIcon,
-    LinkExtractorPipe
+    LinkExtractorPipe,
+    RichTextComponent,
+    NgOptimizedImage
   ],
   templateUrl: './post-embed-record.component.html',
   styleUrl: './post-embed-record.component.scss',
@@ -81,7 +82,7 @@ export class PostEmbedRecordComponent {
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
 
   constructor(
-    private dialogService: DialogService
+    private dialogService: MskyDialogService
   ) {}
 
   openEmbed(event: MouseEvent) {
@@ -92,23 +93,10 @@ export class PostEmbedRecordComponent {
   }
 
   openAuthor(event: MouseEvent, did: string) {
-    if (!window.getSelection().toString().length) {
-      this.dialogService.open(AuthorViewDialogComponent, {
-        data: {
-          actor: did
-        },
-        appendTo: document.querySelector('app-deck'),
-        maskStyleClass: 'full-dialog',
-        modal: true,
-        dismissableMask: true,
-        autoZIndex: false,
-        style: {height: '100%'},
-        focusOnShow: false,
-        duplicate: true
-      });
-    }
     event.preventDefault();
     event.stopPropagation();
+
+    this.dialogService.openAuthor(did);
   }
 
   openStarterPack(event: MouseEvent) {

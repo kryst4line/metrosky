@@ -2,27 +2,25 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, forwardRef,
+  forwardRef,
   OnInit,
   signal,
   WritableSignal
 } from '@angular/core';
-import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DynamicDialogConfig} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
-import {MessageService} from "~/src/app/api/services/message.service";
-import {PostService} from "~/src/app/api/services/post.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {AgVirtualScrollModule} from "ag-virtual-scroll";
 import {ProfileViewDetailed} from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import {DisplayNamePipe} from "~/src/app/shared/utils/pipes/display-name.pipe";
 import {NumberFormatterPipe} from "~/src/app/shared/utils/pipes/number-formatter.pipe";
-import {
-  RichTextDisplayComponent
-} from "~/src/app/shared/components/rich-text/rich-text-display/rich-text-display.component";
+import {RichTextComponent} from "~/src/app/shared/components/utils/rich-text/rich-text.component";
 import {AuthorFeedComponent} from "~/src/app/shared/layout/feeds/author-feed/author-feed.component";
-import {NgTemplateOutlet} from "@angular/common";
+import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {IsLoggedUserPipe} from "~/src/app/shared/utils/pipes/is-logged-user.pipe";
+import {from} from "rxjs";
 
 @Component({
   selector: 'author-view-dialog',
@@ -31,10 +29,11 @@ import {IsLoggedUserPipe} from "~/src/app/shared/utils/pipes/is-logged-user.pipe
     AgVirtualScrollModule,
     DisplayNamePipe,
     NumberFormatterPipe,
-    RichTextDisplayComponent,
+    RichTextComponent,
     forwardRef(() => AuthorFeedComponent),
     NgTemplateOutlet,
-    IsLoggedUserPipe
+    IsLoggedUserPipe,
+    NgOptimizedImage
   ],
   templateUrl: './author-view-dialog.component.html',
   styleUrl: './author-view-dialog.component.scss',
@@ -50,12 +49,8 @@ export class AuthorViewDialogComponent implements OnInit {
   protected readonly AuthorViewMode = AuthorViewMode;
 
   constructor(
-    protected ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
-    private postService: PostService,
-    private messageService: MessageService,
-    private dialogService: DialogService,
-    private parentRef: ElementRef,
+    private messageService: MskyMessageService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -64,11 +59,33 @@ export class AuthorViewDialogComponent implements OnInit {
   }
 
   loadAuthor() {
-    agent.getProfile({
+    from(agent.getProfile({
       actor: this.config.data.actor
-    }).then(response => {
-      this.author = response.data;
-      this.cdRef.markForCheck();
+    })).subscribe({
+      next: response => {
+        this.author = response.data;
+        this.cdRef.markForCheck();
+      }, error: err => this.messageService.error(err.message, 'Oops!')
+    });
+  }
+
+  followUser() {
+    from(agent.follow(this.author.did)).subscribe({
+      next: response => {
+        this.author.viewer.following = response.uri;
+        this.cdRef.markForCheck();
+        this.messageService.success(`You are now following ${this.author.displayName ?? this.author.handle}`);
+      }, error: err => this.messageService.error(err.message, 'Oops!')
+    });
+  }
+
+  unfollowUser() {
+    from(agent.deleteFollow(this.author.viewer.following)).subscribe({
+      next: () => {
+        this.author.viewer.following = undefined;
+        this.cdRef.markForCheck();
+        this.messageService.success(`You unfollowed ${this.author.displayName ?? this.author.handle}`);
+      }, error: err => this.messageService.error(err.message, 'Oops!')
     });
   }
 }

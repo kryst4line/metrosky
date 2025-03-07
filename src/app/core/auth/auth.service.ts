@@ -3,7 +3,7 @@ import {BehaviorSubject, from} from 'rxjs';
 import {AtpAgentLoginOpts} from "@atproto/api";
 import {agent} from "../bsky.api";
 import {Router} from "@angular/router";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {HttpErrorResponse} from "@angular/common/http";
 
 const TOKEN_KEY = 'session';
@@ -18,7 +18,7 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private messageService: MessageService
+    private messageService: MskyMessageService
   ) {
     this.checkToken();
   }

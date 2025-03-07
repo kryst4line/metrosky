@@ -4,7 +4,7 @@ import {MessageService as PrimeNgMessageService} from "primeng/api";
 @Injectable({
   providedIn: 'root'
 })
-export class MessageService {
+export class MskyMessageService {
   constructor(
     private messageService: PrimeNgMessageService
   ) {}

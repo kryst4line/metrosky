@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RichTextDisplayComponent } from './rich-text-display.component';
+import { RichTextComponent } from './rich-text.component';
 
 describe('RichTextComponent', () => {
-  let component: RichTextDisplayComponent;
-  let fixture: ComponentFixture<RichTextDisplayComponent>;
+  let component: RichTextComponent;
+  let fixture: ComponentFixture<RichTextComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RichTextDisplayComponent]
+      imports: [RichTextComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RichTextDisplayComponent);
+    fixture = TestBed.createComponent(RichTextComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

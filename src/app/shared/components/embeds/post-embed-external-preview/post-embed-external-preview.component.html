@@ -1,51 +1,29 @@
 <div
-    class="flex flex-col max-h-full msky-bg-light-20"
+  class="flex flex-col max-h-full msky-bg-light-20"
+>
+  @if (embed.metadata.imageUrl) {
+    <img
+      [ngSrc]="embed.metadata.imageUrl"
+      alt="thumb"
+      width="1000"
+      height="1000"
+      placeholder="default_image.jpg"
+      [placeholderConfig]="{blur: false}"
+      class="aspect-video object-cover min-h-0"
+    />
+  }
+  <div
+    class="px-4 py-2"
   >
-    @if (embed.metadata.imageUrl) {
-      <img
-        [src]="embed.metadata.imageUrl"
-        [alt]="'thumb'"
-        class="aspect-video object-cover min-h-0"
-      />
-    }
-    <div
-      class="px-4 py-2"
+    <span
+      class="msky-text-caption font-semibold line-clamp-1"
     >
+      {{embed.metadata.title}}
+    </span>
       <span
-        class="msky-text-caption font-semibold line-clamp-1"
+        class="block msky-text-caption text-[0.7rem]"
       >
-        {{embed.metadata.title}}
-      </span>
-        <span
-          class="block msky-text-caption text-[0.7rem]"
-        >
-        {{snippet.domain}}
-      </span>
-    </div>
+      {{snippet.domain}}
+    </span>
   </div>
-
-<!--@if (snippet.type == BlueskyGifSnippetType) {-->
-<!--  <video-->
-<!--    #target-->
-<!--    class="video-js vjs-show-big-play-button-on-pause"-->
-<!--    (click)="$event.stopPropagation()"-->
-<!--  ></video>-->
-<!--}-->
-
-<!--@if (snippet.type == IframeSnippetType) {-->
-<!--  @if (snippet.source == YoutubeSnippetSource) {-->
-<!--    <youtube-player-->
-<!--      [videoId]="snippet.url"-->
-<!--      class="aspect-video"-->
-<!--      (click)="$event.stopPropagation()"-->
-<!--    />-->
-<!--  } @else {-->
-<!--    <iframe-->
-<!--      [src]="safeURL"-->
-<!--      width="100%"-->
-<!--      allow="fullscreen"-->
-<!--      class="aspect-video"-->
-<!--      (click)="$event.stopPropagation()"-->
-<!--    ></iframe>-->
-<!--  }-->
-<!--}-->
+</div>

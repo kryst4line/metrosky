@@ -1,4 +1,11 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -26,6 +33,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
   @Input() triggerRefresh: Subject<void>;
   @ViewChild('feed') feed: ElementRef;
   @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
+
   posts: SignalizedFeedViewPost[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
@@ -95,6 +103,11 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
   }
 
   openPost(uri: string) {
+    // Mute all video players
+    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
     this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
       data: {
         uri: uri

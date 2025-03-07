@@ -1,5 +1,4 @@
 <div #base
-  id="base"
   class="flex flex-col p-3 cursor-pointer msky-bg-dark-15 hover:msky-bg-dark-20"
   (click)="openEmbed($event)"
 >
@@ -78,18 +77,21 @@
     <a #avatar
        [href]="'https://bsky.app/profile/' + record.author.handle"
        (click)="openAuthor($event, record.author.did)"
-       class="shrink-0"
+       class="shrink-0 h-8 w-8"
     >
       <img
-        [src]="record.author.avatar"
+        [ngSrc]="record.author.avatar ?? 'default_pfp.jpg'"
         alt="{{record.author | displayName}}'s avatar"
-        class="h-8"
+        width="32"
+        height="32"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
       />
     </a>
-    <div #displayName
-         class="flex flex-col w-full justify-between min-w-0"
-    >
-      @if (record.author.displayName.trim().length) {
+    @if (record.author.displayName?.trim().length) {
+      <div #displayName
+           class="flex flex-col w-full justify-between min-w-0"
+      >
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
@@ -104,7 +106,11 @@
         >
           {{ '@' + record.author.handle }}
         </a>
-      } @else {
+      </div>
+    } @else {
+      <div #displayName
+           class="flex flex-col w-full justify-center min-w-0"
+      >
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
@@ -112,17 +118,18 @@
         >
           {{ '@' + record.author.handle }}
         </a>
-      }
-    </div>
+      </div>
+    }
   </div>
 
   @if ((record.value | isFeedPostRecord) && record.value.text.length) {
     <div #body
          class="mt-2"
     >
-        <span class="msky-text-body">
-          {{ record.value.text }}
-        </span>
+      <rich-text
+        [text]="record.value.text"
+        class="msky-text-body"
+      />
     </div>
   }
 
@@ -211,9 +218,12 @@
        class="shrink-0 h-8 w-8"
     >
       <img
-        [src]="feed.avatar"
-        alt="{{feed.name}}'s avatar"
-        class="h-8"
+        [ngSrc]="feed.avatar ?? 'default_pfp.jpg'"
+        alt="{{feed.name | displayName}}'s avatar"
+        width="32"
+        height="32"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
       />
     </a>
     <div #displayName
@@ -256,9 +266,12 @@
        class="shrink-0 h-8 w-8"
     >
       <img
-        [src]="list.avatar"
-        alt="{{list.name}}'s avatar"
-        class="h-8"
+        [ngSrc]="list.avatar ?? 'default_pfp.jpg'"
+        alt="{{list.name | displayName}}'s avatar"
+        width="32"
+        height="32"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
       />
     </a>
     <div #displayName

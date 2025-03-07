@@ -15,11 +15,12 @@
         >
           @for (image of mediaEmbed.images; track $index) {
             <a
-              class="cursor-pointer relative group shrink-0"
+              class="block h-32 w-32 cursor-pointer relative group shrink-0"
               (click)="removeImage($index)"
             >
               <img
                 [src]="image.data"
+                alt="image preview"
                 class="h-32 w-32 object-cover hover:brightness-75"
               />
               <ng-icon
@@ -34,6 +35,7 @@
       @else if (mediaEmbed | isMediaEmbedVideo) {
         <img
           [src]="mediaEmbed.thumbnail"
+          alt="video preview"
           class="h-32 w-32 object-cover"
         />
       }

@@ -9,8 +9,12 @@
     >
       @if (embed.external.thumb) {
         <img
-          [src]="embed.external.thumb"
-          [alt]="'thumb'"
+          [ngSrc]="embed.external.thumb"
+          alt="thumb"
+          width="1000"
+          height="1000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur: false}"
           class="aspect-video object-cover"
         />
       }

@@ -49,35 +49,38 @@
     class="flex w-full gap-4"
   >
     <div
-      class="w-14 shrink-0"
+      class="w-14 h-14 shrink-0"
     >
       <a #avatar
          [href]="'https://bsky.app/profile/' + feedViewPost.post().author.handle"
          (click)="openAuthor($event)"
       >
         <img
-          [src]="feedViewPost.post().author.avatar"
+          [ngSrc]="feedViewPost.post().author.avatar ?? 'default_pfp.jpg'"
           alt="{{feedViewPost.post().author | displayName}}'s avatar"
+          width="56"
+          height="56"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
         />
       </a>
     </div>
 
     <div #displayName
-         class="flex flex-col w-fit max-w-full min-w-0 justify-center hover:underline"
+         class="flex flex-col w-fit max-w-full min-w-0 justify-center"
     >
       @if (author.displayName?.trim().length) {
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-body text-[20px] font-semibold fit-text shrink-1"
-          style="text-box: trim-both"
+          class="msky-text-body text-[20px] font-semibold fit-text [text-box: trim-both] w-fit shrink-1 hover:underline"
         >
           {{ author.displayName }}
         </a>
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="msky-text-caption text-[14px] fit-text shrink-1"
+          class="msky-text-caption text-[14px] fit-text w-fit shrink-1"
         >
           {{ '@' + author.handle }}
         </a>
@@ -85,7 +88,7 @@
         <a
           [href]="'https://bsky.app/profile/' + author.handle"
           (click)="openAuthor($event)"
-          class="font-semibold"
+          class="msky-text-body text-[20px] font-semibold fit-text shrink-1 hover:underline"
         >
           {{ '@' + author.handle }}
         </a>
@@ -101,7 +104,7 @@
     <div #body
          class="mt-4"
     >
-      <rich-text-display
+      <rich-text
         [text]="record.text"
         [facets]="record.facets"
         class="msky-text-body text-[1rem] cursor-auto"
@@ -121,6 +124,7 @@
       <post-embed-images
         [embed]="embed"
         (onImgClick)="openImage(feedViewPost.post().uri, $event)"
+        class="cursor-pointer"
       />
     }
 
@@ -181,7 +185,7 @@
     [href]="post.uri | linkExtractor: post.author.handle"
     target="_blank"
     [title]="$any(post.record).createdAt | date: 'medium'"
-    class="msky-text-caption text-[14px] hover:underline mt-4"
+    class="msky-text-caption text-[14px] w-fit hover:underline mt-4"
     (click)="$event.stopPropagation()"
   >
     {{ $any(post.record).createdAt | date: 'medium' }}
@@ -196,7 +200,7 @@
   >
     @if (post.likeCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.likeCount + ' likes' }}
@@ -205,7 +209,7 @@
 
     @if (post.repostCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.repostCount + ' reposts' }}
@@ -214,7 +218,7 @@
 
     @if (post.quoteCount) {
       <a
-        class="msky-text-body font-light text-[1rem] hover:underline"
+        class="text-[1rem] font-light msky-text-lightwhite cursor-pointer hover:underline"
         (click)="$event.stopPropagation()"
       >
         {{ post.quoteCount + ' quotes' }}
@@ -227,79 +231,106 @@
   let-post="post"
 >
   <div #buttons
-       class="w-full mt-4 flex justify-between items-center buttons "
+       class="w-[calc(100%+2rem)] mt-2 -mb-4 -ml-4 flex"
   >
     <div
-      class="flex flex-1 items-center gap-2"
+      class="flex flex-1 items-center"
     >
-      <ng-icon
-        name="tablerMessage"
-        class="text-[1.25rem]"
-        color="rgba(207, 255, 255, 0.9)"
+      <button
+        class="relative flex gap-2 items-center p-4 hover:msky-bg-dark-15"
         (click)="replyPost(post, $event)"
-      />
-      @if (post.replyCount) {
-        <span
-          class="msky-text-body text-[1rem]  leading-none"
-        >
+      >
+        <ng-icon
+          name="tablerMessage"
+          class="text-[1.25rem]"
+        />
+        @if (post.replyCount) {
+          <span
+            class="msky-text-body text-[1rem] leading-none"
+          >
           {{ post.replyCount | numberFormatter }}
         </span>
-      }
+        }
+      </button>
     </div>
 
     <div
       class="flex flex-1 items-center gap-1"
     >
-      <ng-icon
-        name="tablerRepeat"
-        [color]="post.viewer.repost ? 'green' : 'rgba(207, 255, 255, 0.9)'"
-        class="text-[1.25rem]"
+      <button
+        class="relative flex gap-2 items-center p-4 hover:msky-bg-dark-15"
+        [class.msky-bg-dark-15]="repostMenu.visible"
         (click)="openRepostMenu(repostMenu, $event)"
-      />
+      >
+        <ng-icon
+          name="tablerRepeat"
+          class="text-[1.25rem]"
+          [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+        />
+        <ng-icon #rtAnim
+          name="tablerRepeat"
+          [color]="post.viewer.repost ? 'var(--green-rt)' : undefined"
+          class="absolute text-[1.25rem] opacity-0"
+        />
+
+        @if (post.repostCount) {
+          <span
+            class="msky-text-body text-[1rem] leading-none"
+          >
+            {{ post.repostCount | numberFormatter }}
+          </span>
+        }
+      </button>
       <p-menu
         #repostMenu popup
         [model]="repostMenuItems"
         appendTo="body"
         class="msky-text-body block"
       />
-
-      @if (post.repostCount) {
-        <span
-          class="msky-text-body text-[1rem] leading-none"
-        >
-          {{ post.repostCount | numberFormatter }}
-        </span>
-      }
     </div>
 
     <div
       class="flex flex-1 items-center gap-2"
     >
-      <ng-icon
-        [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
-        [color]="post.viewer.like ? 'red' : 'rgba(207, 255, 255, 0.9)'"
-        class="text-[1.25rem]"
+      <button
+        class="relative flex gap-2 items-center p-4 hover:msky-bg-dark-15"
         (click)="post.viewer.like ? deleteLike($event) : like($event)"
-      />
+        [disabled]="processingAction"
+      >
+        <ng-icon
+          [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+          [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+          class="text-[1.25rem]"
+        />
+        <ng-icon #likeAnim
+                 [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
+                 [color]="post.viewer.like ? 'var(--red-like)' : undefined"
+                 class="absolute text-[1.25rem] opacity-0"
+        />
 
-      @if (post.likeCount) {
-        <span
-          class="msky-text-body text-[1rem]  leading-none"
-        >
-          {{ post.likeCount | numberFormatter }}
-        </span>
-      }
+        @if (post.likeCount) {
+          <span
+            class="msky-text-body text-[1rem]  leading-none"
+          >
+            {{ post.likeCount | numberFormatter }}
+          </span>
+        }
+      </button>
     </div>
 
     <div
       class="flex-0"
     >
-      <ng-icon
-        name="tablerDots"
-        class="text-[1.25rem]"
-        color="rgba(207, 255, 255, 0.9)"
+      <button
+        class="relative flex gap-2 items-center p-4 hover:msky-bg-dark-15"
+        [class.msky-bg-dark-15]="moreMenu.visible"
         (click)="moreMenu.toggle($event); $event.stopPropagation()"
-      />
+      >
+        <ng-icon
+          name="tablerDots"
+          class="text-[1.25rem]"
+        />
+      </button>
       <p-menu
         #moreMenu popup
         [model]="moreMenuItems"

@@ -6,18 +6,25 @@
       class="h-full w-[30rem] flex flex-col"
     >
       <img
-        [src]="author.banner"
+        [ngSrc]="author.banner ?? 'default_banner.jpg'"
         alt="{{author | displayName}}'s banner"
-        class="w-[30rem] h-[10rem]"
+        width="480"
+        height="160"
+        placeholder="default_banner.jpg"
+        [placeholderConfig]="{blur: false}"
       />
 
       <div
         class="relative w-full h-0"
       >
         <img
-          [src]="author.avatar"
+          [ngSrc]="author.avatar ?? 'default_pfp.jpg'"
           alt="{{author | displayName}}'s avatar"
-          class="h-24 w-24 absolute ml-4 -translate-y-12"
+          width="96"
+          height="96"
+          placeholder="default_pfp.jpg"
+          [placeholderConfig]="{blur: false}"
+          class="ml-4 -translate-y-12"
           style="box-shadow: 0 0 8px rgba(255, 255, 255, 0.3)"
         />
       </div>
@@ -34,25 +41,39 @@
         class="flex flex-col px-4 mt-2 shrink-1 min-h-0"
       >
         <a
-          class="msky-text-white text-[1.5rem] font-bold"
+          class="msky-text-white text-[1.5rem] font-bold cursor-default"
         >
           {{author | displayName}}
         </a>
-        @if (author.displayName) {
-          <a
-            [href]="'https://bsky.app/profile/' + author.handle"
-            target="_blank"
-            class="msky-text-body msky-text-darkwhite hover:underline cursor-pointer"
-          >
-            {{'@' + author.handle}}
-          </a>
-        }
+
+        <div
+          class="flex gap-2"
+        >
+          @if (author.displayName) {
+            <a
+              [href]="'https://bsky.app/profile/' + author.handle"
+              target="_blank"
+              class="w-fit msky-text-body msky-text-darkwhite hover:underline cursor-pointer"
+            >
+              {{'@' + author.handle}}
+            </a>
+          }
+
+          @if (author.viewer.followedBy) {
+            <div
+              class="p-[6px] text-[13px] msky-bg-light-20 msky-text-white [text-box:trim-both_cap_alphabetic] cursor-default"
+            >
+              follows you
+            </div>
+          }
+        </div>
 
         <div
           class="flex mt-3 gap-4 text-lg font-light msky-text-white"
         >
           <a
             class="hover:underline cursor-pointer"
+            (click)="viewMode.set(AuthorViewMode.POSTS)"
           >
             {{author.postsCount | numberFormatter}} posts
           </a>
@@ -68,7 +89,7 @@
           </a>
         </div>
 
-        <rich-text-display
+        <rich-text
           [text]="author.description"
           class="!msky-text-white msky-text-body mt-3 overflow-y-auto mb-5"
         />
@@ -148,29 +169,31 @@
     <button
       class="ui-button-rg"
     >
-      That's you!
+      that's you!
     </button>
   }
   @else if (author.viewer.following) {
     <button
       class="ui-button-rg"
+      (click)="unfollowUser()"
     >
       <ng-icon
         name="tablerCheck"
         class="pt-[2px] -ml-[2px]"
       />
-      Following
+      following
     </button>
   }
   @else {
     <button
       class="ui-button-rg"
+      (click)="followUser()"
     >
       <ng-icon
         name="tablerUserPlus"
         class="pt-[2px] -ml-[2px]"
       />
-      Follow
+      follow
     </button>
   }
 </ng-template>

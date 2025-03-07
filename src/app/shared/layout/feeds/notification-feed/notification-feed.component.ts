@@ -10,7 +10,7 @@ import {Notification} from "~/src/app/api/models/notification";
 import NotificationUtils from "~/src/app/shared/utils/notification-utils";
 import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/notifications/is-post-notification";
 import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
-import {MessageService} from "~/src/app/api/services/message.service";
+import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {NgIcon} from "@ng-icons/core";
 
 @Component({
@@ -42,7 +42,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private dialogService: DialogService,
-    private messageService: MessageService
+    private messageService: MskyMessageService
   ) {}
 
   ngOnInit() {
@@ -93,6 +93,11 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
   }
 
   openPost(uri: string) {
+    // Mute all video players
+    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
     this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
       data: {
         uri: uri

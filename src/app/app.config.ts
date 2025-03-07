@@ -28,6 +28,7 @@ import {
   tablerX
 } from "@ng-icons/tabler-icons";
 import {tablerHeartFill} from "@ng-icons/tabler-icons/fill";
+import {PRECONNECT_CHECK_BLOCKLIST} from "@angular/common";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,7 +43,8 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(),
     MessageService,
-    DialogService
+    DialogService,
+    {provide: PRECONNECT_CHECK_BLOCKLIST, useValue: 'https://cdn.bsky.app'}
   ]
 };
 

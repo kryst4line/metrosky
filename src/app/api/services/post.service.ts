@@ -13,8 +13,6 @@ import {PostCompose} from "~/src/app/api/models/post-compose";
 import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "~/src/app/api/models/embed";
 import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
 import {HttpErrorResponse} from "@angular/common/http";
-import {ImageViewDialogComponent} from "~/src/app/shared/layout/dialogs/image-view-dialog/image-view-dialog.component";
-import {DialogService} from "primeng/dynamicdialog";
 
 export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
   new Map<string, WritableSignal<AppBskyFeedDefs.PostView>>();
@@ -26,8 +24,7 @@ export class PostService {
   public postCompose: WritableSignal<PostCompose> = signal(undefined);
 
   constructor(
-    private imageCompressService: NgxImageCompressService,
-    private dialogService: DialogService
+    private imageCompressService: NgxImageCompressService
   ) {}
 
   setPost(post: AppBskyFeedDefs.PostView): WritableSignal<AppBskyFeedDefs.PostView> {
@@ -354,25 +351,5 @@ export class PostService {
         })
       }
     });
-  }
-
-  openImage(uri: string, index: number) {
-    const ref = this.dialogService.open(ImageViewDialogComponent, {
-      data: {
-        uri: uri,
-        index: index
-      },
-      appendTo: document.querySelector('app-deck'),
-      maskStyleClass: 'full-dialog',
-      modal: true,
-      dismissableMask: true,
-      autoZIndex: false,
-      style: {height: '100%'},
-      focusOnShow: false,
-      duplicate: true,
-      closeOnEscape: true,
-    });
-
-    ref.onClose.subscribe(() => ref.destroy());
   }
 }
