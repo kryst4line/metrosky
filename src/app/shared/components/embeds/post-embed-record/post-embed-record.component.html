@@ -81,7 +81,7 @@
        class="shrink-0 h-8 w-8"
     >
       <img
-        [ngSrc]="record.author.avatar"
+        [ngSrc]="record.author.avatar ?? 'default_pfp.jpg'"
         alt="{{record.author | displayName}}'s avatar"
         width="32"
         height="32"
@@ -89,10 +89,10 @@
         [placeholderConfig]="{blur: false}"
       />
     </a>
-    <div #displayName
-         class="flex flex-col w-full justify-between min-w-0"
-    >
-      @if (record.author.displayName.trim().length) {
+    @if (record.author.displayName?.trim().length) {
+      <div #displayName
+           class="flex flex-col w-full justify-between min-w-0"
+      >
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
@@ -107,7 +107,11 @@
         >
           {{ '@' + record.author.handle }}
         </a>
-      } @else {
+      </div>
+    } @else {
+      <div #displayName
+           class="flex flex-col w-full justify-center min-w-0"
+      >
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
@@ -115,8 +119,8 @@
         >
           {{ '@' + record.author.handle }}
         </a>
-      }
-    </div>
+      </div>
+    }
   </div>
 
   @if ((record.value | isFeedPostRecord) && record.value.text.length) {
@@ -215,7 +219,7 @@
        class="shrink-0 h-8 w-8"
     >
       <img
-        [ngSrc]="feed.avatar"
+        [ngSrc]="feed.avatar ?? 'default_pfp.jpg'"
         alt="{{feed.name | displayName}}'s avatar"
         width="32"
         height="32"
@@ -263,7 +267,7 @@
        class="shrink-0 h-8 w-8"
     >
       <img
-        [ngSrc]="list.avatar"
+        [ngSrc]="list.avatar ?? 'default_pfp.jpg'"
         alt="{{list.name | displayName}}'s avatar"
         width="32"
         height="32"

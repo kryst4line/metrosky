@@ -56,7 +56,7 @@
          (click)="openAuthor($event)"
       >
         <img
-          [ngSrc]="feedViewPost.post().author.avatar"
+          [ngSrc]="feedViewPost.post().author.avatar ?? 'default_pfp.jpg'"
           alt="{{feedViewPost.post().author | displayName}}'s avatar"
           width="56"
           height="56"

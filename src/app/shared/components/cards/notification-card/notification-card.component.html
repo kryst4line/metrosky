@@ -75,7 +75,7 @@
         class="relative h-8 w-8"
       >
         <img
-          [ngSrc]="author.avatar"
+          [ngSrc]="author.avatar ?? 'default_pfp.jpg'"
           alt="{{author | displayName}}'s avatar"
           width="32"
           height="32"

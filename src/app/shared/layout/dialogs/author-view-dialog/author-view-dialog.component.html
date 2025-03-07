@@ -6,7 +6,7 @@
       class="h-full w-[30rem] flex flex-col"
     >
       <img
-        [ngSrc]="author.banner"
+        [ngSrc]="author.banner ?? 'default_banner.jpg'"
         alt="{{author | displayName}}'s banner"
         width="480"
         height="160"
@@ -18,7 +18,7 @@
         class="relative w-full h-0"
       >
         <img
-          [ngSrc]="author.avatar"
+          [ngSrc]="author.avatar ?? 'default_pfp.jpg'"
           alt="{{author | displayName}}'s avatar"
           width="96"
           height="96"

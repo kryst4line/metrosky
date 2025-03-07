@@ -34,7 +34,7 @@
          class="block w-12 h-12 shrink-0"
       >
         <img
-          [ngSrc]="post().author.avatar"
+          [ngSrc]="post().author.avatar ?? 'default_pfp.jpg'"
           alt="{{post().author | displayName}}'s avatar"
           width="48"
           height="48"
@@ -71,7 +71,7 @@
   <div #displayName
        class="flex w-fit max-w-full min-w-0 items-baseline gap-2"
   >
-    @if (author.displayName.trim().length) {
+    @if (author.displayName?.trim().length) {
       <a
         [href]="'https://bsky.app/profile/' + author.handle"
         (click)="openAuthor($event, author.did)"
