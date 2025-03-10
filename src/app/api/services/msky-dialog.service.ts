@@ -1,12 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   AuthorViewDialogComponent
 } from "~/src/app/shared/layout/dialogs/author-view-dialog/author-view-dialog.component";
 import {DialogService} from "primeng/dynamicdialog";
 import {ImageViewDialogComponent} from "~/src/app/shared/layout/dialogs/image-view-dialog/image-view-dialog.component";
+import {
+  ThreadViewDialogComponent
+} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
+
 })
 export class MskyDialogService {
   constructor(
@@ -49,5 +53,24 @@ export class MskyDialogService {
     });
 
     ref.onClose.subscribe(() => ref.destroy());
+  }
+
+  openThread(uri: string, parentElement: HTMLElement) {
+    const ref = this.dialogService.open(ThreadViewDialogComponent, {
+      data: {
+        uri: uri,
+      },
+      appendTo: parentElement,
+      maskStyleClass: 'inner-dialog',
+      style: {background: 'transparent', height: '100%'},
+      focusOnShow: false,
+      duplicate: true
+    });
+
+    ref.onClose.subscribe({
+      next: () => {
+        ref.destroy();
+      }
+    });
   }
 }

@@ -10,7 +10,7 @@ import {
   FeedPostCardDetailComponent
 } from "~/src/app/shared/components/cards/feed-post-card-detail/feed-post-card-detail.component";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {AppBskyFeedDefs} from "@atproto/api";
@@ -26,6 +26,7 @@ import {ThreadReply} from "~/src/app/api/models/thread-reply";
 import {NgTemplateOutlet} from "@angular/common";
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
 import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'thread-view-dialog',
@@ -57,7 +58,7 @@ export class ThreadViewDialogComponent {
     private config: DynamicDialogConfig,
     private postService: PostService,
     private messageService: MskyMessageService,
-    private dialogService: DialogService,
+    private dialogService: MskyDialogService,
     private parentRef: ElementRef,
     private cdRef: ChangeDetectorRef
   ) {
@@ -153,24 +154,7 @@ export class ThreadViewDialogComponent {
       video.muted = true;
     });
 
-    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
-      data: {
-        uri: uri,
-      },
-      appendTo: this.parentRef.nativeElement,
-      maskStyleClass: 'inner-dialog',
-      style: {background: 'transparent', height: '100%'},
-      focusOnShow: false,
-      duplicate: true
-    });
-
-    this.dialog.onClose.subscribe({
-      next: () => {
-        this.dialog.destroy();
-        this.dialog = undefined;
-        this.cdRef.markForCheck();
-      }
-    });
+    this.dialogService.openThread(uri, this.parentRef.nativeElement);
   }
 
   log(event: any) {

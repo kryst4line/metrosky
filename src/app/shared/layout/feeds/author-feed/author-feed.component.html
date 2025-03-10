@@ -1,6 +1,6 @@
 
 <div #feed
-  class="relative w-full h-full min-h-0 flex-1"
+  class="relative w-full h-full min-h-0 flex-1 group"
 >
   @if (posts) {
     <ag-virtual-scroll
@@ -8,7 +8,7 @@
       [items]="posts"
       [height]="'100%'"
       [min-row-height]="150"
-      [class]="dialog ? '!hidden' : 'visible'"
+      class="group-has-[p-dynamicdialog]:!hidden"
       (onItemsRender)="nextData($event); manageRefresh();"
     >
       @for (post of vs.items; track post.uuid; let i = $index) {

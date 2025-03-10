@@ -3,8 +3,6 @@ import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {Notification} from "~/src/app/api/models/notification";
 import NotificationUtils from "~/src/app/shared/utils/notification-utils";
@@ -12,6 +10,7 @@ import {IsNotificationArrayPipe} from "~/src/app/shared/utils/pipes/type-guards/
 import {NotificationCardComponent} from "~/src/app/shared/components/cards/notification-card/notification-card.component";
 import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {NgIcon} from "@ng-icons/core";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'notification-feed',
@@ -25,15 +24,11 @@ import {NgIcon} from "@ng-icons/core";
   ],
   templateUrl: './notification-feed.component.html',
   styleUrl: './notification-feed.component.scss',
-  providers: [
-    DialogService
-  ]
 })
 export class NotificationFeedComponent implements OnInit, OnDestroy {
   feed = viewChild<ElementRef>('feed');
   virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
   notifications: Notification[];
-  dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
   reloadReady = false;
@@ -41,7 +36,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
-    private dialogService: DialogService,
+    private dialogService: MskyDialogService,
     private messageService: MskyMessageService
   ) {}
 
@@ -98,22 +93,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
       video.muted = true;
     });
 
-    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
-      data: {
-        uri: uri
-      },
-      appendTo: this.feed().nativeElement,
-      maskStyleClass: 'inner-dialog',
-      autoZIndex: false,
-      focusOnShow: false,
-    });
-
-    this.dialog.onClose.subscribe({
-      next: () => {
-        this.dialog.destroy();
-        this.dialog = undefined;
-      }
-    });
+    this.dialogService.openThread(uri, this.feed().nativeElement);
   }
 
   openNotification(notification: Notification) {

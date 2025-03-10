@@ -10,12 +10,11 @@ import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {ThreadViewDialogComponent} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
 import {Subject} from "rxjs";
 import {NgIcon} from "@ng-icons/core";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'timeline-feed',
@@ -34,7 +33,6 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
   virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
 
   posts: SignalizedFeedViewPost[];
-  dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
   reloadReady = false;
@@ -42,7 +40,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
-    private dialogService: DialogService
+    private dialogService: MskyDialogService
   ) {}
 
   ngOnInit() {
@@ -107,23 +105,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       video.muted = true;
     });
 
-    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
-      data: {
-        uri: uri
-      },
-      appendTo: this.feed().nativeElement,
-      maskStyleClass: 'inner-dialog',
-      autoZIndex: false,
-      focusOnShow: false,
-      duplicate: true
-    });
-
-    this.dialog.onClose.subscribe({
-      next: () => {
-        this.dialog.destroy();
-        this.dialog = undefined;
-      }
-    });
+    this.dialogService.openThread(uri, this.feed().nativeElement);
   }
 
   manageRefresh() {
