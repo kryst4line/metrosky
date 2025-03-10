@@ -33,9 +33,9 @@ export class AuthService {
           //store user info in localStorage
           agent.getProfile({actor: agent.session.did}).then(response => {
             localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
-          });
 
-          this.authenticationState.next(true);
+            this.authenticationState.next(true);
+          });
         }
       );
     }
@@ -49,10 +49,10 @@ export class AuthService {
         //store user info in localStorage
         agent.getProfile({actor: agent.session.did}).then(response => {
           localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
-        });
 
-        this.authenticationState.next(true);
-        this.router.navigate(['']);
+          this.authenticationState.next(true);
+          this.router.navigate(['']);
+        });
       },
       error: (err: HttpErrorResponse) => {
         this.messageService.warnIcon(err.message, 'Oops!');
