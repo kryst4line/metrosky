@@ -29,18 +29,18 @@
         class="flex flex-col max-w-[90%]"
       >
         @for (parent of parents; track parent.uuid) {
-          @if (parent | isSignalizedFeedViewPost) {
+          @if ((parent | isFeedDefsNotFoundPost) || (parent | isFeedDefsBlockedPost)) {
+            <ng-container
+              [ngTemplateOutlet]="notPostViewTemplate"
+              [ngTemplateOutletContext]="{post: parent}"
+            />
+          }
+          @else {
             <feed-post-card
               [feedViewPost]="parent"
               (onPostClick)="openPost(parent.post().uri)"
               (onEmbedClick)="openPost($any($event.record).uri)"
               class="cursor-pointer"
-            />
-          }
-          @else {
-            <ng-container
-              [ngTemplateOutlet]="notPostViewTemplate"
-              [ngTemplateOutletContext]="{post: parent}"
             />
           }
         }

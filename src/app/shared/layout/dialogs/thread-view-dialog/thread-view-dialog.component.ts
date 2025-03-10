@@ -25,7 +25,6 @@ import {BlockedPost, NotFoundPost, ThreadViewPost} from "@atproto/api/dist/clien
 import {ThreadReply} from "~/src/app/api/models/thread-reply";
 import {NgTemplateOutlet} from "@angular/common";
 import {IsFeedDefsNotFoundPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-notfoundpost";
-import {IsSignalizedFeedViewPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-signalized-feedviewpost";
 import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-blockedpost";
 
 @Component({
@@ -36,7 +35,6 @@ import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guard
     forwardRef(() => FeedPostCardComponent),
     NgTemplateOutlet,
     IsFeedDefsNotFoundPostPipe,
-    IsSignalizedFeedViewPostPipe,
     IsFeedDefsBlockedPostPipe,
   ],
   templateUrl: './thread-view-dialog.component.html',
