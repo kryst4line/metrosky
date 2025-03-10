@@ -3,8 +3,7 @@ import {
   Component,
   ElementRef,
   Input, OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit, viewChild
 } from '@angular/core';
 import {AppBskyEmbedVideo} from "@atproto/api";
 import videojs from "video.js";
@@ -21,7 +20,7 @@ type Options = typeof videojs.options;
 })
 export class PostEmbedVideoComponent implements OnInit, OnDestroy {
   @Input() embed: AppBskyEmbedVideo.View;
-  @ViewChild('target', {static: true}) target: ElementRef;
+  target = viewChild('target', {read: ElementRef});
 
   player: Player;
   options: Options;
@@ -53,12 +52,8 @@ export class PostEmbedVideoComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.player = videojs(this.target.nativeElement, this.options);
+    this.player = videojs(this.target().nativeElement, this.options);
     this.player.addChild('RemainingTimeDisplay', {});
-  }
-
-  public mute() {
-    this.player.muted(true);
   }
 
   ngOnDestroy() {

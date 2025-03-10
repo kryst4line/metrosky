@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, viewChild} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -30,8 +30,8 @@ import {NgIcon} from "@ng-icons/core";
   ]
 })
 export class NotificationFeedComponent implements OnInit, OnDestroy {
-  @ViewChild('feed') feed: ElementRef;
-  @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
+  feed = viewChild<ElementRef>('feed');
+  virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
   notifications: Notification[];
   dialog: DynamicDialogRef;
   lastPostCursor: string;
@@ -94,7 +94,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
 
   openPost(uri: string) {
     // Mute all video players
-    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+    this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
       video.muted = true;
     });
 
@@ -102,7 +102,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
       data: {
         uri: uri
       },
-      appendTo: this.feed.nativeElement,
+      appendTo: this.feed().nativeElement,
       maskStyleClass: 'inner-dialog',
       autoZIndex: false,
       focusOnShow: false,
@@ -136,7 +136,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
       this.reloadTimeout = setTimeout(() => {
         this.reloadTimeout = undefined;
 
-        if (this.virtualScroll.currentScroll == 0) {
+        if (this.virtualScroll().currentScroll == 0) {
           this.reloadReady = false;
           agent.listNotifications({
             limit: 1
@@ -155,7 +155,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
         }
       }, 30e3);
       // Timer in seconds
-    } else if (this.reloadReady && this.virtualScroll.currentScroll == 0) {
+    } else if (this.reloadReady && this.virtualScroll().currentScroll == 0) {
       this.reloadReady = false;
       this.initData();
     }

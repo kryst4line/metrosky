@@ -4,7 +4,7 @@ import {
   Component,
   ElementRef,
   forwardRef,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import {
   FeedPostCardDetailComponent
@@ -45,8 +45,8 @@ import {IsFeedDefsBlockedPostPipe} from "~/src/app/shared/utils/pipes/type-guard
   ]
 })
 export class ThreadViewDialogComponent {
-  @ViewChild('main', {read: ElementRef}) mainCard: ElementRef;
-  @ViewChild('scroll', {read: ElementRef}) scrollDiv: ElementRef<HTMLDivElement>;
+  mainCard = viewChild<ElementRef>('main');
+  scrollDiv = viewChild<ElementRef<HTMLDivElement>>('scroll');
   post: SignalizedFeedViewPost;
   parents: Array<SignalizedFeedViewPost | AppBskyFeedDefs.NotFoundPost | AppBskyFeedDefs.BlockedPost> = [];
   replies: Array<ThreadReply | AppBskyFeedDefs.NotFoundPost | AppBskyFeedDefs.BlockedPost> = [];
@@ -116,8 +116,8 @@ export class ThreadViewDialogComponent {
           this.cdRef.markForCheck();
           setTimeout(() => {
             if (thread.parent) {
-              this.scrollDiv.nativeElement.scrollTo({
-                top: this.mainCard.nativeElement.offsetTop,
+              this.scrollDiv().nativeElement.scrollTo({
+                top: this.mainCard().nativeElement.offsetTop,
                 behavior: 'smooth'
               });
             }

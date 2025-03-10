@@ -1,14 +1,10 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import {Facet, RichText, RichTextSegment} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
@@ -31,10 +27,6 @@ export class RichTextComponent implements OnInit {
   @Output() onMentionClick: EventEmitter<any>
   @Output() onTagClick: EventEmitter<any>
   segments: RichTextSegment[] = [];
-
-  @ViewChildren('mention') mentionTemplate: ElementRef<TemplateRef<any>>;
-  @ViewChild('text', {read: TemplateRef}) textTemplate: TemplateRef<any>;
-  @ViewChild('link', {read: TemplateRef}) linkTemplate: TemplateRef<any>;
 
   constructor(
     private cdRef: ChangeDetectorRef,

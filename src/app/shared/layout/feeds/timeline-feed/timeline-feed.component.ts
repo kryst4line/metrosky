@@ -3,8 +3,7 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit, viewChild,
 } from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
@@ -31,8 +30,8 @@ import {NgIcon} from "@ng-icons/core";
 })
 export class TimelineFeedComponent implements OnInit, OnDestroy {
   @Input() triggerRefresh: Subject<void>;
-  @ViewChild('feed') feed: ElementRef;
-  @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
+  feed = viewChild<ElementRef>('feed');
+  virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
 
   posts: SignalizedFeedViewPost[];
   dialog: DynamicDialogRef;
@@ -52,7 +51,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
     //Listen to new posts to refresh
     this.triggerRefresh.subscribe({
       next: () => {
-        if (this.virtualScroll.currentScroll == 0) {
+        if (this.virtualScroll().currentScroll == 0) {
           this.initData();
         } else {
           this.reloadReady = true;
@@ -104,7 +103,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
 
   openPost(uri: string) {
     // Mute all video players
-    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+    this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
       video.muted = true;
     });
 
@@ -112,7 +111,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       data: {
         uri: uri
       },
-      appendTo: this.feed.nativeElement,
+      appendTo: this.feed().nativeElement,
       maskStyleClass: 'inner-dialog',
       autoZIndex: false,
       focusOnShow: false,
@@ -134,7 +133,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       this.reloadTimeout = setTimeout(() => {
         this.reloadTimeout = undefined;
 
-        if (this.virtualScroll.currentScroll == 0) {
+        if (this.virtualScroll().currentScroll == 0) {
           this.reloadReady = false;
           agent.getTimeline({
             limit: 1
@@ -164,7 +163,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
         }
       }, 30e3);
       // Timer in seconds
-    } else if (this.reloadReady && this.virtualScroll.currentScroll == 0) {
+    } else if (this.reloadReady && this.virtualScroll().currentScroll == 0) {
       this.reloadReady = false;
       this.initData();
     }

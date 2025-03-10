@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef, forwardRef,
-  OnInit, ViewChild,
+  OnInit, viewChild,
   WritableSignal
 } from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -53,8 +53,8 @@ export class ImageViewDialogComponent implements OnInit {
   images: AppBskyEmbedImages.ViewImage[];
   initialIndex: number = 0;
 
-  @ViewChild('likeAnim', {read: ElementRef}) likeAnimation: ElementRef<HTMLElement>;
-  @ViewChild('rtAnim', {read: ElementRef}) repostAnimation: ElementRef<HTMLElement>;
+  likeAnimation = viewChild<ElementRef<HTMLElement>>('likeAnim');
+  repostAnimation = viewChild<ElementRef<HTMLElement>>('rtAnim');
   processingAction = false;
 
   protected readonly window = window;
@@ -143,8 +143,8 @@ export class ImageViewDialogComponent implements OnInit {
     });
 
     // Show animation
-    this.likeAnimation.nativeElement.classList.add('animate-pingonce')
-    setTimeout(() => this.likeAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
+    this.likeAnimation().nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.likeAnimation().nativeElement.classList.remove('animate-pingonce'), 1000);
 
     // API call (delayed to not step over placeholder change)
     this.processingAction = true;
@@ -210,8 +210,8 @@ export class ImageViewDialogComponent implements OnInit {
     });
 
     // Show animation
-    this.repostAnimation.nativeElement.classList.add('animate-pingonce')
-    setTimeout(() => this.repostAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
+    this.repostAnimation().nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.repostAnimation().nativeElement.classList.remove('animate-pingonce'), 1000);
 
     // API call (delayed to not step over placeholder change)
     this.processingAction = true;

@@ -5,8 +5,7 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit, QueryList,
-  ViewChildren
+  OnInit, viewChildren
 } from '@angular/core';
 import {AppBskyEmbedExternal} from "@atproto/api";
 import {
@@ -36,7 +35,7 @@ import {NgOptimizedImage} from "@angular/common";
 })
 export class PostEmbedExternalComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() embed: AppBskyEmbedExternal.View;
-  @ViewChildren('target') target: QueryList<ElementRef>;
+  target = viewChildren<ElementRef<HTMLVideoElement>>('target');
 
   player: Player;
   options: Options;
@@ -79,7 +78,7 @@ export class PostEmbedExternalComponent implements OnInit, OnDestroy, AfterViewI
         controlBar: false,
       };
 
-      this.player = videojs(this.target.first.nativeElement, this.options);
+      this.player = videojs(this.target()[0].nativeElement, this.options);
     }
   }
 

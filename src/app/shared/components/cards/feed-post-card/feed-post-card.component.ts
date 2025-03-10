@@ -5,8 +5,7 @@ import {
   EventEmitter,
   forwardRef,
   Input,
-  Output,
-  ViewChild
+  Output, viewChild,
 } from '@angular/core';
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {IsEmbedImagesViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-embed-images-view.pipe";
@@ -91,8 +90,8 @@ export class FeedPostCardComponent {
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>();
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
 
-  @ViewChild('likeAnim', {read: ElementRef}) likeAnimation: ElementRef<HTMLElement>;
-  @ViewChild('rtAnim', {read: ElementRef}) repostAnimation: ElementRef<HTMLElement>;
+  likeAnimation = viewChild<ElementRef<HTMLElement>>('likeAnim');
+  repostAnimation = viewChild<ElementRef<HTMLElement>>('rtAnim');
   processingAction: boolean = false;
 
   moreMenuItems: MenuItem[] = [
@@ -143,8 +142,8 @@ export class FeedPostCardComponent {
     });
 
     // Show animation
-    this.likeAnimation.nativeElement.classList.add('animate-pingonce')
-    setTimeout(() => this.likeAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
+    this.likeAnimation().nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.likeAnimation().nativeElement.classList.remove('animate-pingonce'), 1000);
 
     // API call (delayed to not step over placeholder change)
     this.processingAction = true;
@@ -210,8 +209,8 @@ export class FeedPostCardComponent {
     });
 
     // Show animation
-    this.repostAnimation.nativeElement.classList.add('animate-pingonce')
-    setTimeout(() => this.repostAnimation.nativeElement.classList.remove('animate-pingonce'), 1000);
+    this.repostAnimation().nativeElement.classList.add('animate-pingonce')
+    setTimeout(() => this.repostAnimation().nativeElement.classList.remove('animate-pingonce'), 1000);
 
     // API call (delayed to not step over placeholder change)
     this.processingAction = true;
