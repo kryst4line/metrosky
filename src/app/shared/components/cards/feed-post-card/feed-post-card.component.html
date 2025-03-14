@@ -260,7 +260,7 @@
   let-post="post"
 >
   <div #buttons
-       class="w-full -mb-4 flex justify-between items-center mt-3 peer-[]/embed:mt-0"
+       class="w-full -mb-4 flex justify-between items-center mt-3 peer-[]/embed:mt-0 "
   >
     <div
       class="flex flex-1"
@@ -269,8 +269,9 @@
         class="flex-1"
       >
         <button
-          class="flex gap-1 items-center p-3 hover:msky-bg-dark-15"
+          class="flex gap-1 items-center p-3 hover:msky-bg-dark-15 transition duration-[0.1s] ease-out"
           (click)="replyPost(post, $event)"
+          pRipple
         >
           <ng-icon
             name="tablerMessage"
@@ -289,9 +290,10 @@
         class="flex-1"
       >
         <button
-          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15"
+          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15 transition duration-[0.1s] ease-out"
           [class.msky-bg-dark-15]="repostMenu.visible"
           (click)="openRepostMenu(repostMenu, $event)"
+          pRipple
         >
           <ng-icon
             name="tablerRepeat"
@@ -325,9 +327,10 @@
         class="flex-1"
       >
         <button
-          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15"
+          class="relative flex gap-1 items-center p-3 hover:msky-bg-dark-15 transition duration-[0.1s] ease-out"
           (click)="post.viewer.like ? deleteLike($event) : like($event)"
           [disabled]="processingAction"
+          pRipple
         >
           <ng-icon
             [name]="post.viewer.like ? 'tablerHeartFill' : 'tablerHeart'"
@@ -353,9 +356,10 @@
         class="flex-0"
       >
         <button
-          class="relative flex items-center p-3 hover:msky-bg-dark-15"
+          class="relative flex items-center p-3 hover:msky-bg-dark-15 transition duration-[0.1s] ease-out"
           [class.msky-bg-dark-15]="moreMenu.visible"
           (click)="moreMenu.toggle($event); $event.stopPropagation()"
+          pRipple
         >
           <ng-icon
             name="tablerDots"

@@ -3,6 +3,7 @@ import {RippleModule} from "primeng/ripple";
 import {NgIcon} from "@ng-icons/core";
 import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {AppBskyActorDefs} from "@atproto/api";
+import {StorageKeys} from "~/src/app/core/storage-keys";
 
 @Component({
   selector: 'sidebar',
@@ -13,7 +14,6 @@ import {AppBskyActorDefs} from "@atproto/api";
     NgOptimizedImage
   ],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit {
@@ -26,6 +26,6 @@ export class SidebarComponent implements OnInit {
   loggedUser: AppBskyActorDefs.ProfileViewDetailed;
 
   ngOnInit() {
-    this.loggedUser = JSON.parse(localStorage.getItem('logged_user')) as AppBskyActorDefs.ProfileViewDetailed;
+    this.loggedUser = JSON.parse(localStorage.getItem(StorageKeys.LOGGED_USER)) as AppBskyActorDefs.ProfileViewDetailed;
   }
 }

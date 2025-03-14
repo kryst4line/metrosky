@@ -4,22 +4,17 @@ import {
   Component,
   ElementRef, forwardRef,
   Input, OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit, viewChild,
 } from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
 import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
-import {
-  ThreadViewDialogComponent
-} from "~/src/app/shared/layout/dialogs/thread-view-dialog/thread-view-dialog.component";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
-import {Subject} from "rxjs";
 import {NgIcon} from "@ng-icons/core";
+import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'author-feed',
@@ -35,18 +30,20 @@ import {NgIcon} from "@ng-icons/core";
 })
 export class AuthorFeedComponent implements OnInit, OnDestroy {
   @Input() author: string;
-  @Input() filter?:
+  @Input() set filter(filter:
     | 'posts_with_replies'
     | 'posts_no_replies'
     | 'posts_with_media'
     | 'posts_and_author_threads'
-    | 'posts_with_video';
+    | 'posts_with_video') {
+    this._filter = filter;
+    this.initData();
+  }
+  _filter = 'posts_no_replies';
   @Input() includePins?: boolean;
-  @Input() triggerRefresh: Subject<void>;
-  @ViewChild('feed') feed: ElementRef;
-  @ViewChild('vs') virtualScroll: AgVirtualSrollComponent;
+  feed = viewChild<ElementRef>('feed');
+  virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
   posts: SignalizedFeedViewPost[];
-  dialog: DynamicDialogRef;
   lastPostCursor: string;
   loading = true;
   reloadReady = false;
@@ -54,7 +51,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
-    private dialogService: DialogService,
+    private dialogService: MskyDialogService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -62,9 +59,9 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     this.initData();
 
     //Listen to new posts to refresh
-    this.triggerRefresh?.subscribe({
+    this.postService.refreshFeeds.subscribe({
       next: () => {
-        if (this.virtualScroll.currentScroll == 0) {
+        if (this.virtualScroll().currentScroll == 0) {
           this.initData();
         } else {
           this.reloadReady = true;
@@ -74,15 +71,15 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.triggerRefresh?.unsubscribe();
+    this.postService.refreshFeeds.unsubscribe();
     clearTimeout(this.reloadTimeout);
   }
 
-  initData() {
+  public initData() {
     this.loading = true;
     agent.getAuthorFeed({
       actor: this.author,
-      filter: this.filter ?? 'posts_no_replies',
+      filter: this._filter,
       includePins: this.includePins ?? false,
       limit: 15
     }).then(
@@ -104,7 +101,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
       agent.getAuthorFeed({
         actor: this.author,
-        filter: this.filter ?? 'posts_no_replies',
+        filter: this._filter,
         includePins: this.includePins ?? false,
         cursor: this.lastPostCursor,
         limit: 15
@@ -123,28 +120,11 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   openPost(uri: string) {
     // Mute all video players
-    this.feed.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+    this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
       video.muted = true;
     });
 
-    this.dialog = this.dialogService.open(ThreadViewDialogComponent, {
-      data: {
-        uri: uri
-      },
-      appendTo: this.feed.nativeElement,
-      maskStyleClass: 'inner-dialog',
-      autoZIndex: false,
-      focusOnShow: false,
-      duplicate: true
-    });
-
-    this.dialog.onClose.subscribe({
-      next: () => {
-        this.dialog.destroy();
-        this.dialog = undefined;
-        this.cdRef.markForCheck();
-      }
-    });
+    this.dialogService.openThread(uri, this.feed().nativeElement);
   }
 
   manageRefresh() {
@@ -154,7 +134,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
       this.reloadTimeout = setTimeout(() => {
         this.reloadTimeout = undefined;
 
-        if (this.virtualScroll.currentScroll == 0) {
+        if (this.virtualScroll().currentScroll == 0) {
           this.reloadReady = false;
           agent.getTimeline({
             limit: 1
@@ -184,13 +164,9 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
         }
       }, 30e3);
       // Timer in seconds
-    } else if (this.reloadReady && this.virtualScroll.currentScroll == 0) {
+    } else if (this.reloadReady && this.virtualScroll().currentScroll == 0) {
       this.reloadReady = false;
       this.initData();
     }
-  }
-
-  log(event: any) {
-    console.log(event)
   }
 }

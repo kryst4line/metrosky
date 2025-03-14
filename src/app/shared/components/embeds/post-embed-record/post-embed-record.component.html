@@ -90,19 +90,19 @@
     </a>
     @if (record.author.displayName?.trim().length) {
       <div #displayName
-           class="flex flex-col w-full justify-between min-w-0"
+           class="flex flex-col w-full justify-around min-w-0"
       >
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
-          class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+          class="w-fit msky-text-body font-semibold hover:underline [text-box:trim-both_cap_alphabetic]"
         >
           {{ record.author.displayName }}
         </a>
         <a
           [href]="'https://bsky.app/profile/' + record.author.handle"
           (click)="openAuthor($event, record.author.did)"
-          class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+          class="w-fit msky-text-caption text-[12px] [text-box:trim-both_cap_alphabetic]"
         >
           {{ '@' + record.author.handle }}
         </a>

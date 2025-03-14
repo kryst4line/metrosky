@@ -7,7 +7,7 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import {DynamicDialogConfig} from "primeng/dynamicdialog";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {iconsProvider} from "~/src/app/app.config";
 import {NgIcon} from "@ng-icons/core";
 import {agent} from "~/src/app/core/bsky.api";
@@ -21,6 +21,8 @@ import {AuthorFeedComponent} from "~/src/app/shared/layout/feeds/author-feed/aut
 import {NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {IsLoggedUserPipe} from "~/src/app/shared/utils/pipes/is-logged-user.pipe";
 import {from} from "rxjs";
+import {ColumnService} from "~/src/app/api/services/column.service";
+import {Tooltip} from "primeng/tooltip";
 
 @Component({
   selector: 'author-view-dialog',
@@ -33,7 +35,8 @@ import {from} from "rxjs";
     forwardRef(() => AuthorFeedComponent),
     NgTemplateOutlet,
     IsLoggedUserPipe,
-    NgOptimizedImage
+    NgOptimizedImage,
+    Tooltip
   ],
   templateUrl: './author-view-dialog.component.html',
   styleUrl: './author-view-dialog.component.scss',
@@ -50,8 +53,10 @@ export class AuthorViewDialogComponent implements OnInit {
 
   constructor(
     private config: DynamicDialogConfig,
+    private dialog: DynamicDialogRef,
     private messageService: MskyMessageService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private columnService: ColumnService
   ) {}
 
   ngOnInit() {
@@ -87,6 +92,11 @@ export class AuthorViewDialogComponent implements OnInit {
         this.messageService.success(`You unfollowed ${this.author.displayName ?? this.author.handle}`);
       }, error: err => this.messageService.error(err.message, 'Oops!')
     });
+  }
+
+  addColumn() {
+    this.columnService.createAuthorColumn(this.author);
+    this.dialog.close();
   }
 }
 

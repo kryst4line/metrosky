@@ -1,0 +1,152 @@
+<div class="flex flex-col h-full gap-2">
+  <div
+    class="h-12 w-full relative shrink-0 leading-[100%] flex items-center group"
+  >
+    <span
+      class="block w-full group-hover:w-[calc(100%_-_8.25rem)] whitespace-nowrap overflow-hidden text-ellipsis leading-[3rem] msky-text-white text-[2.25rem] font-light pointer-events-none transition-[width_100_ease-out]"
+      [class]="openSettings() ? '!w-[calc(100%_-_8.25rem)]' : undefined"
+    >
+      {{ column().title.trim().length ? column().title : '@' + column().handle }}
+    </span>
+
+    <div
+      class="absolute flex top-0 right-0"
+    >
+      <button
+        class="flex items-center p-2 hover:msky-bg-dark-15 transition-[opacity_100_ease-out] opacity-0 disabled:pointer-events-none group-hover:opacity-100 disabled:group-hover:opacity-25"
+        [class]="openSettings() ? 'opacity-100 disabled:opacity-25' : undefined"
+        (click)="reorder.emit({previousIndex: column().index, newIndex: column().index - 1})"
+        [disabled]="column().index == 0"
+        pRipple
+      >
+        <ng-icon
+          name="tablerChevronLeft"
+          class="text-[1.75rem]"
+        />
+      </button>
+      <button
+        class="flex items-center p-2 hover:msky-bg-dark-15 transition-[opacity_100_ease-out] opacity-0 disabled:pointer-events-none group-hover:opacity-100 disabled:group-hover:opacity-25"
+        [class]="openSettings() ? 'opacity-100 disabled:opacity-25' : undefined"
+        (click)="reorder.emit({previousIndex: column().index, newIndex: column().index + 1})"
+        [disabled]="lastIndex()"
+        pRipple
+      >
+        <ng-icon
+          name="tablerChevronRight"
+          class="text-[1.75rem]"
+        />
+      </button>
+      <button
+        class="flex items-center p-2 hover:msky-bg-dark-15 transition-[opacity_100_ease-out] opacity-0 group-hover:opacity-100"
+        [class]="openSettings() ? 'opacity-100 msky-bg-dark-15' : undefined"
+        (click)="openSettings.set(!openSettings())"
+        pRipple
+      >
+        <ng-icon
+          name="tablerSettings"
+          class="text-[1.75rem]"
+        />
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col min-h-0 flex-1"
+  >
+    <div
+      class="flex flex-col max-h-[calc(100%_-_5rem)] overflow-hidden [interpolate-size:allow-keywords] transition-[height] ease-out"
+      [class]="openSettings() ? 'h-auto pb-4' : 'h-0'"
+    >
+      <div
+        class="flex items-end"
+      >
+        <label
+          class="ui-floatlabel flex-1"
+        >
+          <span>
+            Custom title
+            <span
+              class="font-light msky-text-darkwhite text-[14px]"
+            >
+              (empty for default)
+            </span>
+          </span>
+          <input #titleInput
+                 [ngModel]="column().title"
+                 (keydown.enter)="titleInput.value !== column().title ? updateTitle(titleInput.value) : undefined"
+                 class="ui-input"
+          />
+        </label>
+        <button
+          class="ui-button-rg w-9 !p-0 flex items-center justify-center"
+          [disabled]="titleInput.value == column().title"
+          (click)="updateTitle(titleInput.value)"
+        >
+          <ng-icon
+            name="tablerDeviceFloppy"
+          />
+        </button>
+      </div>
+
+      <div
+        class="flex flex-col mt-4"
+      >
+      <span
+        class="text-rg leading-8"
+      >
+        Posts filter
+      </span>
+        <div
+          class="inline-flex"
+        >
+          <button
+            [class.active]="column().mode == AuthorDeckColumnMode.POSTS"
+            (click)="column().mode = AuthorDeckColumnMode.POSTS"
+            class="ui-button-rg"
+          >
+            Posts
+          </button>
+          <button
+            [class.active]="column().mode == AuthorDeckColumnMode.REPLIES"
+            (click)="column().mode = AuthorDeckColumnMode.REPLIES"
+            class="ui-button-rg"
+          >
+            Posts with replies
+          </button>
+          <button
+            [class.active]="column().mode == AuthorDeckColumnMode.MEDIA"
+            (click)="column().mode = AuthorDeckColumnMode.MEDIA"
+            class="ui-button-rg"
+          >
+            Media
+          </button>
+          <button
+            [class.active]="column().mode == AuthorDeckColumnMode.VIDEO"
+            (click)="column().mode = AuthorDeckColumnMode.VIDEO"
+            class="ui-button-rg"
+          >
+            Video
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="mt-8"
+      >
+        <button
+          class="ui-button-danger-rg mt-8"
+          (click)="delete.emit()"
+        >
+          Delete column
+        </button>
+      </div>
+    </div>
+
+    <author-feed
+      [author]="column().did"
+      [includePins]="false"
+      [filter]="column().mode"
+      class="min-h-0 flex-1"
+    />
+  </div>
+</div>

@@ -16,6 +16,11 @@
   --msky-white: rgba(255, 255, 255, 0.85);
   --msky-lightwhite: rgba(255, 255, 255, 0.9);
   --msky-darkwhite: rgba(255, 255, 255, 0.7);
+  --msky-black: #262626;
+
+  --msky-primary: #0066CC;
+  --msky-primary-hover: #0073E5;
+  --msky-link: #66B2FF;
 
   font-family: "Open Sans", sans-serif;
   height: 100%;
@@ -71,12 +76,44 @@
     }
   }
 
+  .p-tooltip {
+    --p-tooltip-background: rgba(0, 32, 71, 0.9);
+    --p-tooltip-color: var(--msky-white);
+    --p-tooltip-padding: 0.25rem 0.75rem;
+    --p-tooltip-border-radius: 0;
+    font-size: 1rem;
+    font-weight: 300;
+
+    .p-tooltip-arrow {
+      display: none;
+    }
+  }
+
   * {
     scrollbar-color: rgba(255,255,255,0.5) transparent;
   }
 
+  label.ui-floatlabel {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      line-height: 2rem;
+    }
+  }
+
+  input.ui-input {
+    all: unset;
+
+    background: white;
+    color: var(--msky-black);
+    padding: 0 1rem;
+    height: 2.25rem;
+    cursor: auto;
+  }
+
   button.ui-button {
-    &, &-rg, &-lg {
+    &, &-rg, &-lg, &-danger-rg {
       border: medium none;
       border-spacing: 0;
       list-style: none outside none;
@@ -85,12 +122,18 @@
       text-decoration: none;
       text-indent: 0;
 
+      transition: background ease-out 0.1s;
       background: rgba(255,255,255,0.2);
       font-weight: 300;
-      color: rgba(255,255,255,0.85);
+      color: var(--msky-white);
 
       &:hover, &:focus, &:focus-visible {
         background: rgba(255,255,255,0.3);
+        outline: none;
+      }
+
+      &.active {
+        background: rgba(255,255,255,0.4);
         outline: none;
       }
 
@@ -103,6 +146,18 @@
     &-rg {
       padding: 0 1rem;
       height: 2.25rem;
+    }
+
+    &-danger-rg {
+      padding: 0 1rem;
+      height: 2.25rem;
+      transition: background ease-out 0.1s;
+      background: rgba(255,100,100,0.8);
+      color: var(--msky-lightwhite);
+
+      &:hover, &:focus, &:focus-visible {
+        background: rgba(255,100,100,0.9);
+      }
     }
 
     &-lg {
@@ -145,33 +200,38 @@
     }
   }
 
-  :host(::ng-deep p-dynamicdialog) .full-dialog {
-    position: absolute !important;
-    --p-dialog-header-padding: 0;
-    --p-dialog-content-padding: 0;
-    --p-dialog-footer-padding: 0;
-    --p-dialog-header-gap: 0;
-    --p-dialog-footer-gap: 0;
-    --p-dialog-shadow: 0 0 25px rgba(255,255,255,0.2);
+  :host(::ng-deep p-dynamicdialog) {
+    order: 1e5;
 
-    .p-dialog {
-      border: 0;
-      background: #002047;
-      max-height: 90%;
+    .full-dialog {
+      position: absolute !important;
+      --p-dialog-header-padding: 0;
+      --p-dialog-content-padding: 0;
+      --p-dialog-footer-padding: 0;
+      --p-dialog-header-gap: 0;
+      --p-dialog-footer-gap: 0;
+      --p-dialog-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
 
-      &:has(author-view-dialog) {
-        max-height: 55rem;
-      }
 
-      &:has(p-galleria) {
-        --p-galleria-border-width: 0;
+      .p-dialog {
+        border: 0;
+        background: #002047;
+        max-height: 90%;
 
-        width: 80%;
-      }
+        &:has(author-view-dialog) {
+          max-height: 55rem;
+        }
 
-      .p-dialog-content {
-        overflow-y: hidden;
-        height: 90%;
+        &:has(p-galleria) {
+          --p-galleria-border-width: 0;
+
+          width: 80%;
+        }
+
+        .p-dialog-content {
+          overflow-y: hidden;
+          height: 90%;
+        }
       }
     }
   }

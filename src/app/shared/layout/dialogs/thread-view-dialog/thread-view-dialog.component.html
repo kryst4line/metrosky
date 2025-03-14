@@ -1,6 +1,5 @@
 <div
-  class="h-full flex flex-col"
-  [class]="dialog ? '!hidden' : 'visible'"
+  class="h-full flex flex-col [&:not(:last-child)]:!hidden"
 >
   <div
     class="h-12 w-full flex items-center px-2 gap-2 shrink-0 cursor-pointer hover:underline decoration-1"
@@ -29,18 +28,18 @@
         class="flex flex-col max-w-[90%]"
       >
         @for (parent of parents; track parent.uuid) {
-          @if (parent | isSignalizedFeedViewPost) {
+          @if ((parent | isFeedDefsNotFoundPost) || (parent | isFeedDefsBlockedPost)) {
+            <ng-container
+              [ngTemplateOutlet]="notPostViewTemplate"
+              [ngTemplateOutletContext]="{post: parent}"
+            />
+          }
+          @else {
             <feed-post-card
               [feedViewPost]="parent"
               (onPostClick)="openPost(parent.post().uri)"
               (onEmbedClick)="openPost($any($event.record).uri)"
               class="cursor-pointer"
-            />
-          }
-          @else {
-            <ng-container
-              [ngTemplateOutlet]="notPostViewTemplate"
-              [ngTemplateOutletContext]="{post: parent}"
             />
           }
         }

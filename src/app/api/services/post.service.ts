@@ -8,7 +8,7 @@ import {
   RichText
 } from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
-import {from} from "rxjs";
+import {from, Subject} from "rxjs";
 import {PostCompose} from "~/src/app/api/models/post-compose";
 import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "~/src/app/api/models/embed";
 import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
@@ -22,6 +22,8 @@ export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
 })
 export class PostService {
   public postCompose: WritableSignal<PostCompose> = signal(undefined);
+  public refreshFeeds: Subject<void> = new Subject<void>();
+  public reset: Subject<void> = new Subject<void>();
 
   constructor(
     private imageCompressService: NgxImageCompressService
@@ -187,6 +189,7 @@ export class PostService {
   }
 
   attachMedia(files: File[]) {
+    if (!files.length) return;
     if (!this.postCompose()) this.createPost();
 
     //Fix array methods because it comes as FileList
@@ -257,6 +260,11 @@ export class PostService {
         from(agent.post(this.postCompose().post())).subscribe({
           next: () => {
             this.postCompose.set(undefined);
+
+            setTimeout(() => {
+              this.refreshFeeds.next();
+            }, 1e3);
+
             resolve();
           },
           error: (err: HttpErrorResponse) => {

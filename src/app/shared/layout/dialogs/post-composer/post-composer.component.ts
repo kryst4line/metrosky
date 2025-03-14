@@ -1,9 +1,6 @@
 import {
   ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input, OnDestroy,
-  Output, signal, WritableSignal
+  Component, OnDestroy,signal, WritableSignal
 } from '@angular/core';
 import {Editor, EditorInitEvent} from "primeng/editor";
 import "quill-mention/autoregister";
@@ -46,6 +43,7 @@ import {
   IsGraphDefsStarterPackViewBasicPipe
 } from "~/src/app/shared/utils/pipes/type-guards/is-graph-defs-starterpack-viewbasic";
 import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-guards/is-feed-defs-generator-view";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'post-composer',
@@ -71,8 +69,7 @@ import {IsFeedDefsGeneratorViewPipe} from "~/src/app/shared/utils/pipes/type-gua
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostComposerComponent implements OnDestroy {
-  @Input() loading = false;
-  @Output() onPublishPost: EventEmitter<string> = new EventEmitter<string>;
+  loading = false;
   postCompose: WritableSignal<PostCompose>
   embedSuggestions: WritableSignal<Array<RecordEmbed | ExternalEmbed>> = signal([]);
 
@@ -83,7 +80,7 @@ export class PostComposerComponent implements OnDestroy {
     {
       key: 'Enter',
       ctrlKey: true,
-      handler: () => this.onPublishPost.emit(this.text)
+      handler: () => this.onPublishPost()
     },
     {
       key: 'Escape',
@@ -254,7 +251,14 @@ export class PostComposerComponent implements OnDestroy {
     });
   }
 
-  log(event: any) {
-    console.log('DEVELOPMENT LOG: ', event);
+  onPublishPost() {
+    this.loading = true;
+
+    this.postService.publishPost(this.text).then(
+      () => {
+        this.messageService.success('Your post has been successfully published');
+      },
+      (err: HttpErrorResponse) => this.messageService.error(err.message, 'Oops!')
+    ).finally(() => this.loading = false);
   }
 }

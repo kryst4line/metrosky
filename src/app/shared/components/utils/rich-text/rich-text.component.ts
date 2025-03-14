@@ -1,29 +1,19 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import {Facet, RichText, RichTextSegment} from "@atproto/api";
 import {agent} from "~/src/app/core/bsky.api";
-import {DialogService} from "primeng/dynamicdialog";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
 @Component({
   selector: 'rich-text',
-  imports: [],
   templateUrl: './rich-text.component.html',
-  styleUrl: './rich-text.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    DialogService
-  ]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RichTextComponent implements OnInit {
   @Input() text: string;
@@ -31,10 +21,6 @@ export class RichTextComponent implements OnInit {
   @Output() onMentionClick: EventEmitter<any>
   @Output() onTagClick: EventEmitter<any>
   segments: RichTextSegment[] = [];
-
-  @ViewChildren('mention') mentionTemplate: ElementRef<TemplateRef<any>>;
-  @ViewChild('text', {read: TemplateRef}) textTemplate: TemplateRef<any>;
-  @ViewChild('link', {read: TemplateRef}) linkTemplate: TemplateRef<any>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
