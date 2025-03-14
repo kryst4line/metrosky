@@ -5,9 +5,8 @@ import {agent} from "../bsky.api";
 import {Router} from "@angular/router";
 import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {HttpErrorResponse} from "@angular/common/http";
-
-const TOKEN_KEY = 'session';
-const LOGGED_USER = 'logged_user';
+import {StorageKeys} from "~/src/app/core/storage-keys";
+import {ColumnService} from "~/src/app/api/services/column.service";
 
 @Injectable({
   providedIn: 'root',
@@ -18,21 +17,23 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private messageService: MskyMessageService
+    private messageService: MskyMessageService,
+    private columnService: ColumnService
   ) {
     this.checkToken();
   }
 
   checkToken() {
-    const sessionData = localStorage.getItem(TOKEN_KEY);
+    const sessionData = localStorage.getItem(StorageKeys.TOKEN_KEY);
     if (sessionData) {
       agent.resumeSession(JSON.parse(sessionData)).then(
         () => {
-          localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
+          localStorage.setItem(StorageKeys.TOKEN_KEY, JSON.stringify(agent.session));
 
           //store user info in localStorage
           agent.getProfile({actor: agent.session.did}).then(response => {
-            localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
+            localStorage.setItem(StorageKeys.LOGGED_USER, JSON.stringify(response.data));
+            this.columnService.checkColumns();
 
             this.authenticationState.next(true);
           });
@@ -44,11 +45,12 @@ export class AuthService {
   login(credentials: AtpAgentLoginOpts) {
     from(agent.login(credentials)).subscribe({
       next: () => {
-        localStorage.setItem(TOKEN_KEY, JSON.stringify(agent.session));
+        localStorage.setItem(StorageKeys.TOKEN_KEY, JSON.stringify(agent.session));
 
         //store user info in localStorage
         agent.getProfile({actor: agent.session.did}).then(response => {
-          localStorage.setItem(LOGGED_USER, JSON.stringify(response.data));
+          localStorage.setItem(StorageKeys.LOGGED_USER, JSON.stringify(response.data));
+          this.columnService.checkColumns();
 
           this.authenticationState.next(true);
           this.router.navigate(['']);
@@ -63,7 +65,7 @@ export class AuthService {
   logout() {
     agent.logout().then(
       () => {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(StorageKeys.TOKEN_KEY);
         this.authenticationState.next(false);
       }
     );

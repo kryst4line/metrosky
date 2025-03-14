@@ -47,6 +47,7 @@ import {PostService} from "~/src/app/api/services/post.service";
 import {MskyMessageService} from "~/src/app/api/services/msky-message.service";
 import {from} from "rxjs";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
+import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'feed-post-card',
@@ -75,7 +76,8 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     IsFeedDefsNotFoundPostPipe,
     IsFeedDefsBlockedPostPipe,
     forwardRef(() => RichTextComponent),
-    NgOptimizedImage
+    NgOptimizedImage,
+    Ripple
   ],
   templateUrl: './feed-post-card.component.html',
   styleUrl: './feed-post-card.component.scss',
@@ -90,8 +92,8 @@ export class FeedPostCardComponent {
   @Output() onPostClick: EventEmitter<SignalizedFeedViewPost> = new EventEmitter<SignalizedFeedViewPost>();
   @Output() onEmbedClick: EventEmitter<AppBskyEmbedRecord.View> = new EventEmitter<AppBskyEmbedRecord.View>();
 
-  likeAnimation = viewChild<ElementRef<HTMLElement>>('likeAnim');
-  repostAnimation = viewChild<ElementRef<HTMLElement>>('rtAnim');
+  likeAnimation = viewChild('likeAnim', {read: ElementRef});
+  repostAnimation = viewChild('rtAnim', {read: ElementRef});
   processingAction: boolean = false;
 
   moreMenuItems: MenuItem[] = [

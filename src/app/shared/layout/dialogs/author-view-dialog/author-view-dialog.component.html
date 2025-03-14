@@ -30,8 +30,18 @@
       </div>
 
       <div
-        class="flex flex-row-reverse px-3 mt-3"
+        class="flex justify-end px-3 mt-3 gap-2"
       >
+        <button
+          class="ui-button-rg w-9 text-[1.25rem] flex !p-0 items-center justify-center"
+          pTooltip="Add as a column"
+          tooltipPosition="top"
+          (click)="addColumn()"
+        >
+          <ng-icon
+            name="tablerColumnInsertRight"
+          />
+        </button>
         <ng-container
           [ngTemplateOutlet]="followBtn"
         />

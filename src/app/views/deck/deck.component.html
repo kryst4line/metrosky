@@ -1,7 +1,7 @@
 <div
   class="flex h-full w-full min-h-0 min-w-0 deck-bg"
   ng2FileDrop
-  (onFileDrop)="onFileDrop($event)"
+  (onFileDrop)="postService.attachMedia($event)"
 >
   <sidebar
     (onActionProfile)="dialogService.openAuthor($event)"
@@ -9,33 +9,73 @@
   />
 
   <div
-    class="relative flex w-full h-full min-h-0 py-5 px-10 gap-8 overflow-x-auto"
-
+    class="relative flex-1 overflow-hidden"
   >
-    <div class="flex flex-col">
+    <div
+      class="relative flex w-full h-full max-h-full min-h-0 py-4 px-8 gap-6 overflow-x-auto"
+    >
+      @for (column of columns(); track column.uuid) {
+        @if (column | isDeckColumnTimeline) {
+          <timeline-deck-column
+            [column]="column"
+            (columnChange)="onColumnChange($event)"
+            (reorder)="reorder($event.previousIndex, $event.newIndex)"
+            (delete)="onDeleteColumn(column.uuid)"
+            [lastIndex]="column.index == columns().length - 1"
+            class="shrink-0"
+            [style]="{width: column.width+'px', order: column.index}"
+          />
+        }
+        @else if (column | isDeckColumnNotifications) {
+          <notifications-deck-column
+            [column]="column"
+            (columnChange)="onColumnChange($event)"
+            (reorder)="reorder($event.previousIndex, $event.newIndex)"
+            (delete)="onDeleteColumn(column.uuid)"
+            [lastIndex]="column.index == columns().length - 1"
+            class="shrink-0"
+            [style]="{width: column.width+'px', order: column.index}"
+          />
+        }
+        @else if (column | isDeckColumnAuthor) {
+          <author-deck-column
+            [column]="column"
+            (columnChange)="onColumnChange($event)"
+            (reorder)="reorder($event.previousIndex, $event.newIndex)"
+            (delete)="onDeleteColumn(column.uuid)"
+            [lastIndex]="column.index == columns().length - 1"
+            class="shrink-0"
+            [style]="{width: column.width+'px', order: column.index}"
+          />
+        }
+        @else if (column | isDeckColumnSearch) {
+
+        }
+        @else if (column | isDeckColumnList) {
+
+        }
+      }
       <div
-        class="h-12 shrink-0 msky-text-header leading-[100%]"
+        class="h-full w-60 flex shrink-0 items-center justify-center order-last"
       >
-        timeline
+        <button
+          class="flex flex-col items-center justify-center gap-2 p-3 opacity-25"
+          disabled
+        >
+          <ng-icon
+            name="tablerColumnInsertRight"
+            class="text-[4rem]"
+          />
+          <span>Add column</span>
+          <span class="text-[14px] font-light">(not yet)</span>
+        </button>
       </div>
-      <timeline-feed
-        [triggerRefresh]="refreshFeeds"
-        class="w-[30rem] flex-1 min-h-0"
-      />
-    </div>
-    <div class="flex flex-col">
-      <div
-        class="h-12 shrink-0 msky-text-header leading-[100%]"
-      >
-        notifications
-      </div>
-      <notification-feed class="w-[30rem] flex-1 min-h-0"/>
     </div>
   </div>
 </div>
 
 <p-drawer
-  [visible]="postCompose() !== undefined"
+  [visible]="postService.postCompose() !== undefined"
   [modal]="false"
   position="bottom"
   styleClass="!border-none !bg-[#002047] !h-auto"
@@ -44,10 +84,8 @@
   <ng-template #headless>
     <post-composer
       class="h-full"
-      [loading]="creatingPost"
-      (onPublishPost)="publishPost($event)"
       ng2FileDrop
-      (onFileDrop)="onFileDrop($event)"
+      (onFileDrop)="postService.attachMedia($event)"
     />
   </ng-template>
 </p-drawer>

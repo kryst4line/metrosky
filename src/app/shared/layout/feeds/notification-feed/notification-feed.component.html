@@ -17,6 +17,7 @@
             [feedViewPost]="notification.feedViewPost"
             (onPostClick)="openPost($event.post().uri)"
             (onEmbedClick)="openPost($any($event.record).uri)"
+            class="cursor-pointer"
           />
         } @else {
           <notification-card

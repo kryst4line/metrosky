@@ -1,4 +1,12 @@
-import {Component, ElementRef, OnDestroy, OnInit, viewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  viewChild
+} from '@angular/core';
 import {agent} from "~/src/app/core/bsky.api";
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from "~/src/app/shared/components/cards/feed-post-card/feed-post-card.component";
@@ -24,6 +32,7 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
   ],
   templateUrl: './notification-feed.component.html',
   styleUrl: './notification-feed.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationFeedComponent implements OnInit, OnDestroy {
   feed = viewChild<ElementRef>('feed');
@@ -37,7 +46,8 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private dialogService: MskyDialogService,
-    private messageService: MskyMessageService
+    private messageService: MskyMessageService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -57,6 +67,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
         this.lastPostCursor = response.data.cursor;
         NotificationUtils.parseNotifications(response.data.notifications, this.postService).then(notifications => {
           this.notifications = notifications;
+          this.cdRef.markForCheck();
           setTimeout(() => {
             this.loading = false;
             this.manageRefresh();
@@ -78,6 +89,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
           this.lastPostCursor = response.data.cursor;
           NotificationUtils.parseNotifications(response.data.notifications, this.postService).then(notifications => {
             this.notifications = [...this.notifications, ...notifications];
+            this.cdRef.markForCheck();
             setTimeout(() => {
               this.loading = false;
             }, 500);

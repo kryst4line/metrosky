@@ -1,7 +1,8 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit, viewChild,
 } from '@angular/core';
@@ -12,7 +13,6 @@ import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
-import {Subject} from "rxjs";
 import {NgIcon} from "@ng-icons/core";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
@@ -25,10 +25,10 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
     NgIcon,
   ],
   templateUrl: './timeline-feed.component.html',
-  styleUrl: './timeline-feed.component.scss'
+  styleUrl: './timeline-feed.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineFeedComponent implements OnInit, OnDestroy {
-  @Input() triggerRefresh: Subject<void>;
   feed = viewChild<ElementRef>('feed');
   virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
 
@@ -40,14 +40,15 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
-    private dialogService: MskyDialogService
+    private dialogService: MskyDialogService,
+    public cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.initData();
 
     //Listen to new posts to refresh
-    this.triggerRefresh.subscribe({
+    this.postService.refreshFeeds.subscribe({
       next: () => {
         if (this.virtualScroll().currentScroll == 0) {
           this.initData();
@@ -56,10 +57,14 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.postService.reset.subscribe({
+      next: () => this.initData()
+    })
   }
 
   ngOnDestroy() {
-    this.triggerRefresh?.unsubscribe();
+    this.postService.refreshFeeds.unsubscribe();
     clearTimeout(this.reloadTimeout);
   }
 
@@ -71,6 +76,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       response => {
         this.lastPostCursor = response.data.cursor;
         this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
+        this.cdRef.markForCheck();
         setTimeout(() => {
           this.loading = false;
           this.manageRefresh();
@@ -91,6 +97,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
           this.lastPostCursor = response.data.cursor;
           const newPosts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
           this.posts = [...this.posts, ...newPosts];
+          this.cdRef.markForCheck();
           setTimeout(() => {
             this.loading = false;
           }, 500);

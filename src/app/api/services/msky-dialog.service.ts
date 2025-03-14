@@ -63,14 +63,11 @@ export class MskyDialogService {
       appendTo: parentElement,
       maskStyleClass: 'inner-dialog',
       style: {background: 'transparent', height: '100%'},
+      autoZIndex: false,
       focusOnShow: false,
       duplicate: true
     });
 
-    ref.onClose.subscribe({
-      next: () => {
-        ref.destroy();
-      }
-    });
+    ref.onClose.subscribe(() => ref.destroy());
   }
 }

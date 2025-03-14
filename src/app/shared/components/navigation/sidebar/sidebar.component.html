@@ -2,7 +2,7 @@
   class="flex flex-col w-20 h-full shrink-0 bg-[#002047] hover:w-80 transition-width ease-out duration-300 overflow-hidden justify-around"
 >
   <div #topButton
-    class="flex shrink-0 select-none cursor-pointer hover:msky-bg-light-20"
+    class="flex shrink-0 select-none cursor-pointer hover:msky-bg-light-20 transition duration-[0.1s] ease-out"
     (click)="onActionProfile.emit(loggedUser.did)"
   >
     <a
@@ -76,8 +76,8 @@
   let-action="action"
   let-did="did"
 >
-  <a
-    class="flex shrink-0 items-center h-20 hover:msky-bg-light-20 cursor-pointer"
+  <button
+    class="flex shrink-0 items-center h-20 w-full hover:msky-bg-light-20 transition duration-[0.1s] ease-out"
     pRipple
     (click)="did ? action.emit(did) : action.emit()"
   >
@@ -94,5 +94,5 @@
     >
       {{title}}
     </span>
-  </a>
+  </button>
 </ng-template>

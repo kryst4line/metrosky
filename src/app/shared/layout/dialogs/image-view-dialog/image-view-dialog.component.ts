@@ -53,8 +53,8 @@ export class ImageViewDialogComponent implements OnInit {
   images: AppBskyEmbedImages.ViewImage[];
   initialIndex: number = 0;
 
-  likeAnimation = viewChild<ElementRef<HTMLElement>>('likeAnim');
-  repostAnimation = viewChild<ElementRef<HTMLElement>>('rtAnim');
+  likeAnimation = viewChild('likeAnim', {read: ElementRef});
+  repostAnimation = viewChild('rtAnim', {read: ElementRef});
   processingAction = false;
 
   protected readonly window = window;

@@ -13,7 +13,6 @@ import {PostService} from "~/src/app/api/services/post.service";
 import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
 import {AgVirtualScrollModule, AgVirtualSrollComponent} from "ag-virtual-scroll";
 import {PostUtils} from "~/src/app/shared/utils/post-utils";
-import {Subject} from "rxjs";
 import {NgIcon} from "@ng-icons/core";
 import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 
@@ -31,14 +30,17 @@ import {MskyDialogService} from "~/src/app/api/services/msky-dialog.service";
 })
 export class AuthorFeedComponent implements OnInit, OnDestroy {
   @Input() author: string;
-  @Input() filter?:
+  @Input() set filter(filter:
     | 'posts_with_replies'
     | 'posts_no_replies'
     | 'posts_with_media'
     | 'posts_and_author_threads'
-    | 'posts_with_video';
+    | 'posts_with_video') {
+    this._filter = filter;
+    this.initData();
+  }
+  _filter = 'posts_no_replies';
   @Input() includePins?: boolean;
-  @Input() triggerRefresh: Subject<void>;
   feed = viewChild<ElementRef>('feed');
   virtualScroll = viewChild<AgVirtualSrollComponent>('vs');
   posts: SignalizedFeedViewPost[];
@@ -57,7 +59,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     this.initData();
 
     //Listen to new posts to refresh
-    this.triggerRefresh?.subscribe({
+    this.postService.refreshFeeds.subscribe({
       next: () => {
         if (this.virtualScroll().currentScroll == 0) {
           this.initData();
@@ -69,15 +71,15 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.triggerRefresh?.unsubscribe();
+    this.postService.refreshFeeds.unsubscribe();
     clearTimeout(this.reloadTimeout);
   }
 
-  initData() {
+  public initData() {
     this.loading = true;
     agent.getAuthorFeed({
       actor: this.author,
-      filter: this.filter ?? 'posts_no_replies',
+      filter: this._filter,
       includePins: this.includePins ?? false,
       limit: 15
     }).then(
@@ -99,7 +101,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
       agent.getAuthorFeed({
         actor: this.author,
-        filter: this.filter ?? 'posts_no_replies',
+        filter: this._filter,
         includePins: this.includePins ?? false,
         cursor: this.lastPostCursor,
         limit: 15
@@ -166,9 +168,5 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
       this.reloadReady = false;
       this.initData();
     }
-  }
-
-  log(event: any) {
-    console.log(event)
   }
 }

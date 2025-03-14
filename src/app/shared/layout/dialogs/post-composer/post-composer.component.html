@@ -160,7 +160,8 @@
       <button
         class="ui-button-lg"
         pRipple
-        (click)="onPublishPost.emit(text)"
+        [disabled]="loading || (editor && text?.trim().length == 0)"
+        (click)="onPublishPost()"
       >
         create post
       </button>
