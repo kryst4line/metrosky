@@ -25,9 +25,11 @@ export class AuthorDeckColumnComponent {
   openSettings = signal(false);
   protected readonly AuthorDeckColumnMode = AuthorDeckColumnMode;
 
-  updateTitle(title: string) {
+  updateMode(mode: AuthorDeckColumnMode) {
+    if (mode == this.column().mode) return;
+
     this.column.update(column => {
-      column.title = title;
+      column.mode = mode;
       return {...column};
     });
   }

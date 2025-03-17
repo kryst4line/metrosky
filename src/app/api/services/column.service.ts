@@ -77,10 +77,11 @@ export class ColumnService {
     this.addColumn(column);
   }
 
-  public createAuthorColumn(author: Partial<{did: string, handle: string}>) {
+  public createAuthorColumn(author: Partial<{did: string, handle: string, displayName: string}>) {
     let column = new AuthorDeckColumn();
     column.did = author.did;
     column.handle = author.handle;
+    column.displayName = author.displayName;
     column.index = columns().length;
     this.addColumn(column);
   }

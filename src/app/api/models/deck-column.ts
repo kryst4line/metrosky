@@ -19,6 +19,7 @@ export class AuthorDeckColumn extends DeckColumn {
   type: DeckColumnType.AUTHOR = DeckColumnType.AUTHOR;
   did: string;
   handle: string;
+  displayName: string;
   mode: AuthorDeckColumnMode = AuthorDeckColumnMode.POSTS;
 }
 

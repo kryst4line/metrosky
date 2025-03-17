@@ -136,12 +136,14 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
         if (this.virtualScroll().currentScroll == 0) {
           this.reloadReady = false;
-          agent.getTimeline({
+          agent.getAuthorFeed({
+            actor: this.author,
+            filter: this._filter,
             limit: 1
           }).then(response => {
             const post = response.data.feed[0];
-            const lastPost = this.posts[0];
             let isNewPost = false;
+            const lastPost = this.posts[this.includePins ? 1 : 0];
 
             if (post) {
               if (post.reason) {

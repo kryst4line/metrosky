@@ -2,11 +2,16 @@
   <div
     class="h-12 w-full relative shrink-0 leading-[100%] flex items-center group"
   >
+    <ng-icon
+      name="tablerHome"
+      class="shrink-0 text-[2rem] !w-14 text-[#D8E3EC]"
+    />
+
     <span
-      class="block w-full group-hover:w-[calc(100%_-_8.25rem)] whitespace-nowrap overflow-hidden text-ellipsis leading-[3rem] msky-text-white text-[2.25rem] font-light pointer-events-none transition-[width_100_ease-out]"
-      [class]="openSettings() ? '!w-[calc(100%_-_8.25rem)]' : undefined"
+      class="w-full min-w-0 group-hover:w-[calc(100%_-_11.75rem)] transition-[width_100_ease-out] msky-text-white text-[2.25rem] font-light [text-box:trim-both_cap_alphabetic] whitespace-nowrap text-ellipsis overflow-x-clip overflow-y-visible"
+      [class]="openSettings() ? '!w-[calc(100%_-_11.75rem)]' : undefined"
     >
-      {{ column().title.trim().length ? column().title : 'timeline' }}
+      {{ 'home' }}
     </span>
 
     <div
@@ -92,8 +97,13 @@
         class="mt-8"
       >
         <button
-          class="ui-button-danger-rg mt-8"
+          class="ui-button-danger-rg flex items-center gap-1"
+          (click)="delete.emit()"
         >
+          <ng-icon
+            name="tablerTrash"
+            class="text-[1.25rem] -ml-1"
+          />
           Delete column
         </button>
       </div>

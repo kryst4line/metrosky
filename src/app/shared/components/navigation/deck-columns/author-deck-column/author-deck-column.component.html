@@ -2,12 +2,42 @@
   <div
     class="h-12 w-full relative shrink-0 leading-[100%] flex items-center group"
   >
-    <span
-      class="block w-full group-hover:w-[calc(100%_-_8.25rem)] whitespace-nowrap overflow-hidden text-ellipsis leading-[3rem] msky-text-white text-[2.25rem] font-light pointer-events-none transition-[width_100_ease-out]"
-      [class]="openSettings() ? '!w-[calc(100%_-_8.25rem)]' : undefined"
+    <ng-icon
+      name="tablerUser"
+      class="shrink-0 text-[2.25rem] !w-14"
+      color="#D8E3EC"
+    />
+
+    <div
+      class="flex flex-col gap-3 w-full min-w-0 group-hover:w-[calc(100%_-_11.75rem)] whitespace-nowrap overflow-x-clip overflow-y-visible text-ellipsis pointer-events-none transition-[width_100_ease-out]"
+      [class]="openSettings() ? '!w-[calc(100%_-_11.75rem)]' : undefined"
     >
-      {{ column().title.trim().length ? column().title : '@' + column().handle }}
-    </span>
+      <span
+        class="msky-text-white text-[1.75rem] font-light [text-box:trim-both_cap_alphabetic] whitespace-nowrap text-ellipsis overflow-x-clip overflow-y-visible"
+      >
+        {{ column().title.trim().length ? column().title : column().displayName }}
+      </span>
+
+      <span
+        class="msky-text-white text-[11px] tracking-widest uppercase font-semibold [text-box:trim-both_cap_alphabetic] whitespace-nowrap text-ellipsis overflow-x-clip overflow-y-visible"
+      >
+        {{ column().handle }} ·
+        @switch (column().mode) {
+          @case (AuthorDeckColumnMode.POSTS) {
+            posts
+          }
+          @case (AuthorDeckColumnMode.REPLIES) {
+            posts with replies
+          }
+          @case (AuthorDeckColumnMode.MEDIA) {
+            media
+          }
+          @case (AuthorDeckColumnMode.VIDEO) {
+            video
+          }
+        }
+      </span>
+    </div>
 
     <div
       class="absolute flex top-0 right-0"
@@ -58,71 +88,40 @@
       [class]="openSettings() ? 'h-auto pb-4' : 'h-0'"
     >
       <div
-        class="flex items-end"
+        class="flex flex-col"
       >
-        <label
-          class="ui-floatlabel flex-1"
+        <span
+          class="text-rg leading-8"
         >
-          <span>
-            Custom title
-            <span
-              class="font-light msky-text-darkwhite text-[14px]"
-            >
-              (empty for default)
-            </span>
-          </span>
-          <input #titleInput
-                 [ngModel]="column().title"
-                 (keydown.enter)="titleInput.value !== column().title ? updateTitle(titleInput.value) : undefined"
-                 class="ui-input"
-          />
-        </label>
-        <button
-          class="ui-button-rg w-9 !p-0 flex items-center justify-center"
-          [disabled]="titleInput.value == column().title"
-          (click)="updateTitle(titleInput.value)"
-        >
-          <ng-icon
-            name="tablerDeviceFloppy"
-          />
-        </button>
-      </div>
-
-      <div
-        class="flex flex-col mt-4"
-      >
-      <span
-        class="text-rg leading-8"
-      >
-        Posts filter
-      </span>
+          Posts filter
+        </span>
         <div
           class="inline-flex"
         >
           <button
             [class.active]="column().mode == AuthorDeckColumnMode.POSTS"
-            (click)="column().mode = AuthorDeckColumnMode.POSTS"
+            (click)="updateMode(AuthorDeckColumnMode.POSTS)"
             class="ui-button-rg"
           >
             Posts
           </button>
           <button
             [class.active]="column().mode == AuthorDeckColumnMode.REPLIES"
-            (click)="column().mode = AuthorDeckColumnMode.REPLIES"
+            (click)="updateMode(AuthorDeckColumnMode.REPLIES)"
             class="ui-button-rg"
           >
             Posts with replies
           </button>
           <button
             [class.active]="column().mode == AuthorDeckColumnMode.MEDIA"
-            (click)="column().mode = AuthorDeckColumnMode.MEDIA"
+            (click)="updateMode(AuthorDeckColumnMode.MEDIA)"
             class="ui-button-rg"
           >
             Media
           </button>
           <button
             [class.active]="column().mode == AuthorDeckColumnMode.VIDEO"
-            (click)="column().mode = AuthorDeckColumnMode.VIDEO"
+            (click)="updateMode(AuthorDeckColumnMode.VIDEO)"
             class="ui-button-rg"
           >
             Video
@@ -134,9 +133,13 @@
         class="mt-8"
       >
         <button
-          class="ui-button-danger-rg mt-8"
+          class="ui-button-danger-rg flex items-center gap-1"
           (click)="delete.emit()"
         >
+          <ng-icon
+            name="tablerTrash"
+            class="text-[1.25rem] -ml-1"
+          />
           Delete column
         </button>
       </div>
