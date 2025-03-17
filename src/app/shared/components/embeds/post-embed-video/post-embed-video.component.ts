@@ -29,7 +29,7 @@ export class PostEmbedVideoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.options = {
       fluid: true,
-      aspectRatio: `${this.embed.aspectRatio.width}:${this.embed.aspectRatio.height}`,
+      aspectRatio: this.embed.aspectRatio ? `${this.embed.aspectRatio.width}:${this.embed.aspectRatio.height}` : '16:9',
       autoplay: true,
       sources: {
         src: this.embed.playlist,
