@@ -1,0 +1,318 @@
+<div #base
+  class="flex flex-col p-3 cursor-pointer border rounded-[var(--p-card-border-radius)] border-[var(--p-content-border-color)]"
+  (click)="openEmbed($event)"
+>
+    @if (embed.record | isEmbedRecordViewRecord) {
+
+      <ng-container
+        [ngTemplateOutlet]="post"
+        [ngTemplateOutletContext]="{record: embed.record, media: embed.record.embeds ? embed.record.embeds[0]: undefined }"
+      />
+    }
+
+    @if (embed.record | isEmbedRecordViewBlocked) {
+      <span
+        class="msky-text-body"
+      >
+        Post blocked
+      </span>
+    }
+
+    @if (embed.record | isEmbedRecordViewNotFound) {
+      <span
+        class="msky-text-body"
+      >
+        Post not found
+      </span>
+    }
+
+    @if (embed.record | isEmbedRecordViewDetached) {
+      <span
+        class="msky-text-body"
+      >
+        Post detached
+      </span>
+    }
+
+    @if (embed.record | isFeedDefsGeneratorView) {
+      <ng-container
+        [ngTemplateOutlet]="feed"
+        [ngTemplateOutletContext]="{feed: embed.record}"
+      />
+    }
+
+    @if (embed.record | isGraphDefsListView) {
+      <ng-container
+        [ngTemplateOutlet]="userList"
+        [ngTemplateOutletContext]="{list: embed.record}"
+      />
+    }
+
+    <!-- Apparently there's no actual support yet? -->
+    @if (embed.record | isLabelerDefsLabelerView) {
+      <span
+        class="msky-text-body"
+      >
+        Labeler record
+      </span>
+    }
+
+    @if (embed.record | isGraphDefsStarterPackView) {
+      <ng-container
+        [ngTemplateOutlet]="starterPack"
+        [ngTemplateOutletContext]="{starterPack: embed.record}"
+      />
+    }
+
+</div>
+
+<ng-template #post
+  let-record="record"
+  let-media="media"
+>
+  <div #header
+       id="header"
+       class="flex gap-2 items-center"
+  >
+    <a #avatar
+       [href]="'https://bsky.app/profile/' + record.author.handle"
+       (click)="openAuthor($event, record.author.did)"
+       class="h-5 w-5"
+    >
+      <p-avatar
+        [image]="record.author.avatar"
+        class="shrink-0 !h-5 !w-5 overflow-hidden"
+      />
+    </a>
+
+    <a
+      [href]="'https://bsky.app/profile/' + record.author.handle"
+      (click)="openAuthor($event, record.author.did)"
+      class="font-semibold shrink-1 grow-0 min-w-0 hover:underline [text-box:trim-both_cap_alphabetic] overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap h-fit"
+    >
+      {{ record.author | displayName }}
+    </a>
+
+    @if (record.author.displayName?.trim().length) {
+      <a
+        [href]="'https://bsky.app/profile/' + record.author.handle"
+        (click)="openAuthor($event, record.author.did)"
+        class="text-sm text-primary-400 shrink-0 grow basis-0 min-w-0 [text-box:trim-both_cap_alphabetic] overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-pre h-fit"
+      >
+        {{'@' + record.author.handle}}
+      </a>
+    }
+  </div>
+
+  @if ((record.value | isFeedPostRecord) && record.value.text.length) {
+    <div #body
+         class="mt-2"
+    >
+      <rich-text
+        [text]="record.value.text"
+        class="text-sm"
+      />
+    </div>
+  }
+
+  @if (media) {
+    <ng-container
+      [ngTemplateOutlet]="mediaEmbeds"
+      [ngTemplateOutletContext]="{media: media, margin: 'mt-2'}"
+    />
+  }
+</ng-template>
+
+<ng-template #mediaEmbeds
+  let-media="media"
+  let-margin="margin"
+>
+  @if (media | isEmbedImagesView) {
+    <post-embed-images
+      [embed]="media"
+      [class]="margin"
+      (onImgClick)="dialogService.openImagePost(media.images, $event)"
+    />
+  }
+
+  @if (media | isEmbedVideoView) {
+    <post-embed-video
+      [embed]="media"
+      [class]="margin"
+      (click)="$event.stopPropagation()"
+    />
+  }
+
+  @if (media | isEmbedExternalView) {
+    <post-embed-external
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+
+  @if (media | isEmbedRecordView) {
+    <post-embed-record
+      [embed]="media"
+      [class]="margin"
+      (onEmbedClick)="onEmbedClick.emit($event)"
+    />
+  }
+
+  @if (media | isEmbedRecordWithMediaView) {
+    @if (media.media | isEmbedImagesView) {
+      <post-embed-images
+        [embed]="media.media"
+        [class]="margin"
+        (onImgClick)="dialogService.openImagePost(media.media.images, $event)"
+      />
+    }
+    @if (media.media | isEmbedVideoView) {
+      <post-embed-video
+        [embed]="media.media"
+        [class]="margin"
+        (click)="$event.stopPropagation()"
+      />
+    }
+    @if (media.media | isEmbedExternalView) {
+      <post-embed-external
+        [embed]="media.media"
+        [class]="margin"
+      />
+    }
+
+    <post-embed-record
+      [embed]="media.record"
+      [class]="margin"
+      (onEmbedClick)="onEmbedClick.emit($event)"
+    />
+  }
+</ng-template>
+
+<ng-template #feed
+             let-feed="feed"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="feed.uri | linkExtractor : feed.creator.handle"
+       (click)="openFeed($event)"
+       class="shrink-0 h-8 w-8"
+    >
+      <img
+        [ngSrc]="feed.avatar ?? 'default_pfp.jpg'"
+        alt="{{feed.name | displayName}}'s avatar"
+        width="32"
+        height="32"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="feed.uri | linkExtractor : feed.creator.handle"
+        (click)="openFeed($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ feed.displayName }}
+      </a>
+      <a
+        [href]="feed.uri | linkExtractor : feed.creator.handle"
+        (click)="openFeed($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        @switch (feed.contentMode) {
+          @case (AppBskyFeedDefs.CONTENTMODEVIDEO) {
+            Video feed by {{ feed.creator | displayName }}
+          }
+          @default {
+            Feed by {{ feed.creator | displayName }}
+          }
+        }
+      </a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #userList
+             let-list="list"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="list.uri | linkExtractor : list.creator.handle"
+       (click)="openList($event)"
+       class="shrink-0 h-8 w-8"
+    >
+      <img
+        [ngSrc]="list.avatar ?? 'default_pfp.jpg'"
+        alt="{{list.name | displayName}}'s avatar"
+        width="32"
+        height="32"
+        placeholder="default_pfp.jpg"
+        [placeholderConfig]="{blur: false}"
+      />
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="list.uri | linkExtractor : list.creator.handle"
+        (click)="openList($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ list.name }}
+      </a>
+      <a
+        [href]="list.uri | linkExtractor : list.creator.handle"
+        (click)="openList($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        @switch (list.purpose) {
+          @case (AppBskyGraphDefs.MODLIST) {
+            Mod list by {{ list.creator | displayName }}
+          }
+          @default {
+            List by {{ list.creator | displayName }}
+          }
+        }
+      </a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #starterPack
+  let-starterpack="starterPack"
+>
+  <div #header
+       class="flex gap-3"
+  >
+    <a #title
+       [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+       (click)="openStarterPack($event)"
+       class="shrink-0 h-8 w-8"
+    >
+    </a>
+    <div #displayName
+         class="flex flex-col w-full justify-between min-w-0"
+    >
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openStarterPack($event)"
+        class="w-fit msky-text-body font-semibold hover:underline leading-[100%] line-clamp-1"
+      >
+        {{ starterpack.record.name }}
+      </a>
+      <a
+        [href]="starterpack.uri | linkExtractorStarterPack : starterpack.creator.handle"
+        (click)="openStarterPack($event)"
+        class="w-fit msky-text-caption text-[12px] leading-[100%] line-clamp-1"
+      >
+        Starter pack by {{ starterpack.creator | displayName }}
+      </a>
+    </div>
+  </div>
+</ng-template>

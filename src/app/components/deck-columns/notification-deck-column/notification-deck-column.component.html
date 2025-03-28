@@ -1,0 +1,100 @@
+<p-card #card
+  class="relative block h-full overflow-hidden border border-[var(--p-content-border-color)] rounded-[var(--p-card-border-radius)] [&_.p-card-body]:!h-full [&_.p-card-content]:!h-full"
+  [style]="{'--p-card-body-padding': 0, '--p-card-background': 'var(--p-primary-800)', 'height': '100%', 'overflow': 'hidden'}"
+>
+  <ng-template #header>
+   <div
+     class="flex h-14 w-full pr-2 items-center bg-[var(--p-primary-750)] [border-bottom:1px_solid_var(--p-surface-700)]"
+   >
+     <i
+       class="pi pi-bell !text-xl w-18 text-center -mt-[2px] shrink-0"
+     ></i>
+
+     <span
+       class="text-lg [text-box:trim-both_cap_alphabetic] flex-1 cursor-default"
+     >Notifications</span>
+
+     <button
+       pButton pRipple text
+       class="!h-10 !w-10 shrink-0"
+       (click)="settings.toggle($event)"
+     >
+       <i
+         class="pi pi-cog !text-xl text-center"
+       ></i>
+     </button>
+   </div>
+  </ng-template>
+
+  <ng-template #content>
+    <notification-feed
+      class="block h-full"
+    />
+  </ng-template>
+</p-card>
+
+<p-popover #settings
+  [appendTo]="card"
+>
+  <div
+    class="flex flex-col"
+  >
+    <div
+      class="flex gap-2"
+    >
+      <button
+        pButton pRipple
+        severity="secondary"
+        class="!h-9 !w-9"
+        [disabled]="firstIndex()"
+        (click)="reorderPrev.emit()"
+      >
+        <i
+          class="pi pi-chevron-left"
+        ></i>
+      </button>
+      <button
+        pButton pRipple
+        severity="secondary"
+        class="!h-9 !w-9"
+        [disabled]="lastIndex()"
+        (click)="reorderNext.emit()"
+      >
+        <i
+          class="pi pi-chevron-right"
+        ></i>
+      </button>
+      <button
+        pButton pRipple
+        severity="danger"
+        class="!h-9 !w-9 ml-auto"
+        (click)="delete.emit()"
+      >
+        <i
+          class="pi pi-trash"
+        ></i>
+      </button>
+    </div>
+
+    <div
+      class="flex flex-col gap-1 mt-4"
+    >
+      <span
+        class="text-sm"
+      >Column width</span>
+      <p-select-button
+        [ngModel]="column().width"
+        (ngModelChange)="widthChange.emit($event)"
+        [options]="[
+          {label: 'Small', value: 400},
+          {label: 'Medium', value: 450},
+          {label: 'Large', value: 500},
+          {label: 'Very Large', value: 600},
+        ]"
+        optionLabel="label"
+        optionValue="value"
+        size="small"
+      />
+    </div>
+  </div>
+</p-popover>

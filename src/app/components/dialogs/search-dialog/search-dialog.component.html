@@ -1,0 +1,161 @@
+<div
+  class="relative flex flex-col h-full p-4"
+>
+  <input
+    pInputText
+    autocomplete="off"
+    aria-autocomplete="none"
+    autofocus
+    [(ngModel)]="query"
+    (keydown.enter)="searchBtn.click()"
+    class="w-full"
+  />
+
+  @if (savedQuery() && (searchType() == 'top' || searchType() == 'latest')) {
+    <button
+      pButton pRipple text
+      pTooltip="Add as column"
+      tooltipPosition="bottom"
+      (click)="addAsColumn()"
+      class="h-[calc(2.5rem_+_2px)] !absolute top-4 right-14.5 !rounded-none"
+    >
+      <i
+        class="pi pi-plus"
+      ></i>
+    </button>
+  }
+
+  <button
+    #searchBtn
+    pButton pRipple text
+    (click)="savedQuery.set(query); cdRef.markForCheck()"
+    class="h-[calc(2.5rem_+_2px)] !absolute top-4 right-4 !rounded-none"
+  >
+    <i
+      class="pi pi-search"
+    ></i>
+  </button>
+
+  <p-card
+    class="relative block flex-1 mt-4 overflow-hidden border border-[var(--p-content-border-color)] rounded-[var(--p-card-border-radius)] [&_.p-card-body]:!overflow-hidden [&_.p-card-content]:!overflow-hidden"
+    [style]="{'--p-card-body-padding': 0, '--p-card-background': 'var(--p-primary-800)', 'height': '100%', 'overflow': 'hidden'}"
+  >
+    <ng-template #header>
+      <div
+        class="flex h-11 w-full items-center justify-center bg-[var(--p-primary-750)] [border-bottom:1px_solid_var(--p-surface-700)]"
+      >
+
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="searchType() == 'top'"
+            (click)="searchType.set('top')"
+          >
+            Top
+          </button>
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="searchType() == 'latest'"
+            (click)="searchType.set('latest')"
+          >
+            Latest
+          </button>
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="searchType() == 'users'"
+            (click)="initUsers(); searchType.set('users')"
+          >
+            Users
+          </button>
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="searchType() == 'feeds'"
+            (click)="searchType.set('feeds')"
+          >
+            Feeds
+          </button>
+      </div>
+    </ng-template>
+
+    <ng-template #content>
+      @if (savedQuery()) {
+        @if (searchType() == 'top') {
+          <search-feed
+            [query]="savedQuery()"
+            [sort]="'top'"
+            class="block h-full"
+          />
+        } @else if (searchType() == 'latest') {
+          <search-feed
+            [query]="savedQuery()"
+            [sort]="'latest'"
+            class="block h-full"
+          />
+        } @else if (searchType() == 'users') {
+          <ng-container
+            [ngTemplateOutlet]="usersTemplate"
+          />
+        }
+      }
+    </ng-template>
+  </p-card>
+</div>
+
+<ng-template
+  #usersTemplate
+>
+  <div
+    vScroll
+    (scrollEnding)="nextUsers()"
+    class="h-full flex flex-col overflow-y-auto"
+  >
+    @for (user of users(); track user.did) {
+      <div
+        class="flex min-h-20 gap-4 p-3 shrink-0 hover:bg-white/5 cursor-pointer"
+        (click)="dialogService.openAuthor(user.did)"
+      >
+        <p-avatar
+          [image]="user.avatar"
+          size="xlarge"
+          class="!h-14 !w-14 mt-1 rounded-md overflow-hidden shrink-0"
+        />
+        <div
+          class="flex flex-col grow"
+        >
+          <span
+            class="text-lg font-medium text-left"
+          >
+            {{user | displayName}}
+          </span>
+          @if (user.displayName) {
+            <span
+              class="text-sm text-primary-400 text-left"
+            >
+              {{'@' + user.handle}}
+            </span>
+          }
+          <span
+            class="mt-2 line-clamp-2 whitespace-pre-line break-words overflow-ellipsis text-left text-sm text-primary-300"
+          >
+            {{user.description}}
+          </span>
+        </div>
+        <div
+          class="shrink-0"
+        >
+          <follow-button
+            [author]="user"
+            (authorChange)="user.viewer = $event.viewer"
+            class="block mt-1"
+          />
+        </div>
+      </div>
+      <p-divider
+        class="!mb-0 !mt-0"
+      />
+    }
+  </div>
+</ng-template>

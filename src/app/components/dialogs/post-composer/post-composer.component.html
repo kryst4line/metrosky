@@ -1,0 +1,317 @@
+@let mediaEmbed = postService.postCompose().mediaEmbed();
+@let recordEmbed = postService.postCompose().recordEmbed();
+@let reply = postService.postCompose().reply();
+
+<div
+  class="flex flex-col pt-3 pb-4 px-4 w-120"
+  (drop)="$event.preventDefault(); postService.attachMedia($any($event.dataTransfer.files))"
+>
+  <div
+    class="flex h-10 w-full justify-end items-center gap-3 mb-2"
+  >
+    @if (reply) {
+      <i
+        class="pi pi-reply !text-sm"
+      ></i>
+      <span
+        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+      >
+        Replying to <span class="font-medium">{{reply.author | displayName}}</span>
+      </span>
+    } @else {
+      <i
+        class="pi pi-pen-to-square !text-sm"
+      ></i>
+      <span
+        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+      >
+        New post
+      </span>
+    }
+    <button
+      pButton pRipple text
+      severity="secondary"
+      class="!p-0 h-8 w-8 !text-white [text-box:trim-both_cap_alphabetic]"
+      (click)="dialog.close()"
+    >
+      <i
+        class="pi pi-times !text-sm"
+      ></i>
+    </button>
+  </div>
+
+  @if (reply) {
+    <preview-card
+      [record]="{
+        '$type': 'app.bsky.embed.record#viewRecord',
+        author: reply.author,
+        value: reply.record,
+        cid: reply.cid,
+        uri: reply.uri,
+        indexedAt: reply.indexedAt
+      }"
+      (onClose)="postService.postCompose().reply.set(undefined)"
+      class="-mt-2 mb-3"
+    />
+  }
+
+  @if (mediaEmbed) {
+    <div
+      class="flex flex-col mb-3"
+    >
+      <div
+        class="flex gap-2 mb-1"
+      >
+        <i
+          class="pi pi-angle-double-right !text-sm"
+        ></i>
+        <span
+          class="text-sm"
+        >Attaching</span>
+      </div>
+
+      @if (mediaEmbed | isMediaEmbedImage) {
+        <div
+          class="flex mt-2"
+        >
+          @for (image of mediaEmbed.images; track $index) {
+            <div
+              class="h-20 w-20 relative group shrink-0 rounded-md overflow-hidden"
+            >
+              <div
+                class="absolute z-1 h-full w-full"
+              >
+                <button
+                  class="absolute bottom-1 left-1 text-xs font-medium p-[1px_4px] bg-primary-900 rounded-sm opacity-60 group-hover:opacity-100 transition cursor-pointer"
+                >ALT</button>
+                <button
+                  class="absolute top-1 right-1 opacity-0 h-6 w-6 rounded-sm group-hover:opacity-100 transition cursor-pointer hover:bg-black/20"
+                  (click)="removeImage($index)"
+                >
+                  <i
+                    class="pi pi-times !text-sm"
+                  ></i>
+                </button>
+              </div>
+              <img
+                [src]="image.data"
+                alt="image preview"
+                class="h-20 w-20 object-cover"
+              />
+            </div>
+          }
+        </div>
+      }
+      @if (mediaEmbed | isMediaEmbedVideo) {
+      }
+      @if (mediaEmbed | isMediaEmbedExternal) {
+        <preview-card
+          closable
+          [image]="mediaEmbed.metadata.imageUrl"
+          [title]="mediaEmbed.metadata.title"
+          [subtitle]="mediaEmbed.snippet.domain"
+          (onClose)="postService.postCompose().mediaEmbed.set(undefined)"
+        />
+      }
+    </div>
+  }
+
+  @if (recordEmbed) {
+
+    <div
+      class="flex flex-col mb-3"
+    >
+      <div
+        class="flex gap-2 mb-1"
+      >
+        <i
+          class="pi pi-angle-double-right !text-sm"
+        ></i>
+        <span
+          class="text-sm"
+        >Quoting</span>
+      </div>
+
+      @if (recordEmbed | isEmbedRecordViewRecord) {
+        <preview-card
+          [record]="recordEmbed"
+          (onClose)="postService.postCompose().recordEmbed.set(undefined)"
+        />
+      } @else if (recordEmbed | isFeedDefsGeneratorView) {
+        <preview-card
+          [title]="recordEmbed.displayName"
+          [subtitle]="recordEmbed.description"
+          [image]="recordEmbed.avatar"
+          (onClose)="postService.postCompose().recordEmbed.set(undefined)"
+        />
+      } @else if (recordEmbed | isGraphDefsListView) {
+        <preview-card
+          [title]="recordEmbed.name"
+          [subtitle]="recordEmbed.description"
+          [image]="recordEmbed.avatar"
+          (onClose)="postService.postCompose().recordEmbed.set(undefined)"
+        />
+      } @else if (recordEmbed | isGraphDefsStarterPackView) {
+        <preview-card
+          [title]="$any(recordEmbed.record).name"
+          [subtitle]="$any(recordEmbed.record).name"
+          (onClose)="postService.postCompose().recordEmbed.set(undefined)"
+        />
+      }
+    </div>
+  }
+
+  <div
+    class="relative rounded-md"
+  >
+    <div
+      #text autofocus
+      contenteditable="plaintext-only"
+      spellcheck="false"
+      class="absolute top-0 left-0 z-1 w-112 min-h-32 p-2 bg-transparent text-transparent rounded-md outline-0 caret-black"
+      (input)="formatText($event)"
+      (paste)="postService.attachMedia($any($event.clipboardData.files))"
+      (keydown.control.enter)="postBtn.click()"
+      [mention]="mentionItems"
+      [mentionConfig]="{
+        triggerChar: '@',
+        labelKey: 'value',
+        disableSearch: true,
+        dropUp: true
+      }"
+      (searchTerm)="searchMentions($event)"
+    ></div>
+    <div
+      [innerHTML]="text.textContent.length ? formattedText : undefined"
+      class="w-112 min-h-32 p-2 bg-white text-black empty:text-primary-400 rounded-md outline-0 break-words whitespace-pre-wrap empty:before:content-['What\'s_up,_danger?']"
+    ></div>
+
+    <div
+      class="h-12 absolute bottom-0 left-0 right-0 flex flex-col justify-end items-end rounded-b-md pointer-events-none select-none overflow-hidden"
+    >
+      <span
+        class="mb-1 mr-2 text-sm text-zinc-500"
+      >{{300 - text.textContent.length}}</span>
+
+      <p-progress-bar
+        class="block w-full"
+        [style]="{
+          '--p-progressbar-background': 'transparent',
+          '--p-progressbar-value-background': 'var(--p-primary-400)',
+          '--p-progressbar-border-radius': 0,
+          '--p-progressbar-label-color': 'transparent',
+          '--p-progressbar-height': '0.25rem',
+        }"
+        [value]="text.textContent.length / 3"
+      ></p-progress-bar>
+    </div>
+  </div>
+
+  <div
+    class="flex h-10 mt-4 items-center"
+  >
+    <div
+      class="flex flex-1"
+    >
+      <button
+        pButton pRipple
+        severity="secondary"
+        class="!p-0 h-10 w-10 mr-2 !text-white [text-box:trim-both_cap_alphabetic]"
+        (click)="uploader.click()"
+      >
+        <i
+          class="pi pi-paperclip"
+        ></i>
+        <input
+          #uploader
+          type="file"
+          class="hidden"
+          (change)="postService.attachMedia($any(uploader.files))"
+
+        />
+      </button>
+
+      @for (embed of embedSuggestions() | slice : 0 : 1; track embed) {
+        <ng-container
+          [ngTemplateOutlet]="embedButton"
+          [ngTemplateOutletContext]="{embed: embed}"
+        />
+      }
+    </div>
+    @if (loading) {
+      <p-progress-spinner
+        class="mr-2 h-fit"
+        strokeWidth="5"
+        [style]="{height: '1.5rem', width: '1.5rem'}"
+      />
+    }
+    <button
+      #postBtn pButton pRipple
+      severity="secondary"
+      class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+      [disabled]="loading || text.innerText.length > 300 || (!text.innerText.length && !mediaEmbed && !recordEmbed) "
+      (click)="publishPost()"
+    >
+      Post
+    </button>
+  </div>
+</div>
+
+<ng-template #embedButton
+             let-embed="embed"
+>
+  @if (embed.type == 'RECORD' && !recordEmbed) {
+    @switch (embed.recordType) {
+      @case ('POST') {
+        <button
+          pButton pRipple
+          severity="secondary"
+          class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="embedQuote()"
+        >
+          Quote post
+        </button>
+      }
+      @case ('FEED') {
+        <button
+          pButton pRipple
+          severity="secondary"
+          class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="embedFeed()"
+        >
+          Quote feed
+        </button>
+      }
+      @case ('LIST') {
+        <button
+          pButton pRipple
+          severity="secondary"
+          class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="embedList()"
+        >
+          Quote list
+        </button>
+      }
+      @case ('STARTER_PACK') {
+        <button
+          pButton pRipple
+          severity="secondary"
+          class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="embedStarterPack()"
+        >
+          Quote starter pack
+        </button>
+      }
+    }
+  }
+  @if (embed.type == 'EXTERNAL' && !mediaEmbed) {
+    <button
+      pButton pRipple
+      severity="secondary"
+      class="h-10 !py-0 !px-4 !text-white !font-medium [text-box:trim-both_cap_alphabetic]"
+      (click)="embedLink()"
+    >
+      Add card
+    </button>
+  }
+</ng-template>

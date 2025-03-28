@@ -1,0 +1,29 @@
+<div
+  class="flex flex-col max-h-full msky-bg-light-20"
+>
+  @if (embed.metadata.imageUrl) {
+    <img
+      [ngSrc]="embed.metadata.imageUrl"
+      alt="thumb"
+      width="1000"
+      height="1000"
+      placeholder="default_image.jpg"
+      [placeholderConfig]="{blur: false}"
+      class="aspect-video object-cover min-h-0"
+    />
+  }
+  <div
+    class="px-4 py-2"
+  >
+    <span
+      class="msky-text-caption font-semibold line-clamp-1"
+    >
+      {{embed.metadata.title}}
+    </span>
+      <span
+        class="block msky-text-caption text-[0.7rem]"
+      >
+      {{snippet.domain}}
+    </span>
+  </div>
+</div>

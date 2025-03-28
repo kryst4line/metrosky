@@ -1,0 +1,317 @@
+<div #base
+  class="flex flex-col px-3 pt-4 pb-2"
+>
+
+  <div
+    class="flex flex-col flex-1 min-w-0"
+  >
+    <ng-container
+      [ngTemplateOutlet]="header"
+      [ngTemplateOutletContext]="{author: feedViewPost.post().author}"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="record"
+      [ngTemplateOutletContext]="{record: feedViewPost.post().record}"
+    />
+
+    @if (feedViewPost.post().embed) {
+      <ng-container
+        [ngTemplateOutlet]="embed"
+        [ngTemplateOutletContext]="{embed: feedViewPost.post().embed}"
+      />
+    }
+
+    <ng-container
+      [ngTemplateOutlet]="date"
+      [ngTemplateOutletContext]="{post: feedViewPost.post()}"
+    />
+
+    <p-divider
+      class="!mb-3"
+    />
+
+    @if (feedViewPost.post().likeCount || feedViewPost.post().repostCount || feedViewPost.post().quoteCount) {
+      <ng-container
+        [ngTemplateOutlet]="interactions"
+        [ngTemplateOutletContext]="{post: feedViewPost.post()}"
+      />
+    }
+
+    <ng-container
+      [ngTemplateOutlet]="buttons"
+      [ngTemplateOutletContext]="{post: feedViewPost.post()}"
+    />
+  </div>
+</div>
+
+
+<ng-template #header
+  let-author="author"
+>
+  <div
+    class="flex w-full gap-3"
+  >
+    <a #avatar
+       [href]="'https://bsky.app/profile/' + author.handle"
+       (click)="openAuthor($event)"
+       class="h-12 w-12 shrink-0"
+    >
+      <p-avatar
+        [image]="author.avatar"
+        size="large"
+        class="overflow-hidden"
+      />
+    </a>
+
+    <div #displayName
+         class="flex flex-col w-fit max-w-full min-w-0 justify-around"
+    >
+      @if (author.displayName?.trim().length) {
+        <a
+          [href]="'https://bsky.app/profile/' + author.handle"
+          (click)="openAuthor($event)"
+          class="text-lg font-medium [text-box:trim-both_cap_alphabetic] overflow-x-clip overflow-y-visible whitespace-nowrap text-ellipsis shrink-1 max-w-full w-fit hover:underline"
+        >
+          {{ author.displayName }}
+        </a>
+        <a
+          [href]="'https://bsky.app/profile/' + author.handle"
+          (click)="openAuthor($event)"
+          class="text-sm text-[var(--p-primary-400)] [text-box:trim-both_cap_alphabetic] overflow-x-clip overflow-y-visible whitespace-nowrap text-ellipsis max-w-full w-fit shrink-1"
+        >
+          {{ '@' + author.handle }}
+        </a>
+      } @else {
+        <a
+          [href]="'https://bsky.app/profile/' + author.handle"
+          (click)="openAuthor($event)"
+          class="text-xl font-normal w-fit shrink-1 hover:underline"
+        >
+          {{ '@' + author.handle }}
+        </a>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #record
+  let-record="record"
+>
+  @if ((record | isFeedPostRecord) && record.text.length) {
+    <div #body
+         class="mt-3"
+    >
+      <rich-text
+        [text]="record.text"
+        [facets]="record.facets"
+        class="cursor-auto"
+      />
+    </div>
+  }
+</ng-template>
+
+<ng-template #embed
+  let-embed="embed"
+>
+  <div #content
+       id="content"
+       class="mt-3 flex flex-col"
+  >
+    @if (embed | isEmbedImagesView) {
+      <post-embed-images
+        [embed]="embed"
+        (onImgClick)="openImage(embed.images, $event)"
+        class="cursor-pointer"
+      />
+    }
+
+    @if (embed | isEmbedVideoView) {
+      <post-embed-video
+        [embed]="embed"
+      />
+    }
+
+    @if (embed | isEmbedExternalView) {
+      <post-embed-external
+        [embed]="embed"
+      />
+    }
+
+    @if (embed | isEmbedRecordView) {
+      <post-embed-record
+        [embed]="embed"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+      />
+    }
+
+    @if (embed | isEmbedRecordWithMediaView) {
+      @if (embed.media | isEmbedImagesView) {
+        <post-embed-images
+          [embed]="embed.media"
+          (onImgClick)="openImage(embed.media.images, $event)"
+        />
+      }
+
+      @if (embed.media | isEmbedVideoView) {
+        <post-embed-video
+          [embed]="embed.media"
+        />
+      }
+
+      @if (embed.media | isEmbedExternalView) {
+        <post-embed-external
+          [embed]="embed.media"
+        />
+      }
+
+      <post-embed-record
+        [embed]="embed.record"
+        (onEmbedClick)="onEmbedClick.emit($event)"
+        class="block mt-4"
+      />
+    }
+  </div>
+</ng-template>
+
+<ng-template #date
+  let-post="post"
+>
+  <a
+    [href]="post.uri | linkExtractor: post.author.handle"
+    target="_blank"
+    [title]="$any(post.record).createdAt | date: 'medium'"
+    class="text-sm text-primary-400 w-fit hover:underline mt-4"
+    (click)="$event.stopPropagation()"
+  >
+    {{ $any(post.record).createdAt | date: 'medium' }}
+  </a>
+</ng-template>
+
+<ng-template #interactions
+  let-post="post"
+>
+  @if (post.likeCount || post.repostCount || post.quoteCount) {
+    <div
+      class="flex gap-4"
+    >
+      @if (post.likeCount) {
+        <a
+          class="text-rg cursor-pointer hover:underline"
+          (click)="$event.stopPropagation()"
+        >
+          {{ post.likeCount + ' likes' }}
+        </a>
+      }
+
+      @if (post.repostCount) {
+        <a
+          class="text-rg cursor-pointer hover:underline"
+          (click)="$event.stopPropagation()"
+        >
+          {{ post.repostCount + ' reposts' }}
+        </a>
+      }
+
+      @if (post.quoteCount) {
+        <a
+          class="text-rg cursor-pointer hover:underline"
+          (click)="$event.stopPropagation()"
+        >
+          {{ post.quoteCount + ' quotes' }}
+        </a>
+      }
+    </div>
+
+    <p-divider
+      class="!mt-3 !mb-2"
+    />
+  }
+</ng-template>
+
+<ng-template #buttons
+             let-post="post"
+>
+  <div #buttons
+       class="w-full flex items-center"
+  >
+    <div
+      class="flex-1"
+    >
+      <button
+        pRipple
+        class="relative flex items-center gap-2 py-2 px-3 hover:bg-primary-700 rounded-xl cursor-pointer transition"
+      >
+        <i
+          class="pi pi-comment text-primary-400"
+        ></i>
+        @if (post.replyCount) {
+          <span
+            class="text-primary-400 [text-box:trim-both_cap_alphabetic]"
+          >{{post.replyCount | numberFormatter}}</span>
+        }
+      </button>
+    </div>
+    <div
+      class="flex-1"
+    >
+      <button
+        pRipple
+        class="flex items-center gap-2 py-2 px-3 hover:bg-primary-700 rounded-xl cursor-pointer transition"
+        (click)="openRepostMenu(repostMenu, $event); moreMenu.visible ? moreMenu.toggle($event) : undefined"
+      >
+        <i
+          class="pi pi-arrow-right-arrow-left"
+          [class]="post.viewer.repost ? 'text-green-600' : 'text-primary-400'"
+        ></i>
+        @if (post.repostCount) {
+          <span
+            class="text-primary-400 [text-box:trim-both_cap_alphabetic]"
+          >{{post.repostCount | numberFormatter}}</span>
+        }
+      </button>
+      <p-menu
+        #repostMenu popup
+        [model]="repostMenuItems"
+        appendTo="body"
+      />
+    </div>
+    <div
+      class="flex-1"
+    >
+      <button
+        pRipple
+        class="flex items-center gap-2 py-2 px-3 hover:bg-primary-700 rounded-xl cursor-pointer transition"
+        (click)="post.viewer.like ? deleteLike($event) : like($event)"
+      >
+        <i
+          class="pi transition"
+          [class]="post.viewer.like ? 'pi-heart-fill text-red-600' : 'pi-heart text-primary-400'"
+        ></i>
+        @if (post.likeCount) {
+          <span
+            class="text-primary-400 [text-box:trim-both_cap_alphabetic]"
+          >{{post.likeCount | numberFormatter}}</span>
+        }
+      </button>
+    </div>
+    <div
+      class="flex"
+    >
+      <button
+        pRipple
+        class="flex items-center py-2 px-3 hover:bg-primary-700 rounded-xl cursor-pointer transition"
+        (click)="moreMenu.toggle($event); repostMenu.visible ? repostMenu.toggle($event) : undefined; $event.stopPropagation()"
+      >
+        <i
+          class="pi pi-ellipsis-h text-primary-400"
+        ></i>
+      </button>
+      <p-menu
+        #moreMenu popup
+        [model]="moreMenuItems"
+        appendTo="body"
+      />
+    </div>
+  </div>
+</ng-template>

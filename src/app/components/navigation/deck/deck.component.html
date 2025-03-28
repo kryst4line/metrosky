@@ -1,0 +1,66 @@
+<div
+  class="flex gap-4"
+>
+  @for (column of columns(); track column.uuid) {
+    @if (column | isDeckColumnTimeline) {
+      <timeline-deck-column
+        [column]="column"
+        [firstIndex]="column.index == 0"
+        [lastIndex]="column.index == columns().length - 1"
+        (columnChange)="onColumnChange($event)"
+        (reorderPrev)="reorder(column.index, column.index - 1)"
+        (reorderNext)="reorder(column.index, column.index + 1)"
+        (delete)="onDeleteColumn(column.uuid)"
+        (widthChange)="widthChange(column.uuid, $event)"
+        class="shrink-0"
+        [style]="{width: column.width+'px', order: column.index}"
+      />
+    }
+    @else if (column | isDeckColumnNotifications) {
+      <notification-deck-column
+        [column]="column"
+        [firstIndex]="column.index == 0"
+        [lastIndex]="column.index == columns().length - 1"
+        (columnChange)="onColumnChange($event)"
+        (reorderPrev)="reorder(column.index, column.index - 1)"
+        (reorderNext)="reorder(column.index, column.index + 1)"
+        (delete)="onDeleteColumn(column.uuid)"
+        (widthChange)="widthChange(column.uuid, $event)"
+        class="shrink-0"
+        [style]="{width: column.width+'px', order: column.index}"
+      />
+    }
+    @else if (column | isDeckColumnAuthor) {
+      <author-deck-column
+        [column]="column"
+        [firstIndex]="column.index == 0"
+        [lastIndex]="column.index == columns().length - 1"
+        (columnChange)="onColumnChange($event)"
+        (reorderPrev)="reorder(column.index, column.index - 1)"
+        (reorderNext)="reorder(column.index, column.index + 1)"
+        (delete)="onDeleteColumn(column.uuid)"
+        (widthChange)="widthChange(column.uuid, $event)"
+        class="shrink-0"
+        [style]="{width: column.width+'px', order: column.index}"
+      />
+    }
+    @else if (column | isDeckColumnSearch) {
+      <search-deck-column
+        [column]="column"
+        [firstIndex]="column.index == 0"
+        [lastIndex]="column.index == columns().length - 1"
+        (columnChange)="onColumnChange($event)"
+        (reorderPrev)="reorder(column.index, column.index - 1)"
+        (reorderNext)="reorder(column.index, column.index + 1)"
+        (delete)="onDeleteColumn(column.uuid)"
+        (widthChange)="widthChange(column.uuid, $event)"
+        (sortChange)="sortChange(column.uuid, $event)"
+        class="shrink-0"
+        [style]="{width: column.width+'px', order: column.index}"
+      />
+    }
+    @else if (column | isDeckColumnList) {
+
+    }
+  }
+</div>

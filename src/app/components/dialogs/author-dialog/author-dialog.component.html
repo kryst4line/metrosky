@@ -1,0 +1,200 @@
+<div
+  class="flex p-3 gap-4"
+>
+  @if (author) {
+    <div
+      class="w-[27rem] flex flex-col"
+    >
+      <p-image
+        [src]="author.banner"
+        width="480"
+        height="160"
+        class="rounded-t-md overflow-hidden"
+      />
+
+      <div
+        class="relative h-0 w-full"
+      >
+        <p-avatar id="mask"
+                  [image]="author.avatar"
+                  size="xlarge"
+                  class="!w-20 !h-20 absolute -top-11 left-2 overflow-hidden !box-content border-4 border-[var(--p-card-background)]"
+        />
+      </div>
+      <div
+        class="h-10 w-full flex justify-end items-end gap-2"
+      >
+        <button
+          pButton pRipple outlined
+          class="border h-8 w-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+        >
+          <i
+            class="pi pi-ellipsis-h !text-xs"
+          ></i>
+        </button>
+
+        <button
+          pButton pRipple outlined
+          pTooltip="Add as column"
+          tooltipPosition="bottom"
+          class="border h-8 w-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="addAsColumn()"
+        >
+          <i
+            class="pi pi-plus !text-xs"
+          ></i>
+        </button>
+
+        <follow-button
+          [(author)]="author"
+        />
+      </div>
+
+      <span
+        class="text-xl mt-4 [text-box:trim-both_cap_alphabetic]"
+      >{{author | displayName}}</span>
+
+      @if (author.displayName) {
+        <span
+          class="text-sm text-primary-400 mt-3 [text-box:trim-both_cap_alphabetic]"
+        >{{'@' + author.handle}}</span>
+      }
+
+      <div
+        class="flex gap-4 mt-4"
+      >
+        <a
+          class="text-[15px] cursor-pointer hover:underline"
+        >
+        <span
+          class="font-medium"
+          (click)="$event.stopPropagation()"
+        >{{author.postsCount}}</span>
+
+          <span
+            class="text-primary-400"
+          >
+          posts
+        </span>
+        </a>
+
+        <a
+          class="text-[15px] cursor-pointer hover:underline"
+        >
+        <span
+          class="font-medium"
+          (click)="$event.stopPropagation()"
+        >{{author.followsCount}}</span>
+
+          <span
+            class="text-primary-400"
+          >
+          following
+        </span>
+        </a>
+
+        <a
+          class="text-[15px] cursor-pointer hover:underline"
+        >
+        <span
+          class="font-medium"
+          (click)="$event.stopPropagation()"
+        >{{author.followersCount}}</span>
+
+          <span
+            class="text-primary-400"
+          >
+          followers
+        </span>
+        </a>
+      </div>
+
+      <rich-text
+        [text]="author.description"
+        class="text-sm mt-3"
+      />
+    </div>
+
+    <ng-container
+      [ngTemplateOutlet]="card"
+    />
+  } @else {
+    <div
+      class="w-[55rem] h-[45rem] flex items-center justify-center"
+    >
+      <p-progress-spinner
+        class="h-fit"
+        strokeWidth="5"
+        [style]="{height: '3rem', width: '3rem'}"
+      />
+    </div>
+  }
+</div>
+
+<ng-template #card>
+  <p-card
+          class="relative block h-full w-[25rem] max-h-[45rem] overflow-hidden border border-[var(--p-content-border-color)] rounded-[var(--p-card-border-radius)]"
+          [style]="{'--p-card-body-padding': 0, '--p-card-background': 'var(--p-primary-800)', 'height': '100%', 'overflow': 'hidden'}"
+  >
+    <ng-template #header>
+      <div
+        class="flex h-11 w-full items-center justify-center bg-[var(--p-primary-750)] [border-bottom:1px_solid_var(--p-surface-700)]"
+      >
+        @if (AuthorViewMode.POSTS || AuthorViewMode.REPLIES || AuthorViewMode.MEDIA) {
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="viewMode() == AuthorViewMode.POSTS"
+            (click)="viewMode.set(AuthorViewMode.POSTS)"
+          >
+            Posts
+          </button>
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium border-r-1 border-r-[var(--p-content-border-color)] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="viewMode() == AuthorViewMode.REPLIES"
+            (click)="viewMode.set(AuthorViewMode.REPLIES)"
+          >
+            Replies
+          </button>
+          <button
+            pRipple
+            class="flex flex-1 h-full items-center justify-center font-medium] hover:bg-primary-700 cursor-pointer"
+            [class.!bg-primary-600]="viewMode() == AuthorViewMode.MEDIA"
+            (click)="viewMode.set(AuthorViewMode.MEDIA)"
+          >
+            Media
+          </button>
+        } @else {
+          <span
+            class="[text-box:trim-both_cap_alphabetic] cursor-default"
+          >
+            @switch (viewMode()) {
+              @case (AuthorViewMode.POSTS) {
+                Posts
+              }
+              @case (AuthorViewMode.MEDIA) {
+                Media
+              }
+              @case (AuthorViewMode.MORE) {
+                More
+              }
+            }
+          </span>
+        }
+      </div>
+    </ng-template>
+
+    <ng-template #content>
+      <author-feed
+        [author]="author.did"
+        [filter]="
+          viewMode() == AuthorViewMode.POSTS ? 'posts_no_replies' :
+          viewMode() == AuthorViewMode.REPLIES ? 'posts_with_replies' : 'posts_with_media'
+        "
+        [includePins]="viewMode() == AuthorViewMode.POSTS"
+        class="block h-[45rem]"
+      />
+    </ng-template>
+  </p-card>
+</ng-template>

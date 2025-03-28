@@ -1,0 +1,31 @@
+@if (author().did | isLoggedUser: authService.loggedUser()) {
+  <button
+    pButton pRipple outlined disabled
+    class="h-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+    (click)="$event.stopPropagation()"
+  >
+    Omg it's you! ✨
+  </button>
+} @else if (author().viewer.following) {
+  <button
+    pButton pRipple outlined
+    class="h-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+    (click)="$event.stopPropagation(); unfollow()"
+  >
+    <i
+      class="pi pi-check !text-sm"
+    ></i>
+    Following
+  </button>
+} @else {
+  <button
+    pButton pRipple
+    class="h-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+    (click)="$event.stopPropagation(); follow()"
+  >
+    <i
+      class="pi pi-user-plus !text-sm"
+    ></i>
+    Follow
+  </button>
+}

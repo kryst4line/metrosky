@@ -1,0 +1,141 @@
+<p-card
+  class="relative block group overflow-hidden border border-[var(--p-content-border-color)] rounded-[var(--p-card-border-radius)] [&_.p-card-header]:hidden"
+  [style]="{'--p-card-body-padding': 0, '--p-card-background': 'var(--p-primary-800)', 'height': '100%', 'overflow': 'hidden'}"
+>
+  @if (closable) {
+    <div
+      class="relative h-0 w-full"
+    >
+      <button
+        pButton pRipple text
+        class="!absolute top-2 right-2 !p-0 flex items-center justify-center h-6 w-6"
+        (click)="onClose.emit()"
+      >
+        <i
+          class="pi pi-times !text-sm opacity-0 group-hover:opacity-100 transition"
+        ></i>
+      </button>
+    </div>
+  }
+  @if (record()) {
+    <ng-container
+      [ngTemplateOutlet]="recordPreview"
+      [ngTemplateOutletContext]="{record: record()}"
+    />
+  } @else {
+    <div
+      class="flex min-h-20"
+    >
+      @if (image()) {
+        <p-image
+          [src]="image()"
+          styleClass="block h-full w-full"
+          imageClass="h-full w-full object-cover"
+          class="h-20 w-20 shrink-0"
+        />
+      }
+      <div
+        class="flex"
+      >
+        <div
+          class="flex flex-col flex-1 px-4 py-3 justify-center"
+        >
+          <span
+            class="font-medium overflow-hidden"
+          >{{title()}}</span>
+          <span
+            class="text-xs line-clamp-2 overflow-hidden"
+          >{{subtitle()}}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+</p-card>
+
+<ng-template
+  #recordPreview
+  let-record="record"
+>
+  <div
+    class="flex p-3"
+  >
+    <div
+      class="flex flex-col flex-1"
+    >
+      <div #header
+           id="header"
+           class="flex gap-2 items-center w-[calc(100%_-_1.5rem)"
+      >
+        <a #avatar
+           [href]="'https://bsky.app/profile/' + record.author.handle"
+           (click)="openAuthor($event, record.author.did)"
+           class="h-5 w-5"
+        >
+          <p-avatar
+            [image]="record.author.avatar"
+            class="shrink-0 !h-5 !w-5 overflow-hidden"
+          />
+        </a>
+
+        <a
+          [href]="'https://bsky.app/profile/' + record.author.handle"
+          (click)="openAuthor($event, record.author.did)"
+          class="font-semibold shrink-1 grow-0 min-w-0 hover:underline [text-box:trim-both_cap_alphabetic] overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap h-fit"
+        >
+          {{ record.author | displayName }}
+        </a>
+
+        @if (record.author.displayName?.trim().length) {
+          <a
+            [href]="'https://bsky.app/profile/' + record.author.handle"
+            (click)="openAuthor($event, record.author.did)"
+            class="text-sm text-primary-400 shrink-0 grow basis-0 min-w-0 [text-box:trim-both_cap_alphabetic] overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-pre h-fit"
+          >
+            {{'@' + record.author.handle}}
+          </a>
+        }
+      </div>
+
+      <div
+        class="flex"
+      >
+        @if ((record.value | isFeedPostRecord) && record.value.text.length) {
+          <div #body
+               class="flex-1 mt-2"
+          >
+            <rich-text
+              [text]="record.value.text"
+              class="text-sm line-clamp-3"
+            />
+          </div>
+        }
+        @if (record.embeds) {
+          @if (record.embeds[0] | isEmbedImagesView) {
+            <p-image
+              [src]="record.embeds[0].images[0].fullsize"
+              styleClass="block h-full w-full"
+              imageClass="h-full w-full object-cover"
+              class="h-16 w-16 mt-1 shrink-0 rounded-sm overflow-hidden"
+            />
+          }
+          @if (record.embeds[0] | isEmbedVideoView) {
+            <p-image
+              [src]="record.embeds[0].thumbnail"
+              styleClass="block h-full w-full"
+              imageClass="h-full w-full object-cover"
+              class="h-16 w-16 mt-1 shrink-0 rounded-sm overflow-hidden"
+            />
+          }
+          @if (record.embeds[0] | isEmbedExternalView) {
+            <p-avatar
+              icon="pi pi-link"
+              class="!h-16 !w-16"
+              [style]="{'--p-avatar-icon-size': '1.5rem'}"
+            />
+          }
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

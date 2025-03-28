@@ -1,0 +1,50 @@
+<div
+  class="h-full w-full flex flex-col items-center justify-center"
+>
+  <p-panel
+    class="w-sm p-4"
+  >
+    <ng-template #header>
+      <span
+        class="text-2xl uppercase tracking-widest font-bold w-full text-center"
+      >
+        Bsky App
+      </span>
+    </ng-template>
+
+    <p-iftalabel
+      class="mt-2"
+    >
+      <input
+        [(ngModel)]="credentials().identifier"
+        (keydown.enter)="onLogin()"
+        pInputText
+        class="w-full"
+      />
+      <label>Username</label>
+    </p-iftalabel>
+
+    <p-iftalabel
+      class="mt-4"
+    >
+      <input
+        [(ngModel)]="credentials().password"
+        (keydown.enter)="onLogin()"
+        pInputText
+        type="password"
+        class="w-full"
+      />
+      <label>Password</label>
+    </p-iftalabel>
+
+    <div
+      class="mt-4 flex justify-center"
+    >
+      <p-button
+        label="Login"
+        class="leading-[1rem]"
+        (click)="onLogin()"
+      />
+    </div>
+  </p-panel>
+</div>

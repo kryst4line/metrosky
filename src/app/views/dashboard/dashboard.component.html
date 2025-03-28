@@ -1,0 +1,39 @@
+<div
+  class="flex h-full w-full min-h-0 min-w-0"
+>
+  <sidebar
+    (onProfile)="dialogService.openAuthor($event)"
+    (onSearch)="dialogService.openSearch()"
+    (onPost)="postService.createPost()"
+  />
+
+  <div
+    class="relative flex-1 overflow-hidden"
+  >
+    <deck
+      class="relative flex w-full h-full max-h-full min-h-0 p-4 overflow-x-auto"
+    >
+    </deck>
+  </div>
+</div>
+
+<p-galleria
+  [value]="dialogService.images()?.images"
+  [visible]="!!dialogService.images()"
+  [activeIndex]="dialogService.images()?.index"
+  (visibleChange)="dialogService.images.set(undefined)"
+  (keydown.escape)="dialogService.images.set(undefined)"
+  showIndicators
+  fullScreen
+  [showItemNavigators]="dialogService.images()?.images.length > 1"
+  [showThumbnails]="false"
+  [showIndicators]="dialogService.images()?.images.length > 1"
+  [showItemNavigatorsOnHover]="true"
+  [circular]="true"
+>
+  <ng-template
+    #item let-item
+  >
+    <img [src]="item.fullsize" style="width: 100%; display: block;">
+  </ng-template>
+</p-galleria>

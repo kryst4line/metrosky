@@ -1,0 +1,171 @@
+<div
+  class="flex flex-col w-17 h-full shrink-0 transition-width ease-out duration-300 overflow-hidden justify-around bg-[var(--p-surface-900)]"
+  style="border-right: 1px solid #3F3F46"
+>
+  <div #arrayButtons
+       class="flex flex-col flex-1 select-none p-2"
+  >
+    <button
+      pButton text pRipple
+      pTooltip="Profile"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onProfile.emit(authService.loggedUser().did)"
+    >
+      <p-avatar
+        [image]="authService.loggedUser().avatar"
+        size="large"
+        class="flex shrink-0 overflow-hidden"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis"
+        >
+          {{ authService.loggedUser()?.displayName ?? '@'+authService.loggedUser()?.handle }}
+        </span>
+
+        @if (authService.loggedUser()?.displayName) {
+          <span
+            class="msky-text-caption text-[14px] !msky-text-darkwhite whitespace-nowrap overflow-hidden text-ellipsis"
+          >
+            {{ '@'+authService.loggedUser()?.handle }}
+          </span>
+        }
+      </div>
+    </button>
+
+    <p-divider
+      class="!mt-1 !mb-2"
+    />
+
+    <button
+      pButton text pRipple
+      pTooltip="Search"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onSearch.emit()"
+    >
+      <p-avatar
+        icon="pi pi-search"
+        size="large"
+        class="flex shrink-0 overflow-hidden !bg-transparent"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis !font-semibold"
+        >
+          Search
+        </span>
+      </div>
+    </button>
+
+    <button
+      pButton text pRipple
+      pTooltip="Feeds"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onFeeds.emit()"
+    >
+      <p-avatar
+        icon="pi pi-hashtag"
+        size="large"
+        class="flex shrink-0 overflow-hidden !bg-transparent"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis !font-semibold"
+        >
+          Feeds
+        </span>
+      </div>
+    </button>
+
+    <button
+      pButton text pRipple
+      pTooltip="Lists"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onLists.emit()"
+    >
+      <p-avatar
+        icon="pi pi-list"
+        size="large"
+        class="flex shrink-0 overflow-hidden !bg-transparent"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis !font-semibold"
+        >
+          Lists
+        </span>
+      </div>
+    </button>
+  </div>
+  <div #bottomButton
+       class="mt-auto shrink-0 p-2"
+  >
+    <button
+      pButton text pRipple
+      pTooltip="Settings"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onSettings.emit()"
+    >
+      <p-avatar
+        icon="pi pi-cog"
+        size="large"
+        class="flex shrink-0 overflow-hidden !bg-transparent"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis !font-semibold"
+        >
+          Settings
+        </span>
+      </div>
+    </button>
+
+    <p-divider
+      class="!mt-2 !mb-1"
+    />
+
+    <button
+      pButton text pRipple
+      pTooltip="New post"
+      tooltipPosition="right"
+      class="flex w-full min-w-0 overflow-hidden shrink-0 !p-0 !justify-start !gap-0"
+      (click)="onPost.emit()"
+    >
+      <p-avatar
+        icon="pi pi-pen-to-square"
+        size="large"
+        class="flex shrink-0 overflow-hidden"
+      />
+
+      <div
+        class="flex flex-col shrink-0 h-full justify-center items-start px-4 max-w-full min-w-0 flex-1"
+      >
+        <span
+          class="whitespace-nowrap overflow-hidden text-ellipsis !font-semibold"
+        >
+          New post
+        </span>
+      </div>
+    </button>
+  </div>
+</div>

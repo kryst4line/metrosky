@@ -1,59 +1,69 @@
-# Primesky
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
+  <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/icon.webp" alt="logo" width="200" height="auto" />
+  <h1>Metrosky</h1>
 
-## Development server
+Yet Another Bluesky Client
 
-To start a local development server, run:
+  <br>
 
-```bash
-ng serve
-```
+[![contributors](https://img.shields.io/github/contributors/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/graphs/contributors)
+[![commits](https://img.shields.io/github/last-commit/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/commits/main)
+[![bug issues](https://img.shields.io/github/issues/kryst4line/metrosky/bug)](https://github.com/kryst4line/metrosky/issues)
+[![stars](https://img.shields.io/github/stars/kryst4line/metrosky)](https://github.com/kryst4line/metrosky/stargazers)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+  <br>
 
-## Code scaffolding
+Social link:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+[![bluesky link](https://img.shields.io/badge/Bluesky-%230285FF.svg?logo=bluesky&logoColor=white)](https://bsky.app/profile/metrosky.dragon.gal)
 
-```bash
-ng generate component component-name
-```
+  <br>
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+[![Repobeats analytics image](https://repobeats.axiom.co/api/embed/b91e825d74528f905289f0df10d2bca516f62be3.svg "Repobeats analytics image")](https://github.com/kryst4line/metrosky/pulse)
 
-```bash
-ng generate --help
-```
+</div>
 
-## Building
+<br />
 
-To build the project run:
 
-```bash
-ng build
-```
+<!-- Screenshots -->
+## :camera: Screenshots
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+<div align="center">
+    <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/demo.webp" alt="screenshot" />
+    <p><sup>Very, VERY early WIP, btw</sup></p>
+</div>
 
-## Running unit tests
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+<!-- TechStack -->
+## :space_invader: Tech Stack
 
-```bash
-ng test
-```
+- [Angular 19](https://v19.angular.dev/)
+- [PrimeNG](https://primeng.org/)
+- [Tailwind](https://tailwindcss.com/)
 
-## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+<!-- Roadmap -->
+## :compass: Roadmap
 
-```bash
-ng e2e
-```
+* [x] Browse timeline, notification, profile and search feeds
+* [x] User interactions
+* [x] Customizable columns
+* [ ] Column filters
+* [ ] Internationalization (multi-language)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+For more info, [check the project kanban](https://github.com/users/kryst4line/projects/1)
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<!-- License -->
+## :warning: License
+
+owo what's that? haha idk (I started this for fun)
+
+
+<!-- Acknowledgments -->
+## :gem: Acknowledgements
+
+- [Skeetdeck](https://github.com/mary-ext/skeetdeck) (Easily the best Bsky 3rd party client and an invaluable source of ideas about how to implement some stuff!)
+- [Awesome README](https://github.com/matiassingers/awesome-readme)

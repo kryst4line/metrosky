@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "primesky": {
+    "metrosky": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/primesky",
+            "outputPath": {
+              "base": "docs",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -32,22 +35,18 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css",
+              "https://unpkg.com/video.js@8.21.1/dist/video-js.min.css"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -69,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "primesky:build:production"
+              "buildTarget": "metrosky:build:production"
             },
             "development": {
-              "buildTarget": "primesky:build:development"
+              "buildTarget": "metrosky:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -96,12 +95,16 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css",
+              "https://unpkg.com/video.js@8.21.1/dist/video-js.min.css"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

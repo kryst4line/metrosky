@@ -1,0 +1,112 @@
+<div
+  class="h-full flex flex-col [&:not(:last-child)]:!hidden bg-[var(--p-primary-750)]"
+>
+  <button
+    class="h-14 w-full flex items-center shrink-0 cursor-pointer [border-bottom:1px_solid_var(--p-surface-700)] hover:bg-white/2"
+    (click)="ref.close();"
+  >
+    <i
+      class="pi pi-times -mt-[2px] !text-xl w-18 text-center shrink-0 pointer-events-none"
+    ></i>
+
+    <span
+      class="text-lg text-left flex-1 pointer-events-none [text-box:trim-both_cap_alphabetic]"
+    >Thread</span>
+  </button>
+
+  @if (post) {
+    <div #scroll
+         class="flex flex-col flex-1 min-h-0 overflow-y-auto bg-[var(--p-primary-800)]"
+    >
+      @for (parent of parents; track $index) {
+        @if ((parent | isFeedDefsNotFoundPost) || (parent | isFeedDefsBlockedPost)) {
+          <ng-container
+            [ngTemplateOutlet]="notPostViewTemplate"
+            [ngTemplateOutletContext]="{post: parent}"
+          />
+        }
+        @else {
+          <feed-post-card
+            [feedViewPost]="parent"
+            (onPostClick)="openPost(parent.post().uri)"
+            (onEmbedClick)="openPost($any($event.record).uri)"
+            class="cursor-pointer hover:bg-white/2"
+            parent
+          />
+        }
+      }
+
+      <feed-post-card-detail #main
+        [feedViewPost]="post"
+        (onEmbedClick)="openPost($any($event.record).uri)"
+      />
+
+      <p-divider
+        class="!mt-0 !mb-0"
+      />
+
+      @for (reply of replies; track $index) {
+        <ng-container
+          [ngTemplateOutlet]="threadReplyTemplate"
+          [ngTemplateOutletContext]="{threadReply: reply}"
+        />
+
+        <p-divider
+          class="!mt-0 !mb-0"
+        />
+      }
+    </div>
+  } @else {
+    <div
+      class="w-full h-full flex justify-center items-center"
+    >
+      <i
+        class="pi pi-spinner !text-2xl animate-spin"
+      ></i>
+    </div>
+  }
+</div>
+
+<ng-template #threadReplyTemplate
+  let-threadReply="threadReply"
+>
+  @if (threadReply.post) {
+    <feed-post-card
+      [feedViewPost]="threadReply.post"
+      (onPostClick)="openPost($event.post().uri)"
+      (onEmbedClick)="openPost($any($event.record).uri)"
+      class="w-full cursor-pointer hover:bg-white/2"
+    />
+  }
+  @if (threadReply.replies && threadReply.replies.length) {
+    <div
+      class="flex w-full"
+    >
+      <div
+        class="flex flex-col w-full items-end min-w-0 border-l-2 border-[var(--p-primary-700)] ml-3"
+      >
+        @for (reply of threadReply.replies; track reply.uuid) {
+          <ng-container
+            [ngTemplateOutlet]="threadReplyTemplate"
+            [ngTemplateOutletContext]="{threadReply: reply}"
+          />
+        }
+      </div>
+    </div>
+  }
+</ng-template>
+
+<ng-template #notPostViewTemplate
+  let-post="post"
+>
+  <div
+    class="flex flex-col p-3 mb-2 cursor-default msky-bg-dark-15 hover:msky-bg-dark-20"
+  >
+    @if (post | isFeedDefsNotFoundPost) {
+      Post not found
+    }
+    @else if (post | isFeedDefsBlockedPost) {
+      Blocked post
+    }
+  </div>
+</ng-template>

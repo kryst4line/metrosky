@@ -1,0 +1,30 @@
+<span
+  class="whitespace-pre-line block [overflow-wrap:break-word]"
+>
+  @for (segment of segments; track $index) {
+    @if (segment.isLink()) {
+      <a
+        [href]="segment.link?.uri"
+        target="_blank"
+        class="hover:underline text-blue-400 visited:text-purple-400 break-all"
+        (click)="$event.stopPropagation()"
+      >
+        {{segment.text}}
+      </a>
+    } @else if (segment.isMention()) {
+      <a
+        href="https://bsky.app/profile/{{segment.mention?.did}}"
+        class="hover:underline text-blue-400"
+        (click)="openAuthor($event, segment.mention?.did)"
+      >{{segment.text}}</a>
+    } @else if (segment.isTag()) {
+      <a
+        href="https://bsky.app/hashtag/{{segment.tag?.tag}}"
+        class="hover:underline text-blue-400 visited:text-purple-500"
+        (click)="$event.stopPropagation(); $event.preventDefault()"
+      >{{segment.text}}</a>
+    } @else {
+      <span class="break-words">{{segment.text}}</span>
+    }
+  }
+</span>

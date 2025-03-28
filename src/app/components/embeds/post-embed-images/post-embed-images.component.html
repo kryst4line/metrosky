@@ -1,0 +1,62 @@
+@switch (embed.images.length) {
+  @case (1) {
+    <img
+      [ngSrc]="embed.images[0].thumb"
+      [alt]="embed.images[0].alt"
+      width="1000"
+      height="1000"
+      placeholder="default_image.jpg"
+      [placeholderConfig]="{blur:false}"
+      class="min-w-full min-h-full max-h-full w-auto h-auto object-cover pointer rounded-md overflow-hidden"
+      (click)="imgClick(0, $event)"
+    />
+  }
+  @case (2) {
+    <div class="grid grid-cols-[repeat(2,_1fr)] grid-rows-[repeat(1,_1fr)] gap-2 aspect-video rounded-md overflow-hidden">
+      @for (image of embed.images; track image.thumb; let i = $index) {
+        <img
+          [ngSrc]="embed.images[i].thumb"
+          [alt]="embed.images[i].alt"
+          width="1000"
+          height="1000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur:false}"
+          class="min-w-full min-h-full max-h-full w-auto h-auto object-cover pointer"
+          (click)="imgClick(i, $event)"
+        />
+      }
+    </div>
+  }
+  @case (3) {
+    <div class="grid grid-cols-[repeat(2,_1fr)] grid-rows-[repeat(2,_1fr)] gap-2 aspect-video rounded-md overflow-hidden">
+      @for (image of embed.images; track image.thumb; let i = $index) {
+        <img
+          [ngSrc]="embed.images[i].thumb"
+          [alt]="embed.images[i].alt"
+          width="1000"
+          height="1000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur:false}"
+          class="min-w-full min-h-full max-h-full w-auto h-auto object-cover pointer first:row-span-2 last:col-start-2 overflow-hidden"
+          (click)="imgClick(i, $event)"
+        />
+      }
+    </div>
+  }
+  @case (4) {
+    <div class="grid grid-cols-[repeat(2,_1fr)] grid-rows-[repeat(2,_1fr)] gap-2 aspect-[4/3] rounded-md overflow-hidden">
+      @for (image of embed.images; track image.thumb; let i = $index) {
+        <img
+          [ngSrc]="embed.images[i].thumb"
+          [alt]="embed.images[i].alt"
+          width="1000"
+          height="1000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur:false}"
+          class="min-w-full min-h-full max-h-full w-auto h-auto object-cover pointer"
+          (click)="imgClick(i, $event)"
+        />
+      }
+    </div>
+  }
+}

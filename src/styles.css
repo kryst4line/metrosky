@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
+
+html, body, .app-container{
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-color: var(--p-primary-850);
+
+  --default-font-family: "Roboto";
+
+  --p-progressspinner-color-1: white;
+  --p-progressspinner-color-2: white;
+  --p-progressspinner-color-3: white;
+  --p-progressspinner-color-4: white;
+
+  --p-tooltip-padding: 0.25rem 0.5rem;
+
+}
+
+.p-tooltip-text {
+  font-size: 14px;
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+@theme {
+  --animate-pingonce: 'pingonce 1s ease-in-out';
+
+  @keyframes pingonce {
+    0% {
+      opacity: 0;
+    }
+    1% {
+      opacity: 1;
+    }
+    75% {
+      transform: scale(3);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+}

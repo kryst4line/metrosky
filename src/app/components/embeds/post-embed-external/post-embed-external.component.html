@@ -1,0 +1,64 @@
+@if (snippet.type == LinkSnippetType) {
+  <a
+    [href]="embed.external.uri"
+    target="_blank"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="flex flex-col rounded-[var(--p-card-border-radius)] border border-[var(--p-content-border-color)] overflow-hidden hover:bg-white/2"
+    >
+      @if (embed.external.thumb) {
+        <img
+          [ngSrc]="embed.external.thumb"
+          alt="thumb"
+          width="1000"
+          height="1000"
+          placeholder="default_image.jpg"
+          [placeholderConfig]="{blur: false}"
+          class="aspect-video object-cover"
+        />
+      }
+      <div
+        class="px-3 py-2"
+      >
+        <span
+          class="text-sm font-medium line-clamp-2"
+          [title]="embed.external.title"
+        >
+          {{embed.external.title}}
+        </span>
+          <span
+            class="block text-xs text-primary-400"
+          >
+          {{snippet.domain}}
+        </span>
+      </div>
+    </div>
+  </a>
+}
+
+@if (snippet.type == BlueskyGifSnippetType) {
+  <video
+    #target
+    class="video-js vjs-show-big-play-button-on-pause rounded-md overflow-hidden"
+    (click)="$event.stopPropagation()"
+  ></video>
+}
+
+@if (snippet.type == IframeSnippetType) {
+  @if (snippet.source == YoutubeSnippetSource) {
+    <youtube-player
+      [videoId]="snippet.url"
+      class="aspect-video"
+      (click)="$event.stopPropagation()"
+    />
+  } @else {
+    <iframe
+      [src]="safeURL"
+      width="100%"
+      allow="fullscreen"
+      class="aspect-video"
+      (click)="$event.stopPropagation()"
+    ></iframe>
+  }
+}
