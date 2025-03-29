@@ -7,6 +7,9 @@ export class LinkExtractorPipe implements PipeTransform {
   transform(uri: string, handle?: string): string {
     let url = 'https://bsky.app/profile/';
 
+    if (!uri && !handle) return undefined;
+    if (!uri && handle) return url + handle;
+
     if (uri.includes('at://')) {
       uri = uri.substring(5);
     }

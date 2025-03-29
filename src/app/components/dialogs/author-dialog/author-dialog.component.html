@@ -1,12 +1,12 @@
 <div
   class="flex p-3 gap-4"
 >
-  @if (author) {
+  @if (author()) {
     <div
       class="w-[27rem] flex flex-col"
     >
       <p-image
-        [src]="author.banner"
+        [src]="author().banner"
         width="480"
         height="160"
         class="rounded-t-md overflow-hidden"
@@ -16,7 +16,7 @@
         class="relative h-0 w-full"
       >
         <p-avatar id="mask"
-                  [image]="author.avatar"
+                  [image]="author().avatar"
                   size="xlarge"
                   class="!w-20 !h-20 absolute -top-11 left-2 overflow-hidden !box-content border-4 border-[var(--p-card-background)]"
         />
@@ -27,6 +27,7 @@
         <button
           pButton pRipple outlined
           class="border h-8 w-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="refreshMenuItems(); menu.toggle($event)"
         >
           <i
             class="pi pi-ellipsis-h !text-xs"
@@ -62,14 +63,40 @@
         />
       </div>
 
-      <span
-        class="text-xl mt-4 [text-box:trim-both_cap_alphabetic]"
-      >{{author | displayName}}</span>
+      <p-menu
+        #menu popup
+        [model]="menuItems()"
+        appendTo="body"
+      />
 
-      @if (author.displayName) {
+      <div
+        class="flex gap-2 mt-4"
+      >
+        <span
+          class="text-xl h-4 [text-box:trim-both_cap_alphabetic]"
+        >{{author() | displayName}}</span>
+
+        @if (author().viewer.muted) {
+          <i
+            class="pi pi-eye-slash"
+            pTooltip="This user is muted"
+            tooltipPosition="bottom"
+          ></i>
+        }
+
+        @if (author().viewer.blocking) {
+          <i
+            class="pi pi-ban"
+            pTooltip="This user is blocked"
+            tooltipPosition="bottom"
+          ></i>
+        }
+      </div>
+
+      @if (author().displayName) {
         <span
           class="text-sm text-primary-400 mt-3 [text-box:trim-both_cap_alphabetic]"
-        >{{'@' + author.handle}}</span>
+        >{{'@' + author().handle}}</span>
       }
 
       <div
@@ -78,51 +105,51 @@
         <a
           class="text-[15px] cursor-pointer hover:underline"
         >
-        <span
-          class="font-medium"
-          (click)="$event.stopPropagation()"
-        >{{author.postsCount}}</span>
+          <span
+            class="font-medium"
+            (click)="$event.stopPropagation()"
+          >{{author().postsCount}}</span>
 
           <span
             class="text-primary-400"
           >
-          posts
-        </span>
+            posts
+          </span>
         </a>
 
         <a
           class="text-[15px] cursor-pointer hover:underline"
         >
-        <span
-          class="font-medium"
-          (click)="$event.stopPropagation()"
-        >{{author.followsCount}}</span>
+          <span
+            class="font-medium"
+            (click)="$event.stopPropagation()"
+          >{{author().followsCount}}</span>
 
           <span
             class="text-primary-400"
           >
-          following
-        </span>
+            following
+          </span>
         </a>
 
         <a
           class="text-[15px] cursor-pointer hover:underline"
         >
-        <span
-          class="font-medium"
-          (click)="$event.stopPropagation()"
-        >{{author.followersCount}}</span>
+          <span
+            class="font-medium"
+            (click)="$event.stopPropagation()"
+          >{{author().followersCount}}</span>
 
           <span
             class="text-primary-400"
           >
-          followers
-        </span>
+            followers
+          </span>
         </a>
       </div>
 
       <rich-text
-        [text]="author.description"
+        [text]="author().description"
         class="text-sm mt-3"
       />
     </div>
@@ -199,7 +226,7 @@
 
     <ng-template #content>
       <author-feed
-        [author]="author.did"
+        [author]="author().did"
         [filter]="
           viewMode() == AuthorViewMode.POSTS ? 'posts_no_replies' :
           viewMode() == AuthorViewMode.REPLIES ? 'posts_with_replies' : 'posts_with_media'

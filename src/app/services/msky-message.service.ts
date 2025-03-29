@@ -12,7 +12,7 @@ export class MskyMessageService {
 
   success(title: string, subtitle?: string) {
     this.messageService.add({
-      severity: 'success',
+      severity: 'pi pi-success',
       summary: title,
       detail: subtitle
     });
@@ -20,7 +20,7 @@ export class MskyMessageService {
 
   warn(title: string, subtitle?: string) {
     this.messageService.add({
-      severity: 'warn',
+      severity: 'pi pi-warn',
       summary: title,
       detail: subtitle
     });
@@ -28,8 +28,16 @@ export class MskyMessageService {
 
   error(title: string, subtitle?: string) {
     this.messageService.add({
-      icon: 'error',
+      icon: 'pi pi-error',
       severity: 'error',
+      summary: title,
+      detail: subtitle
+    });
+  }
+
+  info(title: string, subtitle?: string) {
+    this.messageService.add({
+      severity: 'secondary',
       summary: title,
       detail: subtitle
     });

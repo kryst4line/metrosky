@@ -1,7 +1,6 @@
 import {booleanAttribute, ChangeDetectionStrategy, Component, forwardRef, input, output,} from '@angular/core';
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
-import {DialogService} from "primeng/dynamicdialog";
 import {AppBskyEmbedImages, AppBskyEmbedRecord} from "@atproto/api";
 import {from} from "rxjs";
 import {Ripple} from "primeng/ripple";
@@ -66,8 +65,7 @@ import {Avatar} from 'primeng/avatar';
   styleUrl: './feed-post-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    LinkExtractorPipe,
-    DialogService
+    LinkExtractorPipe
   ]
 })
 export class FeedPostCardComponent {
@@ -80,7 +78,20 @@ export class FeedPostCardComponent {
 
   moreMenuItems: MenuItem[] = [
     {
+      label: 'Copy link',
+      icon: 'pi pi-link',
+      command: () => {
+        navigator.clipboard.writeText(
+          this.linkExtractorPipe.transform(
+            this.feedViewPost().post().uri,
+            this.feedViewPost().post().author.handle
+          )
+        );
+      }
+    },
+    {
       label: 'Open in Bsky',
+      icon: 'pi pi-upload',
       command: () => {
         window.open(
           this.linkExtractorPipe.transform(
@@ -90,17 +101,6 @@ export class FeedPostCardComponent {
         );
       }
     },
-    {
-      label: 'Copy link',
-      command: () => {
-        navigator.clipboard.writeText(
-          this.linkExtractorPipe.transform(
-            this.feedViewPost().post().uri,
-            this.feedViewPost().post().author.handle
-          )
-        );
-      }
-    }
   ];
   repostMenuItems: MenuItem[];
 
