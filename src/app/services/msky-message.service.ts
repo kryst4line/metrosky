@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ConfirmationService, MessageService as PrimeNgMessageService} from "primeng/api";
 
 @Injectable({

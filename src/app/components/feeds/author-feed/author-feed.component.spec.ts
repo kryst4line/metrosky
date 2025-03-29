@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AuthorFeedComponent } from './author-feed.component';
+import {AuthorFeedComponent} from './author-feed.component';
 
 describe('PostFeedComponent', () => {
   let component: AuthorFeedComponent;

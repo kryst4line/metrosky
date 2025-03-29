@@ -1,4 +1,4 @@
-import {booleanAttribute, ChangeDetectionStrategy, Component, input, model, output, signal} from '@angular/core';
+import {booleanAttribute, ChangeDetectionStrategy, Component, input, model, output} from '@angular/core';
 import {Card} from 'primeng/card';
 import {NotificationFeedComponent} from '@components/feeds/notification-feed/notification-feed.component';
 import {NotificationDeckColumn} from '@models/deck-column';

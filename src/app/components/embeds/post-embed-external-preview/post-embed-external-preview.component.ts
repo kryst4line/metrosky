@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
-import {
-  SnippetType,
-  BlueskyGifSnippet,
-  IframeSnippet,
-  LinkSnippet,
-  SnippetSource
-} from "@models/snippet";
+import {ChangeDetectionStrategy, Component, Input, OnInit,} from '@angular/core';
+import {BlueskyGifSnippet, IframeSnippet, LinkSnippet, SnippetSource, SnippetType} from "@models/snippet";
 import {SnippetUtils} from "@shared/utils/snippet-utils";
 import {ExternalEmbed} from "@models/embed";
 import {NgOptimizedImage} from "@angular/common";

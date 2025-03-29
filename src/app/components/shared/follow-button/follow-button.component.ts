@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, input, model, output} from '@angular/core';
+import {ChangeDetectorRef, Component, model} from '@angular/core';
 import {ButtonDirective} from 'primeng/button';
 import {IsLoggedUserPipe} from '@shared/pipes/is-logged-user.pipe';
 import {Ripple} from 'primeng/ripple';

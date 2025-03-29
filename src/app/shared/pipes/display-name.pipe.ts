@@ -1,5 +1,4 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {AppBskyActorDefs} from "@atproto/api";
 
 @Pipe({
   name: 'displayName'

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from '@core/auth/auth.service';
 import {takeWhile} from 'rxjs';

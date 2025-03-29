@@ -4,7 +4,8 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit, viewChild,
+  OnInit,
+  viewChild,
 } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from '@components/cards/feed-post-card/feed-post-card.component';

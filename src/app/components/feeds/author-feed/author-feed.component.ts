@@ -3,9 +3,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, forwardRef, input,
-  Input, OnDestroy,
-  OnInit, viewChild,
+  ElementRef,
+  forwardRef,
+  input,
+  Input,
+  OnDestroy,
+  OnInit,
+  viewChild,
 } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {Divider} from "primeng/divider";

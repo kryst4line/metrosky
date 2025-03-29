@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  forwardRef,
-  viewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, viewChild} from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {$Typed, AppBskyFeedDefs} from "@atproto/api";
 import {from} from "rxjs";

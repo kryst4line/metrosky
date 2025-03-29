@@ -3,7 +3,6 @@ import {DialogService} from "primeng/dynamicdialog";
 import {ThreadDialogComponent} from '@components/dialogs/thread-dialog/thread-dialog.component';
 import {AppBskyEmbedImages} from '@atproto/api';
 import {AuthorDialogComponent} from '@components/dialogs/author-dialog/author-dialog.component';
-import {PostService} from '@services/post.service';
 import {PostComposerComponent} from '@components/dialogs/post-composer/post-composer.component';
 import {SearchDialogComponent} from '@components/dialogs/search-dialog/search-dialog.component';
 import {PostCompose} from '@models/post-compose';

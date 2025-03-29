@@ -1,11 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit, output
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, output} from '@angular/core';
 import {RippleModule} from "primeng/ripple";
-import {AppBskyActorDefs} from "@atproto/api";
-import {StorageKeys} from '@core/storage-keys';
 import {Avatar} from 'primeng/avatar';
 import {ButtonDirective} from 'primeng/button';
 import {Divider} from 'primeng/divider';

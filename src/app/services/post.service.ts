@@ -3,7 +3,8 @@ import {
   $Typed,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
-  AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
   RichText
@@ -342,7 +343,7 @@ export class PostService {
       }
 
       if (this.postCompose().mediaEmbed()?.type == EmbedType.VIDEO) {
-        const videoEmbed = this.postCompose().mediaEmbed as WritableSignal<VideoEmbed>;
+        // const videoEmbed = this.postCompose().mediaEmbed as WritableSignal<VideoEmbed>;
         resolve(undefined);
       }
 

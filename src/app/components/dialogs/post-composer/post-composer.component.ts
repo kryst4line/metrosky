@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef, forwardRef,
-  output, signal,
-  viewChild,
-  WritableSignal
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, WritableSignal} from '@angular/core';
 import {$Typed, AppBskyFeedDefs, AppBskyGraphDefs, RichText} from '@atproto/api';
 import {MentionModule} from 'angular-mentions';
 import {agent} from '@core/bsky.api';
@@ -29,7 +21,6 @@ import {SnippetType} from '@models/snippet';
 import {EmbedService} from '@services/embed.service';
 import {PreviewCardComponent} from '@components/cards/preview-card/preview-card.component';
 import {IsEmbedRecordViewRecordPipe} from '@shared/pipes/type-guards/is-embed-record-viewrecord.pipe';
-import {PostEmbedRecordComponent} from '@components/embeds/post-embed-record/post-embed-record.component';
 import {IsFeedDefsGeneratorViewPipe} from '@shared/pipes/type-guards/is-feed-defs-generator-view';
 import {IsGraphDefsListViewPipe} from '@shared/pipes/type-guards/is-graph-defs-list-view';
 import {IsGraphDefsStarterPackViewPipe} from '@shared/pipes/type-guards/is-graph-defs-starterpack-view';

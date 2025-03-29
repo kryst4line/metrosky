@@ -5,7 +5,8 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit, viewChildren
+  OnInit,
+  viewChildren
 } from '@angular/core';
 import {AppBskyEmbedExternal} from "@atproto/api";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -15,6 +16,7 @@ import {NgOptimizedImage} from "@angular/common";
 import {BlueskyGifSnippet, IframeSnippet, LinkSnippet, SnippetSource, SnippetType} from '@models/snippet';
 import {SnippetUtils} from '@shared/utils/snippet-utils';
 import {YouTubePlayer} from '@angular/youtube-player';
+
 type Options = typeof videojs.options;
 
 @Component({

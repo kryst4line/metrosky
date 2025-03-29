@@ -1,6 +1,6 @@
 import {booleanAttribute, ChangeDetectionStrategy, Component, input, model, output} from '@angular/core';
 import {Card} from 'primeng/card';
-import {AuthorDeckColumn, SearchDeckColumn} from '@models/deck-column';
+import {SearchDeckColumn} from '@models/deck-column';
 import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
 import {Popover} from 'primeng/popover';

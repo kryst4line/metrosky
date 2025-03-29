@@ -5,16 +5,16 @@ import {
   EventEmitter,
   forwardRef,
   Input,
-  Output, viewChild,
+  Output,
+  viewChild,
 } from '@angular/core';
-import {DatePipe, NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
+import {DatePipe, NgTemplateOutlet} from "@angular/common";
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {AppBskyEmbedImages, AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
 import {from} from "rxjs";
 import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
 import {LinkExtractorPipe} from '@shared/pipes/link-extractor.pipe';
-import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {NumberFormatterPipe} from '@shared/pipes/number-formatter.pipe';
 import {PostEmbedImagesComponent} from '@components/embeds/post-embed-images/post-embed-images.component';
 import {IsEmbedVideoViewPipe} from '@shared/pipes/type-guards/is-embed-video-view.pipe';
@@ -39,7 +39,6 @@ import {Ripple} from 'primeng/ripple';
   selector: 'feed-post-card-detail',
   imports: [
     IsEmbedImagesViewPipe,
-    DisplayNamePipe,
     LinkExtractorPipe,
     DatePipe,
     NumberFormatterPipe,

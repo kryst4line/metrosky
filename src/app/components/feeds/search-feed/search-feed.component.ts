@@ -1,10 +1,14 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, effect,
-  ElementRef, forwardRef, input,
+  Component,
+  effect,
+  ElementRef,
+  forwardRef,
+  input,
   OnDestroy,
-  OnInit, viewChild,
+  OnInit,
+  viewChild,
 } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {FeedPostCardComponent} from '@components/cards/feed-post-card/feed-post-card.component';

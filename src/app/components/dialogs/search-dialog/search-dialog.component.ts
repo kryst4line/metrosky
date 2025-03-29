@@ -1,19 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  effect,
-  signal,
-  viewChild,
-  WritableSignal
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, signal, viewChild} from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {ColumnService} from '@services/column.service';
 import {SearchFeedComponent} from '@components/feeds/search-feed/search-feed.component';
 import {MentionModule} from 'angular-mentions';
 import {agent} from '@core/bsky.api';
 import {FormsModule} from '@angular/forms';
-import {AutoComplete} from 'primeng/autocomplete';
 import {Avatar} from 'primeng/avatar';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {MskyDialogService} from '@services/msky-dialog.service';
@@ -22,15 +13,11 @@ import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
 import {Divider} from 'primeng/divider';
 import {InputText} from 'primeng/inputtext';
-import {InputGroup} from 'primeng/inputgroup';
-import {InputGroupAddon} from 'primeng/inputgroupaddon';
-import {AuthorFeedComponent} from '@components/feeds/author-feed/author-feed.component';
 import type * as AppBskyActorDefs from '@atproto/api/src/client/types/app/bsky/actor/defs';
 import {NgTemplateOutlet} from '@angular/common';
 import {FollowButtonComponent} from '@components/shared/follow-button/follow-button.component';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {Tooltip} from 'primeng/tooltip';
-import {from} from 'rxjs';
 import {MskyMessageService} from '@services/msky-message.service';
 
 @Component({
@@ -38,7 +25,6 @@ import {MskyMessageService} from '@services/msky-message.service';
   imports: [
     MentionModule,
     FormsModule,
-    AutoComplete,
     Avatar,
     DisplayNamePipe,
     SearchFeedComponent,

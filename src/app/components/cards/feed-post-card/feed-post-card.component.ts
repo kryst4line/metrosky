@@ -1,17 +1,8 @@
-import {
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  forwardRef, input,
-  Input, output,
-  Output, viewChild,
-} from '@angular/core';
+import {booleanAttribute, ChangeDetectionStrategy, Component, forwardRef, input, output,} from '@angular/core';
 import {Menu} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {DialogService} from "primeng/dynamicdialog";
-import {AppBskyEmbedImages, AppBskyEmbedRecord, AppBskyFeedDefs} from "@atproto/api";
+import {AppBskyEmbedImages, AppBskyEmbedRecord} from "@atproto/api";
 import {from} from "rxjs";
 import {Ripple} from "primeng/ripple";
 import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
@@ -19,7 +10,7 @@ import {IsFeedDefsReasonRepostPipe} from '@shared/pipes/type-guards/is-feed-defs
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsFeedDefsPostViewPipe} from '@shared/pipes/type-guards/is-feed-defs-postview';
 import {LinkExtractorPipe} from '@shared/pipes/link-extractor.pipe';
-import {DatePipe, NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
+import {DatePipe, NgTemplateOutlet} from '@angular/common';
 import {NumberFormatterPipe} from '@shared/pipes/number-formatter.pipe';
 import {DateFormatterPipe} from '@shared/pipes/date-formatter.pipe';
 import {IsEmbedVideoViewPipe} from '@shared/pipes/type-guards/is-embed-video-view.pipe';

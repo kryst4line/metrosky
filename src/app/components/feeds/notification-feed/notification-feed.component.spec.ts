@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NotificationFeedComponent } from './notification-feed.component';
+import {NotificationFeedComponent} from './notification-feed.component';
 
 describe('PostFeedComponent', () => {
   let component: NotificationFeedComponent;

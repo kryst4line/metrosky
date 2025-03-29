@@ -3,7 +3,7 @@ import {Card} from 'primeng/card';
 import {Image} from 'primeng/image';
 import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
-import {$Typed, AppBskyEmbedDefs, AppBskyEmbedRecord} from '@atproto/api';
+import {AppBskyEmbedRecord} from '@atproto/api';
 import {Avatar} from 'primeng/avatar';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsFeedPostRecordPipe} from '@shared/pipes/type-guards/is-feed-post-record';
@@ -13,7 +13,6 @@ import {MskyDialogService} from '@services/msky-dialog.service';
 import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
 import {IsEmbedVideoViewPipe} from '@shared/pipes/type-guards/is-embed-video-view.pipe';
 import {IsEmbedExternalViewPipe} from '@shared/pipes/type-guards/is-embed-external-view.pipe';
-import {PostEmbedImagesComponent} from '@components/embeds/post-embed-images/post-embed-images.component';
 
 @Component({
   selector: 'preview-card',
@@ -29,8 +28,7 @@ import {PostEmbedImagesComponent} from '@components/embeds/post-embed-images/pos
     NgTemplateOutlet,
     IsEmbedImagesViewPipe,
     IsEmbedVideoViewPipe,
-    IsEmbedExternalViewPipe,
-    PostEmbedImagesComponent
+    IsEmbedExternalViewPipe
   ],
   templateUrl: './preview-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

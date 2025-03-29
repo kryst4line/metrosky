@@ -1,5 +1,5 @@
 import {AppBskyEmbedExternal} from "@atproto/api";
-import {SnippetSource, SnippetType, LinkSnippet, BlueskyGifSnippet, IframeSnippet} from "@models/snippet";
+import {BlueskyGifSnippet, IframeSnippet, LinkSnippet, SnippetSource, SnippetType} from "@models/snippet";
 
 export class SnippetUtils {
   public static detectSnippet(link: Pick<AppBskyEmbedExternal.ViewExternal, 'uri' | 'description'>): LinkSnippet | BlueskyGifSnippet | IframeSnippet {

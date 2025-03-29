@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TimelineFeedComponent } from './timeline-feed.component';
+import {TimelineFeedComponent} from './timeline-feed.component';
 
 describe('PostFeedComponent', () => {
   let component: TimelineFeedComponent;

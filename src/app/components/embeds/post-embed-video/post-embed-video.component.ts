@@ -1,13 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input, OnDestroy,
-  OnInit, viewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, viewChild} from '@angular/core';
 import {AppBskyEmbedVideo} from "@atproto/api";
 import videojs from "video.js";
 import type Player from "video.js/dist/types/player";
+
 type Options = typeof videojs.options;
 
 @Component({
