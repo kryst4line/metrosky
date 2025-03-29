@@ -19,8 +19,7 @@ import {agent} from '@core/bsky.api';
 import {PostUtils} from '@shared/utils/post-utils';
 import {Divider} from 'primeng/divider';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
-import {$Typed, AppBskyFeedDefs} from '@atproto/api';
-import {ReasonRepost} from '@atproto/api/dist/client/types/app/bsky/feed/defs';
+import {AppBskyFeedDefs} from '@atproto/api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 
 @Component({
@@ -143,22 +142,15 @@ export class SearchFeedComponent implements OnInit, OnDestroy {
 
         if (this.feed().nativeElement.scrollTop == 0) {
           this.reloadReady = false;
-          agent.getTimeline({
-            limit: 1
+          agent.app.bsky.feed.searchPosts({
+            q: this.query(),
           }).then(response => {
-            const post = response.data.feed[0];
+            const post = response.data.posts[0];
             const lastPost = this.posts[0];
             let isNewPost = false;
 
-            if (post) {
-              if (post.reason) {
-                const reason = post.reason as $Typed<ReasonRepost>;
-                if (!lastPost.reason) isNewPost = true;
-                if (reason.indexedAt !== (lastPost.reason as $Typed<ReasonRepost>)?.indexedAt) isNewPost = true;
-              } else {
-                if (lastPost.reason) isNewPost = true;
-                if (post.post.indexedAt !== lastPost.post().indexedAt) isNewPost = true;
-              }
+            if (post && post.uri+post.cid == lastPost.post().uri+lastPost.post().cid) {
+              isNewPost = true;
             }
 
             if (isNewPost) {
