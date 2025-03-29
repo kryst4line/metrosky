@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {SignalizedFeedViewPost} from "~/src/app/api/models/signalized-feed-view-post";
+import {SignalizedFeedViewPost} from "@models/signalized-feed-view-post";
 import {AppBskyFeedDefs} from "@atproto/api";
 
 @Pipe({

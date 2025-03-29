@@ -6,13 +6,24 @@
    <div
      class="flex h-14 w-full pr-2 items-center bg-[var(--p-primary-750)] [border-bottom:1px_solid_var(--p-surface-700)]"
    >
-     <i
-       class="pi pi-bell !text-xl w-18 text-center -mt-[2px] shrink-0"
-     ></i>
+     <div
+       class="h-full w-18 flex shrink-0 items-center justify-center"
+     >
+       @if (column().avatar) {
+         <p-avatar
+           [image]="column().avatar"
+           class="!h-10 !w-10 rounded-md overflow-hidden"
+         />
+       } @else {
+         <i
+           class="pi pi-hashtag !text-xl w-18 text-center -mt-[2px]"
+         ></i>
+       }
+     </div>
 
      <span
        class="text-lg [text-box:trim-both_cap_alphabetic] flex-1 cursor-default"
-     >{{ column().title }}</span>
+     >{{column().title}}</span>
 
      <button
        pButton pRipple text
@@ -27,7 +38,8 @@
   </ng-template>
 
   <ng-template #content>
-    <notification-feed
+    <generator-feed
+      [uri]="column().uri"
       class="block h-full"
     />
   </ng-template>

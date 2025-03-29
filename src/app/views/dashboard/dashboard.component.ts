@@ -16,9 +16,10 @@ import {PostService} from '@services/post.service';
   styles: `
     :host(::ng-deep p-galleria) {
       --p-galleria-border-width: 0;
+      --p-galleria-nav-button-size: 3.5rem;
 
       .p-galleria-content {
-        height: 100vh;
+        //height: 100vh;
       }
 
       .p-galleria-items-container {
@@ -39,9 +40,15 @@ import {PostService} from '@services/post.service';
       }
 
       .p-galleria-close-button {
-        z-index: 99999;
         background: transparent;
         outline: none;
+        height: 100vh;
+        width: 100vw;
+        border-radius: 0;
+
+        p-times-icon {
+          visibility: hidden;
+        }
       }
     }
   `,

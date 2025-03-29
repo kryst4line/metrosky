@@ -1,0 +1,128 @@
+<div
+  class="h-full flex flex-col [&:not(:last-child)]:!hidden bg-[var(--p-primary-850)] overflow-hidden"
+>
+  @if (feedInfo()) {
+    <div
+      class="w-full p-4 gap-3 flex flex-col shrink-0 [border-bottom:1px_solid_var(--p-surface-700)] bg-[var(--p-primary-800)]"
+    >
+      <div
+        class="flex gap-3"
+      >
+        @if (feedInfo().avatar) {
+          <p-avatar
+            [image]="feedInfo().avatar"
+            size="xlarge"
+            class="!h-14 !w-14 rounded-md overflow-hidden shrink-0"
+          />
+        } @else {
+          <p-avatar
+            icon="pi pi-hashtag"
+            size="xlarge"
+            class="!h-14 !w-14 rounded-md overflow-hidden shrink-0"
+          />
+        }
+
+        <div
+          class="flex flex-col h-full justify-center grow"
+        >
+          <span
+            class="text-2xl font-medium"
+          >{{feedInfo().displayName}}</span>
+
+          <span
+            class="text-sm text-primary-400"
+          >Created by
+            <a
+              class="hover:underline cursor-pointer"
+            >{{feedInfo().creator | displayName}}</a>
+            · Liked by
+            <a
+              class="hover:underline cursor-pointer"
+            >{{feedInfo().likeCount}} users</a>
+          </span>
+        </div>
+
+        <button
+          pButton pRipple text
+          class="!h-8 !w-8 !p-0 shrink-0"
+          (click)="ref.close()"
+        >
+          <i
+            class="pi pi-times !text-xl"
+          ></i>
+        </button>
+      </div>
+
+      <rich-text
+        [text]="feedInfo().description"
+        [facets]="feedInfo().descriptionFacets"
+        class="text-sm"
+      />
+
+      <div
+        class="flex gap-4"
+      >
+        <button
+          pButton pRipple outlined
+          class="!p-2 flex-1"
+        >
+          @if (feedInfo().viewer.like) {
+            <i
+              class="pi pi-heart-fill text-red-600 !text-sm"
+            ></i>
+            <span
+              class="text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+            >Unlike</span>
+          } @else {
+            <i
+              class="pi pi-heart !text-sm"
+            ></i>
+            <span
+              class="text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+            >Like</span>
+          }
+        </button>
+
+        <button
+          pButton pRipple outlined
+          class="!p-2 flex-1"
+          (click)="columnService.createGeneratorColumn(feedInfo()); ref.close()"
+        >
+          <i
+            class="pi pi-plus !text-sm"
+          ></i>
+          <span
+            class="text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+          >Add as column</span>
+        </button>
+
+        <button
+          pButton pRipple outlined
+          class="!p-2 flex-1"
+        >
+          <i
+            class="pi pi-upload !text-sm"
+          ></i>
+          <span
+            class="text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+          >Share</span>
+        </button>
+      </div>
+    </div>
+
+    <generator-feed
+      [uri]="uri()"
+      class="block flex-1 min-h-0"
+    />
+  } @else {
+    <div
+      class="h-full w-full flex items-center justify-center"
+    >
+      <p-progress-spinner
+        class="h-12"
+        strokeWidth="5"
+        [style]="{height: '3rem', width: '3rem'}"
+      />
+    </div>
+  }
+</div>

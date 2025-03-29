@@ -19,6 +19,7 @@ import {FollowButtonComponent} from '@components/shared/follow-button/follow-but
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {Tooltip} from 'primeng/tooltip';
 import {MskyMessageService} from '@services/msky-message.service';
+import {AppBskyFeedDefs} from '@atproto/api';
 
 @Component({
   selector: 'search-dialog',
@@ -38,20 +39,6 @@ import {MskyMessageService} from '@services/msky-message.service';
     ScrollDirective,
     Tooltip,
   ],
-  styles: `
-    :host(::ng-deep p-auto-complete) {
-      .p-autocomplete, .p-autocomplete input {
-        width: 100%;
-      }
-      .p-autocomplete-list-container {
-        max-height: unset !important;
-      }
-
-      p-overlay:has(.p-autocomplete-empty-message) {
-        display: none;
-      }
-    }
-  `,
   templateUrl: './search-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -61,9 +48,10 @@ export class SearchDialogComponent {
   searchType = signal<'top' | 'latest' | 'users' | 'feeds'>('top');
   cursor = signal<string>(undefined);
   users = signal<AppBskyActorDefs.ProfileView[]>([]);
-  feeds = signal([]);
+  feeds = signal<AppBskyFeedDefs.GeneratorView[]>([]);
 
   usersTemplate = viewChild('usersTemplate');
+  feedsTemplate = viewChild('feedsTemplate');
 
   constructor(
     config: DynamicDialogConfig,
@@ -81,7 +69,10 @@ export class SearchDialogComponent {
       if (this.usersTemplate() && this.savedQuery()) {
         this.initUsers();
       }
-    })
+      if (this.feedsTemplate() && this.savedQuery()) {
+        this.initFeeds();
+      }
+    });
   }
 
   initUsers() {
@@ -107,6 +98,35 @@ export class SearchDialogComponent {
       this.users.update(users => {
         users = [...users, ...response.data.actors];
         return users;
+      });
+      this.cursor.set(response.data.cursor);
+      this.cdRef.markForCheck();
+    });
+  }
+
+  initFeeds() {
+    if (!this.savedQuery()) return;
+
+    this.feeds.set([]);
+    agent.app.bsky.unspecced.getPopularFeedGenerators({
+      query: this.savedQuery(),
+      limit: 15
+    }).then(response => {
+      this.feeds.set(response.data.feeds);
+      this.cursor.set(response.data.cursor);
+      this.cdRef.markForCheck();
+    });
+  }
+
+  nextFeeds() {
+    agent.app.bsky.unspecced.getPopularFeedGenerators({
+      query: this.savedQuery(),
+      limit: 15,
+      cursor: this.cursor()
+    }).then(response => {
+      this.feeds.update(feeds => {
+        feeds = [...feeds, ...response.data.feeds];
+        return feeds;
       });
       this.cursor.set(response.data.cursor);
       this.cdRef.markForCheck();

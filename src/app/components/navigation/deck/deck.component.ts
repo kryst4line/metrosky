@@ -18,6 +18,10 @@ import {IsDeckColumnSearchPipe} from '@shared/pipes/type-guards/is-deckcolumn-se
 import {IsDeckColumnListPipe} from '@shared/pipes/type-guards/is-deckcolumn-list';
 import {MskyMessageService} from '@services/msky-message.service';
 import {SearchDeckColumnComponent} from '@components/deck-columns/search-deck-column/search-deck-column.component';
+import {IsDeckColumnGeneratorPipe} from '@shared/pipes/type-guards/is-deckcolumn-generator';
+import {
+  GeneratorDeckColumnComponent
+} from '@components/deck-columns/generator-deck-column/generator-deck-column.component';
 
 @Component({
   selector: 'deck',
@@ -31,7 +35,9 @@ import {SearchDeckColumnComponent} from '@components/deck-columns/search-deck-co
     IsDeckColumnAuthorPipe,
     IsDeckColumnSearchPipe,
     IsDeckColumnListPipe,
-    SearchDeckColumnComponent
+    SearchDeckColumnComponent,
+    IsDeckColumnGeneratorPipe,
+    GeneratorDeckColumnComponent
   ],
   templateUrl: './deck.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

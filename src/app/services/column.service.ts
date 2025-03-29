@@ -2,6 +2,7 @@ import {StorageKeys} from "@core/storage-keys";
 import {
   AuthorDeckColumn,
   DeckColumn,
+  GeneratorDeckColumn,
   NotificationDeckColumn,
   SearchDeckColumn,
   TimelineDeckColumn
@@ -17,7 +18,7 @@ const columns: WritableSignal<Partial<DeckColumn>[]> = signal([]);
 export class ColumnService {
   public addColumn(column: Partial<DeckColumn>) {
     columns.update(columns => [...columns, column]);
-    localStorage.setItem(StorageKeys.DECK_COLUMNS, JSON.stringify(columns()));
+    this.saveColumns();
   }
 
   public updateColumn(column: Partial<DeckColumn>) {
@@ -54,7 +55,7 @@ export class ColumnService {
     }
 
     storageColumns.forEach((column: any) => {
-      if (!column.width) column.width = 480;
+      if (!column.width) column.width = 450;
       if (!column.uuid) column.uuid = uuid.v4();
     });
 
@@ -65,16 +66,19 @@ export class ColumnService {
   public initColumns() {
     this.createTimelineColumn();
     this.createNotificationsColumn();
+    this.createAuthorColumn(JSON.parse(localStorage.getItem(StorageKeys.LOGGED_USER)));
   }
 
   public createTimelineColumn() {
     let column = new TimelineDeckColumn();
+    column.title = 'Home';
     column.index = columns().length;
     this.addColumn(column);
   }
 
   public createNotificationsColumn() {
     let column = new NotificationDeckColumn();
+    column.title = 'Notifications';
     column.index = columns().length;
     this.addColumn(column);
   }
@@ -84,6 +88,15 @@ export class ColumnService {
     column.did = author.did;
     column.handle = author.handle;
     column.displayName = author.displayName;
+    column.index = columns().length;
+    this.addColumn(column);
+  }
+
+  public createGeneratorColumn(generator: Partial<{uri: string, avatar: string, displayName: string}>) {
+    let column = new GeneratorDeckColumn();
+    column.title = generator.displayName;
+    column.uri = generator.uri;
+    column.avatar = generator.avatar;
     column.index = columns().length;
     this.addColumn(column);
   }

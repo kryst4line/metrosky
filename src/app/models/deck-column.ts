@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 export class DeckColumn {
   uuid: string = uuid.v4();
   title: string = '';
-  width: number = 400;
+  width: number = 450;
   index: number;
 }
 
@@ -28,6 +28,12 @@ export class ListDeckColumn extends DeckColumn {
   did: string;
 }
 
+export class GeneratorDeckColumn extends DeckColumn {
+  type: DeckColumnType.GENERATOR = DeckColumnType.GENERATOR;
+  uri: string;
+  avatar: string;
+}
+
 export class SearchDeckColumn extends DeckColumn {
   type: DeckColumnType.SEARCH = DeckColumnType.SEARCH;
   query: string;
@@ -39,6 +45,7 @@ export enum DeckColumnType {
   NOTIFICATION = 'NOTIFICATION',
   AUTHOR = 'AUTHOR',
   LIST = 'LIST',
+  GENERATOR = 'GENERATOR',
   SEARCH = 'SEARCH'
 }
 
