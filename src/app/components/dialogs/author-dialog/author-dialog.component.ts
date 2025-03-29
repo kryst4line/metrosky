@@ -15,9 +15,9 @@ import {Card} from 'primeng/card';
 import {NgTemplateOutlet} from '@angular/common';
 import {AuthorFeedComponent} from '@components/feeds/author-feed/author-feed.component';
 import {ProgressSpinner} from 'primeng/progressspinner';
-import {AuthService} from '@core/auth/auth.service';
 import {FollowButtonComponent} from '@components/shared/follow-button/follow-button.component';
 import {Tooltip} from 'primeng/tooltip';
+import {MskyDialogService} from '@services/msky-dialog.service';
 
 @Component({
   selector: 'author-dialog',
@@ -45,7 +45,7 @@ export class AuthorDialogComponent {
   constructor(
     private config: DynamicDialogConfig,
     private dialog: DynamicDialogRef,
-    protected authService: AuthService,
+    private dialogService: MskyDialogService,
     private messageService: MskyMessageService,
     private cdRef: ChangeDetectorRef,
     private columnService: ColumnService
@@ -67,6 +67,10 @@ export class AuthorDialogComponent {
   addAsColumn() {
     this.columnService.createAuthorColumn(this.author);
     this.dialog.close();
+  }
+
+  openSearch() {
+    this.dialogService.openSearch(`from:${this.author.handle} `);
   }
 }
 

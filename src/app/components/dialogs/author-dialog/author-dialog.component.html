@@ -35,6 +35,18 @@
 
         <button
           pButton pRipple outlined
+          pTooltip="Search posts from user"
+          tooltipPosition="bottom"
+          class="border h-8 w-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"
+          (click)="openSearch()"
+        >
+          <i
+            class="pi pi-search !text-xs"
+          ></i>
+        </button>
+
+        <button
+          pButton pRipple outlined
           pTooltip="Add as column"
           tooltipPosition="bottom"
           class="border h-8 w-8 !text-sm font-medium [text-box:trim-both_cap_alphabetic]"

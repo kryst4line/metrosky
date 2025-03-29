@@ -63,7 +63,7 @@ export class SearchDialogComponent {
   ) {
     if (config.data.query) {
       this.query = config.data.query;
-      this.savedQuery = config.data.query;
+      this.savedQuery.set(config.data.query);
     }
     effect(() => {
       if (this.usersTemplate() && this.savedQuery()) {
