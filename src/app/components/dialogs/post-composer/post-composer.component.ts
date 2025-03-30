@@ -193,17 +193,10 @@ export class PostComposerComponent {
 
     this.postService.publishPost().then(
       () => {
-        this.messageService.success('Your post has been successfully published');
+        this.messageService.info('Your post has been successfully published');
+        this.dialog.close();
       },
       err => this.messageService.error(err.message, 'Oops!')
     ).finally(() => this.loading = false);
-  }
-
-  paste(event: ClipboardEvent) {
-    console.log(event.clipboardData.files)
-  }
-
-  log(event: any) {
-    console.log("DEVELOPMENT LOG: ", event);
   }
 }
