@@ -34,6 +34,21 @@
   <ng-template
     #item let-item
   >
-    <img [src]="item.fullsize" style="width: 100%; display: block;">
+    <a
+      [href]="item.fullsize"
+      target="_blank"
+    >
+      <img
+        [src]="item.fullsize"
+        class="block w-full !max-w-[90vw] !max-h-[90vh]"
+        [alt]="item.alt"
+      />
+    </a>
+  </ng-template>
+
+  <ng-template
+    #closeicon
+  >
+
   </ng-template>
 </p-galleria>

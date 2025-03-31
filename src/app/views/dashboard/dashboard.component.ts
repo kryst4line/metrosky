@@ -23,9 +23,16 @@ import {PostService} from '@services/post.service';
         max-width: 90vw;
       }
 
+      .p-galleria-items {
+        justify-content: center;
+      }
+
+      .p-galleria-item {
+        width: fit-content;
+      }
+
       .p-galleria-items-container {
         min-height: 0;
-        height: 100vh;
       }
 
       .p-galleria-indicator-list {
@@ -46,10 +53,6 @@ import {PostService} from '@services/post.service';
         height: 100vh;
         width: 100vw;
         border-radius: 0;
-
-        p-times-icon {
-          visibility: hidden;
-        }
       }
     }
   `,
