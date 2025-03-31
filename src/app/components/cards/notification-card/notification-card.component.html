@@ -1,5 +1,5 @@
 <div #base
-     class="flex px-3 pt-4 pb-3 cursor-pointer gap-3"
+     class="flex px-3 pt-4 pb-3 gap-3"
      (click)="onNotificationClick.emit(notification)"
 >
   @if (
@@ -75,7 +75,7 @@
     @for (author of notification.authors | slice : 0: 5; track author.did) {
       <a
         (click)="openAuthor($event, author.did)"
-        class="relative h-8 w-8"
+        class="relative h-8 w-8 cursor-pointer"
       >
         <p-avatar
           [image]="author.avatar"
@@ -101,32 +101,32 @@
       @case (1) {
         <a
           (click)="openAuthor($event, notification.authors[0].did)"
-          class="font-medium hover:underline"
+          class="font-medium hover:underline cursor-pointer"
         >{{notification.authors[0] | displayName}}</a>
       }
       @case (2) {
         <a
           (click)="openAuthor($event, notification.authors[0].did)"
-          class="font-medium hover:underline"
+          class="font-medium hover:underline cursor-pointer"
         >{{notification.authors[0] | displayName}}</a>
 
         and
 
         <a
           (click)="openAuthor($event, notification.authors[1].did)"
-          class="font-medium hover:underline"
+          class="font-medium hover:underline cursor-pointer"
         >{{notification.authors[1] | displayName}}</a>
       }
       @default {
         <a
           (click)="openAuthor($event, notification.authors[0].did)"
-          class="font-medium hover:underline"
+          class="font-medium hover:underline cursor-pointer"
         >{{notification.authors[0] | displayName}}</a>
 
         and
 
         <a
-          class="font-medium hover:underline"
+          class="font-medium hover:underline cursor-pointer"
           [href]=""
         >{{notification.authors.length - 1}} more</a>
       }

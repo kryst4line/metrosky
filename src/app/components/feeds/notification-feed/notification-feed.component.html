@@ -18,6 +18,7 @@
           [notification]="notification"
           (onNotificationClick)="openNotification($event)"
           class="hover:bg-white/2"
+          [class.cursor-pointer]="notification.reason == 'like'"
         />
       }
       <p-divider
