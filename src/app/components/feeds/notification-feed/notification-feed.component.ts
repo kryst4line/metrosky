@@ -118,7 +118,6 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
         break;
       case "follow":
       case "starterpack-joined":
-        this.messageService.warn('This feature is not implemented yet.', 'Welp!');
         break;
     }
   }
