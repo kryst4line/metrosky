@@ -65,7 +65,7 @@ export class MskyDialogService {
         uri: uri,
       },
       appendTo: parentElement,
-      maskStyleClass: '!absolute top-[100px] !max-w-full [--p-dialog-content-padding:0] [&_.p-dialog-header]:!hidden',
+      maskStyleClass: '!absolute top-[100px] !max-w-full [--p-dialog-content-padding:0] [&_.p-dialog-header]:!hidden has-[thread-dialog]:[&_.p-dialog]:!border-0',
       style: {height: '100%', width: '100%', maxHeight: '100%'},
       autoZIndex: false,
       focusOnShow: false,
