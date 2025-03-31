@@ -19,7 +19,8 @@ import {PostService} from '@services/post.service';
       --p-galleria-nav-button-size: 3.5rem;
 
       .p-galleria-content {
-        //height: 100vh;
+        max-height: 90vh;
+        max-width: 90vw;
       }
 
       .p-galleria-items-container {
