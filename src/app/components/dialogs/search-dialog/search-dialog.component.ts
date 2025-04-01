@@ -5,8 +5,6 @@ import {SearchFeedComponent} from '@components/feeds/search-feed/search-feed.com
 import {MentionModule} from 'angular-mentions';
 import {agent} from '@core/bsky.api';
 import {FormsModule} from '@angular/forms';
-import {Avatar} from 'primeng/avatar';
-import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {MskyDialogService} from '@services/msky-dialog.service';
 import {Card} from 'primeng/card';
 import {ButtonDirective} from 'primeng/button';
@@ -15,19 +13,18 @@ import {Divider} from 'primeng/divider';
 import {InputText} from 'primeng/inputtext';
 import type * as AppBskyActorDefs from '@atproto/api/src/client/types/app/bsky/actor/defs';
 import {NgTemplateOutlet} from '@angular/common';
-import {FollowButtonComponent} from '@components/shared/follow-button/follow-button.component';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {Tooltip} from 'primeng/tooltip';
 import {MskyMessageService} from '@services/msky-message.service';
 import {AppBskyFeedDefs} from '@atproto/api';
+import {AuthorCardComponent} from '@components/cards/author-card/author-card.component';
+import {GeneratorCardComponent} from '@components/cards/generator-card/generator-card.component';
 
 @Component({
   selector: 'search-dialog',
   imports: [
     MentionModule,
     FormsModule,
-    Avatar,
-    DisplayNamePipe,
     SearchFeedComponent,
     Card,
     ButtonDirective,
@@ -35,9 +32,10 @@ import {AppBskyFeedDefs} from '@atproto/api';
     Divider,
     InputText,
     NgTemplateOutlet,
-    FollowButtonComponent,
     ScrollDirective,
     Tooltip,
+    AuthorCardComponent,
+    GeneratorCardComponent,
   ],
   templateUrl: './search-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

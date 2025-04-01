@@ -1,16 +1,16 @@
 <div
   class="h-full flex flex-col [&:not(:last-child)]:!hidden bg-[var(--p-primary-850)] overflow-hidden"
 >
-  @if (feedInfo()) {
+  @if (generator()) {
     <div
       class="w-full p-4 gap-3 flex flex-col shrink-0 [border-bottom:1px_solid_var(--p-surface-700)] bg-[var(--p-primary-800)]"
     >
       <div
         class="flex gap-3"
       >
-        @if (feedInfo().avatar) {
+        @if (generator().avatar) {
           <p-avatar
-            [image]="feedInfo().avatar"
+            [image]="generator().avatar"
             size="xlarge"
             class="!h-14 !w-14 rounded-md overflow-hidden shrink-0"
           />
@@ -27,25 +27,25 @@
         >
           <span
             class="text-2xl font-medium"
-          >{{feedInfo().displayName}}</span>
+          >{{generator().displayName}}</span>
 
           <span
             class="text-sm text-primary-400"
           >Created by
             <a
               class="hover:underline cursor-pointer"
-            >{{feedInfo().creator | displayName}}</a>
+            >{{generator().creator | displayName}}</a>
             · Liked by
             <a
               class="hover:underline cursor-pointer"
-            >{{feedInfo().likeCount}} users</a>
+            >{{generator().likeCount}} users</a>
           </span>
         </div>
 
         <button
           pButton pRipple text
           class="!h-8 !w-8 !p-0 shrink-0"
-          (click)="ref.close()"
+          (click)="dialog.close()"
         >
           <i
             class="pi pi-times !text-xl"
@@ -54,8 +54,8 @@
       </div>
 
       <rich-text
-        [text]="feedInfo().description"
-        [facets]="feedInfo().descriptionFacets"
+        [text]="generator().description"
+        [facets]="generator().descriptionFacets"
         class="text-sm"
       />
 
@@ -65,8 +65,9 @@
         <button
           pButton pRipple outlined
           class="!p-2 flex-1"
+          (click)="generator().viewer.like ? unlike() : like()"
         >
-          @if (feedInfo().viewer.like) {
+          @if (generator().viewer.like) {
             <i
               class="pi pi-heart-fill text-red-600 !text-sm"
             ></i>
@@ -86,7 +87,7 @@
         <button
           pButton pRipple outlined
           class="!p-2 flex-1"
-          (click)="columnService.createGeneratorColumn(feedInfo()); ref.close()"
+          (click)="addAsColumn()"
         >
           <i
             class="pi pi-plus !text-sm"
@@ -111,7 +112,7 @@
     </div>
 
     <generator-feed
-      [uri]="uri()"
+      [uri]="generator().uri"
       class="block flex-1 min-h-0"
     />
   } @else {

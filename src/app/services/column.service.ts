@@ -55,7 +55,7 @@ export class ColumnService {
     }
 
     storageColumns.forEach((column: any) => {
-      if (!column.width) column.width = 450;
+      if (!column.width) column.width = 400;
       if (!column.uuid) column.uuid = uuid.v4();
     });
 

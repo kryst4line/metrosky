@@ -39,7 +39,7 @@ export class FollowButtonComponent {
           return author;
         });
         this.cdRef.markForCheck();
-        this.messageService.success(`You are now following ${this.author().displayName ?? this.author().handle}`);
+        this.messageService.info(`You are now following ${this.author().displayName ?? this.author().handle}`);
       }, error: err => this.messageService.error(err.message, 'Oops!')
     });
   }
@@ -56,7 +56,7 @@ export class FollowButtonComponent {
             return author;
           });
           this.cdRef.markForCheck();
-          this.messageService.success(`You unfollowed ${this.author().displayName ?? this.author().handle}`);
+          this.messageService.info(`You unfollowed ${this.author().displayName ?? this.author().handle}`);
         }, error: err => this.messageService.error(err.message, 'Oops!')
       });
     });

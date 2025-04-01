@@ -1,0 +1,45 @@
+  <p-card
+    class="relative block flex-1 overflow-hidden [&_.p-card-body]:!overflow-hidden [&_.p-card-body]:!h-full [&_.p-card-content]:!overflow-hidden [&_.p-card-content]:!h-full"
+    [style]="{'--p-card-body-padding': 0, '--p-card-background': 'var(--p-primary-850)', 'height': '100%', 'overflow': 'hidden'}"
+  >
+    <ng-template #header>
+      <div
+        class="flex h-14 w-full items-center justify-center bg-[var(--p-primary-750)] [border-bottom:1px_solid_var(--p-surface-700)]"
+      >
+        <span
+          class="text-xl font-medium"
+        >Saved Feeds</span>
+      </div>
+    </ng-template>
+
+    <ng-template #content>
+      @if (generators()) {
+        <div #scroll
+             class="h-full flex flex-col overflow-y-auto"
+        >
+          @for (generator of generators(); track generator.uri) {
+            <generator-card
+              [generator]="generator"
+              (onClick)="dialogService.openFeed(generator, scroll)"
+              (onAuthorClick)="dialogService.openAuthor(generator.did)"
+              (onAddAsColumnClick)="addAsColumn(generator)"
+              addColumnButton
+            />
+            <p-divider
+              class="!mb-0 !mt-0"
+            />
+          }
+        </div>
+      } @else {
+        <div
+          class="h-full w-full flex items-center justify-center"
+        >
+          <p-progress-spinner
+            class="h-12"
+            strokeWidth="5"
+            [style]="{height: '3rem', width: '3rem'}"
+          />
+        </div>
+      }
+    </ng-template>
+  </p-card>

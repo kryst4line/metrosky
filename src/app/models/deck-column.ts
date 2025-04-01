@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 export class DeckColumn {
   uuid: string = uuid.v4();
   title: string = '';
-  width: number = 450;
+  width: number = 400;
   index: number;
 }
 

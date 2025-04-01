@@ -19,6 +19,8 @@ import {PostUtils} from '@shared/utils/post-utils';
 import {Divider} from 'primeng/divider';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {ProgressSpinner} from 'primeng/progressspinner';
+import {from} from 'rxjs';
+import {MskyMessageService} from '@services/msky-message.service';
 
 @Component({
   selector: 'generator-feed',
@@ -45,6 +47,7 @@ export class GeneratorFeedComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private dialogService: MskyDialogService,
+    private messageService: MskyMessageService,
     public cdRef: ChangeDetectorRef
   ) {}
 
@@ -70,11 +73,11 @@ export class GeneratorFeedComponent implements OnInit, OnDestroy {
 
   initData() {
     this.loading = true;
-    agent.app.bsky.feed.getFeed({
+    from(agent.app.bsky.feed.getFeed({
       feed: this.uri(),
       limit: 15
-    }).then(
-      response => {
+    })).subscribe({
+      next: response => {
         this.lastPostCursor = response.data.cursor;
         this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
         this.cdRef.markForCheck();
@@ -82,20 +85,20 @@ export class GeneratorFeedComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.manageRefresh();
         }, 500);
-      }
-    );
+      }, error: err => this.messageService.error(err.message)
+    });
   }
 
   nextData() {
     if (this.loading) return;
     this.loading = true;
 
-    agent.app.bsky.feed.getFeed({
+    from(agent.app.bsky.feed.getFeed({
       feed: this.uri(),
       limit: 15,
       cursor: this.lastPostCursor
-    }).then(
-      response => {
+    })).subscribe({
+      next: response => {
         this.lastPostCursor = response.data.cursor;
         const newPosts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
         this.posts = [...this.posts, ...newPosts];
@@ -103,8 +106,8 @@ export class GeneratorFeedComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.loading = false;
         }, 500);
-      }
-    );
+      }, error: err => this.messageService.error(err.message)
+    });
   }
 
   openPost(uri: string) {

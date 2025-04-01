@@ -1,0 +1,91 @@
+<div
+  class="flex min-h-20 gap-4 p-3 shrink-0 hover:bg-white/5 cursor-pointer"
+  (click)="onClick.emit()"
+>
+  @if (generator().avatar) {
+    <p-avatar
+      [image]="generator().avatar"
+      size="xlarge"
+      class="!h-14 !w-14 mt-1 rounded-md overflow-hidden shrink-0"
+    />
+  } @else {
+    <p-avatar
+      icon="pi pi-hashtag"
+      size="xlarge"
+      class="!h-14 !w-14 mt-1 rounded-md overflow-hidden shrink-0"
+    />
+  }
+  <div
+    class="flex flex-col flex-1 min-w-0"
+  >
+      <span
+        class="text-lg font-medium text-left"
+      >
+        {{ generator().displayName }}
+      </span>
+
+    <span
+      class="text-sm text-primary-400 text-left"
+    >
+      Created by
+
+      <a
+        class="hover:underline"
+        (click)="$event.stopPropagation(); onAuthorClick.emit()"
+      >{{ generator().creator | displayName }}</a>
+
+      {{ ' · ' + generator().likeCount }}
+      <i
+        class="pi pi-heart-fill !text-xs"
+      ></i>
+    </span>
+
+    <span
+      class="mt-2 line-clamp-2 whitespace-pre-line break-words overflow-ellipsis text-left text-sm text-primary-300"
+    >
+      {{ generator().description }}
+    </span>
+  </div>
+  @if (likeButton()) {
+    <div
+      class="shrink-0"
+    >
+      @if (generator().viewer.like) {
+        <button
+          pButton pRipple outlined
+          class="!h-10 !w-10"
+          (click)="$event.stopPropagation(); onUnlike.emit()"
+        >
+          <i
+            class="pi pi-heart-fill text-red-600 !text-lg"
+          ></i>
+        </button>
+      } @else {
+        <button
+          pButton pRipple outlined
+          class="!h-10 !w-10"
+          (click)="$event.stopPropagation(); onLike.emit()"
+        >
+          <i
+            class="pi pi-heart !text-lg"
+          ></i>
+        </button>
+      }
+    </div>
+  }
+  @if (addColumnButton()) {
+    <div
+      class="shrink-0"
+    >
+      <button
+        pButton pRipple outlined
+        class="!h-10 !w-10"
+        (click)="$event.stopPropagation(); onAddAsColumnClick.emit()"
+      >
+        <i
+          class="pi pi-plus !text-lg"
+        ></i>
+      </button>
+    </div>
+  }
+</div>

@@ -1,12 +1,13 @@
 import {Injectable, signal, WritableSignal} from '@angular/core';
 import {DialogService} from "primeng/dynamicdialog";
 import {ThreadDialogComponent} from '@components/dialogs/thread-dialog/thread-dialog.component';
-import {AppBskyEmbedImages} from '@atproto/api';
+import {AppBskyEmbedImages, AppBskyFeedDefs} from '@atproto/api';
 import {AuthorDialogComponent} from '@components/dialogs/author-dialog/author-dialog.component';
 import {PostComposerComponent} from '@components/dialogs/post-composer/post-composer.component';
 import {SearchDialogComponent} from '@components/dialogs/search-dialog/search-dialog.component';
 import {PostCompose} from '@models/post-compose';
 import {GeneratorDialogComponent} from '@components/dialogs/generator-dialog/generator-dialog.component';
+import {GeneratorListDialogComponent} from '@components/dialogs/generator-list-dialog/generator-list-dialog.component';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +37,10 @@ export class MskyDialogService {
     ref.onClose.subscribe(() => ref.destroy());
   }
 
-  openFeed(uri: string, parentElement: HTMLElement) {
+  openFeed(generator: AppBskyFeedDefs.GeneratorView, parentElement: HTMLElement) {
     const ref = this.dialogService.open(GeneratorDialogComponent, {
       data: {
-        uri: uri,
+        generator: generator,
       },
       appendTo: parentElement,
       maskStyleClass: '!absolute top-[100px] !max-w-full [--p-dialog-content-padding:0] [&_.p-dialog-header]:!hidden',
@@ -47,6 +48,20 @@ export class MskyDialogService {
       autoZIndex: false,
       focusOnShow: false,
       duplicate: true
+    });
+
+    ref.onClose.subscribe(() => ref.destroy());
+  }
+
+  openLikedFeeds() {
+    const ref = this.dialogService.open(GeneratorListDialogComponent, {
+      appendTo: document.querySelector('dashboard'),
+      height: '100%',
+      width: '40rem',
+      maskStyleClass: '[--p-dialog-content-padding:0] [&_.p-dialog-header]:!hidden [&_generator-list-dialog]:flex [&_generator-list-dialog]:h-full',
+      modal: true,
+      dismissableMask: true,
+      focusOnShow: true
     });
 
     ref.onClose.subscribe(() => ref.destroy());

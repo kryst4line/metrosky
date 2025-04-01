@@ -1,10 +1,8 @@
-import {ChangeDetectionStrategy, Component, ElementRef, forwardRef, signal} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, signal} from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {AppBskyFeedDefs} from "@atproto/api";
 import {from} from "rxjs";
-import {HttpErrorResponse} from "@angular/common/http";
 import {MskyMessageService} from '@services/msky-message.service';
-import {MskyDialogService} from '@services/msky-dialog.service';
 import {agent} from '@core/bsky.api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {Avatar} from 'primeng/avatar';
@@ -30,40 +28,59 @@ import {ColumnService} from '@services/column.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GeneratorDialogComponent {
-  feedInfo = signal<AppBskyFeedDefs.GeneratorView>(undefined);
+  generator = signal<AppBskyFeedDefs.GeneratorView>(undefined);
   uri = signal<string>(undefined);
 
   constructor(
-    protected ref: DynamicDialogRef,
+    protected dialog: DynamicDialogRef,
     config: DynamicDialogConfig,
     protected columnService: ColumnService,
     private messageService: MskyMessageService,
-    private dialogService: MskyDialogService,
-    private parentRef: ElementRef,
+    private cdRef: ChangeDetectorRef
   ) {
-    this.uri.set(config.data.uri);
-    this.loadFeed();
+    this.generator.set(config.data.generator);
+    // this.loadFeed();
   }
 
-  loadFeed() {
-    from(agent.app.bsky.feed.getFeedGenerator({
-      feed: this.uri()
-    })).subscribe({
+  // loadFeed() {
+  //   from(agent.app.bsky.feed.getFeedGenerator({
+  //     feed: this.generator().uri
+  //   })).subscribe({
+  //     next: response => {
+  //       this.generator.set(response.data.view);
+  //     }, error: (err: HttpErrorResponse) => {
+  //       this.messageService.error(err.message);
+  //       this.dialog.close();
+  //     }
+  //   });
+  // }
+
+  like() {
+    from(agent.like(this.generator().uri, this.generator().cid)).subscribe({
       next: response => {
-        this.feedInfo.set(response.data.view);
-      }, error: (err: HttpErrorResponse) => {
-        this.messageService.error(err.message);
-        this.ref.close();
-      }
+        this.generator.update(feed => {
+          feed.viewer.like = response.uri;
+          return feed;
+        });
+        this.cdRef.markForCheck();
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
-  openPost(uri: string) {
-    // Mute all video players
-    this.parentRef.nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
-      video.muted = true;
+  unlike() {
+    from(agent.deleteLike(this.generator().viewer.like)).subscribe({
+      next: () => {
+        this.generator.update(feed => {
+          feed.viewer.like = undefined;
+          return feed;
+        });
+        this.cdRef.markForCheck();
+      }, error: err => this.messageService.error(err.message)
     });
+  }
 
-    this.dialogService.openThread(uri, this.parentRef.nativeElement);
+  addAsColumn() {
+    this.columnService.createGeneratorColumn(this.generator());
+    this.dialog.close();
   }
 }
